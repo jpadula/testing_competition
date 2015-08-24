@@ -7,12 +7,12 @@ module.exports = function(app) {
 	// Countries Routes
 	app.route('/countries')
 		.get(countries.list)
-		.post(users.requiresLogin, countries.create);
+		.post(users.hasAuthorization("admin"), countries.create);
 
 	app.route('/countries/:countryId')
-		.get(countries.read)
-		.put(users.requiresLogin, countries.hasAuthorization, countries.update)
-		.delete(users.requiresLogin, countries.hasAuthorization, countries.delete);
+		.get(users.hasAuthorization("admin"),countries.read)
+		.put(users.hasAuthorization("admin"), countries.hasAuthorization, countries.update)
+		.delete(users.hasAuthorization("admin"), countries.hasAuthorization, countries.delete);
 
 	// Finish by binding the Country middleware
 	app.param('countryId', countries.countryByID);
