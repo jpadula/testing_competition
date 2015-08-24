@@ -32,20 +32,21 @@ describe('Country CRUD tests', function() {
 			email: 'test@test.com',
 			username: credentials.username,
 			password: credentials.password,
-			provider: 'local'
+			provider: 'local',
+			roles: ["admin"]
 		});
 
 		// Save a user to the test db and create new Country
 		user.save(function() {
 			country = {
-				name: 'Country Name'
+				name: 'Argentina'
 			};
 
 			done();
 		});
 	});
 
-	it('should be able to save Country instance if logged in', function(done) {
+	it('should be able to save Country instance if logged in as Admin', function(done) {
 		agent.post('/auth/signin')
 			.send(credentials)
 			.expect(200)
@@ -75,7 +76,7 @@ describe('Country CRUD tests', function() {
 
 								// Set assertions
 								(countries[0].user._id).should.equal(userId);
-								(countries[0].name).should.match('Country Name');
+								(countries[0].name).should.match('Argentina');
 
 								// Call the assertion callback
 								done();
@@ -122,7 +123,7 @@ describe('Country CRUD tests', function() {
 			});
 	});
 
-	it('should be able to update Country instance if signed in', function(done) {
+	it('should be able to update Country instance if signed in as Admin', function(done) {
 		agent.post('/auth/signin')
 			.send(credentials)
 			.expect(200)
@@ -142,7 +143,7 @@ describe('Country CRUD tests', function() {
 						if (countrySaveErr) done(countrySaveErr);
 
 						// Update Country name
-						country.name = 'WHY YOU GOTTA BE SO MEAN?';
+						country.name = 'Brasil';
 
 						// Update existing Country
 						agent.put('/countries/' + countrySaveRes.body._id)
@@ -154,7 +155,7 @@ describe('Country CRUD tests', function() {
 
 								// Set assertions
 								(countryUpdateRes.body._id).should.equal(countrySaveRes.body._id);
-								(countryUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+								(countryUpdateRes.body.name).should.match('Brasil');
 
 								// Call the assertion callback
 								done();
@@ -183,7 +184,7 @@ describe('Country CRUD tests', function() {
 	});
 
 
-	it('should be able to get a single Country if not signed in', function(done) {
+	it('should not be able to get a single Country if (not signed in or if not an Administrator)', function(done) {
 		// Create new Country model instance
 		var countryObj = new Country(country);
 
@@ -192,7 +193,7 @@ describe('Country CRUD tests', function() {
 			request(app).get('/countries/' + countryObj._id)
 				.end(function(req, res) {
 					// Set assertion
-					res.body.should.be.an.Object.with.property('name', country.name);
+					res.body.should.be.an.Object.with.property('message', "User is not logged in");
 
 					// Call the assertion callback
 					done();
@@ -200,7 +201,7 @@ describe('Country CRUD tests', function() {
 		});
 	});
 
-	it('should be able to delete Country instance if signed in', function(done) {
+	it('should be able to delete Country instance if signed in as Administrator', function(done) {
 		agent.post('/auth/signin')
 			.send(credentials)
 			.expect(200)
