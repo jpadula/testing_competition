@@ -11,7 +11,7 @@ var should = require('should'),
 /**
  * Globals
  */
-var user, group;
+var user, group,s1,s2;
 
 /**
  * Unit tests
@@ -27,13 +27,36 @@ describe('Group Model Unit Tests:', function() {
 			password: 'password'
 		});
 
-		user.save(function() { 
-			group = new Group({
-				name: 'Group Name',
-				user: user
-			});
+		s1 = new User({
+			firstName: 's1',
+			lastName: 's1',
+			displayName: 'Full Name',
+			email: 's1@s1.com',
+			username: 's1',
+			password: 's1'
+		});
 
-			done();
+		s2 = new User({
+			firstName: 's2',
+			lastName: 's2',
+			displayName: 'Full Name',
+			email: 's@s2.com',
+			username: 's2',
+			password: 's2'
+		});
+
+		user.save(function() {
+			s1.save(function(){
+				s2.save(function(){
+					group = new Group({
+					name: 'Group Name',
+					user: user,
+					number: 1,
+					studentsList: [s1,s2]
+					});
+					done();
+				})
+			})
 		});
 	});
 
@@ -56,6 +79,7 @@ describe('Group Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) { 
+		console.log(group);
 		Group.remove().exec();
 		User.remove().exec();
 
