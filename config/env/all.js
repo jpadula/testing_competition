@@ -27,7 +27,6 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/angular-permission/dist/angular-permission.js'
-
 			]
 		},
 		css: [
