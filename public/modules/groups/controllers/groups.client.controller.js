@@ -1,15 +1,24 @@
 'use strict';
 
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups',
-	function($scope, $stateParams, $location, Authentication, Groups) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups','Users',
+	function($scope, $stateParams, $location, Authentication, Groups,Users) {
 		$scope.authentication = Authentication;
+		
+		//this is the model that contain the selected users for a Group
+		$scope.studentsSelectedList=[];
+
+
+		//this is a API Query that pull all Users in a Wrapper. We can improve searching by demand. Not necessary in this instance.
+		$scope.wrapperStudentsList = Users.query();
 
 		// Create new Group
 		$scope.create = function() {
 			// Create new Group object
 			var group = new Groups ({
-				name: this.name
+				name: this.name,
+				number:this.groupNumber,
+				studentsList: $scope.studentsSelectedList
 			});
 
 			// Redirect after save
@@ -18,6 +27,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
 				// Clear form fields
 				$scope.name = '';
+				$scope.groupNumber = '';
+				$scope.studentsSelectedList = [];
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});

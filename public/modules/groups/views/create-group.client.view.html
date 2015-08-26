@@ -19,8 +19,20 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="studentList">Students List</label>
+                    <!--
                     <div class="controls">
                         <input type="text" data-ng-model="studentList" id="studentList" class="form-control" placeholder="" required>
+                    </div>
+                    -->
+                    <div     
+                        isteven-multi-select
+                        input-model="wrapperStudentsList"
+                        output-model="studentsSelectedList"
+                        button-label="displayName"
+                        item-label=" displayName email"
+                        tick-property="ticked",
+                        output-properties="_id"
+                    >
                     </div>
                 </div>
 

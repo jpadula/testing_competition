@@ -18,8 +18,7 @@ var GroupSchema = new Schema({
 	},
 	number: {
 		type: Number,
-		required: "Please fill the Group Number",
-		unique: true
+		required: "Please fill the Group Number"
 	},
 	created: {
 		type: Date,

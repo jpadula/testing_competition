@@ -12,11 +12,26 @@ var mongoose = require('mongoose'),
  * Create a Group
  */
 exports.create = function(req, res) {
-	var group = new Group(req.body);
-	group.user = req.user;
+	//extract the req data
+	var studentsList = req.body.studentsList;
+	var number = req.body.number;
+	var name = req.body.name;
 
+	//create the group to save and set the variables
+	var group = new Group();
+	group.user = req.user;
+	group.name = name;
+	group.number = number;
+	
+	//we should cast to ObjectId of Mongoose each ID in studentsList variable
+	group.studentsList=[];
+	for (var i = studentsList.length - 1; i >= 0; i--) {
+		group.studentsList.push(mongoose.Types.ObjectId(studentsList[i]._id));
+	};
+	
 	group.save(function(err) {
 		if (err) {
+			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
