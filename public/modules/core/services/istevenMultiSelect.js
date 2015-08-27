@@ -980,9 +980,20 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             
             // watch1, for changes in input model property
             // updates multi-select when user select/deselect a single checkbox programatically
-            // https://github.com/isteven/angular-multi-select/issues/8            
-            $scope.$watch( 'inputModel' , function( newVal ) {                                 
-                if ( newVal ) {                            
+            // https://github.com/isteven/angular-multi-select/issues/8
+            
+            var firstTimeWatch1 = true;
+            var firstTimeWatch2 = true;
+
+            $scope.$watch( 'inputModel' , function( newVal ) {
+                if ( newVal ) {
+                    if (firstTimeWatch1){
+                        if (newVal[$scope.tickProperty] != undefined)
+                            $scope.setDefaultTicketIfHasNot(newVal,false);
+                        else
+                            $scope.setDefaultTicketIfHasNot(newVal,true);
+                        firstTimeWatch1=false;
+                    }
                     $scope.refreshOutputModel();                                    
                     $scope.refreshButton();                                                  
                 }
@@ -990,8 +1001,15 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             
             // watch2 for changes in input model as a whole
             // this on updates the multi-select when a user load a whole new input-model. We also update the $scope.backUp variable
-            $scope.$watch( 'inputModel' , function( newVal ) {  
+            $scope.$watch( 'inputModel' , function( newVal ) { 
                 if ( newVal ) {
+                    if (firstTimeWatch2){
+                        if (newVal[$scope.tickProperty] != undefined)
+                            $scope.setDefaultTicketIfHasNot(newVal,false);
+                        else
+                            $scope.setDefaultTicketIfHasNot(newVal,true);
+                        firstTimeWatch2=false;
+                    }
                     $scope.backUp = angular.copy( $scope.inputModel );    
                     $scope.updateFilter();
                     $scope.prepareGrouping();
@@ -999,7 +1017,13 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     $scope.refreshOutputModel();                
                     $scope.refreshButton();                                                                                                                 
                 }
-            });                        
+            });
+
+            $scope.setDefaultTicketIfHasNot = function(newVal,defaultTicket) {
+                for (var i = newVal.length - 1; i >= 0; i--) {
+                    newVal[i][$scope.tickProperty] = defaultTicket;
+                };
+            }
 
             // watch for changes in directive state (disabled or enabled)
             $scope.$watch( 'isDisabled' , function( newVal ) {         

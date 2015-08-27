@@ -103,7 +103,7 @@ exports.list = function(req, res) {
  * Group middleware
  */
 exports.groupByID = function(req, res, next, id) { 
-	Group.findById(id).populate('user', 'displayName').exec(function(err, group) {
+	Group.findById(id).populate('user', 'displayName').populate('studentsList', 'displayName email').exec(function(err, group) {
 		if (err) return next(err);
 		if (! group) return next(new Error('Failed to load Group ' + id));
 		req.group = group ;

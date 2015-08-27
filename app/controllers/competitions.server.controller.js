@@ -12,11 +12,24 @@ var mongoose = require('mongoose'),
  * Create a Competition
  */
 exports.create = function(req, res) {
-	var competition = new Competition(req.body);
-	competition.user = req.user;
+	//extract the req data
+	var groupsList = req.body.groupsList;
+	var name = req.body.name;
 
+	//create the competition to save and set the variables
+	var competition = new Competition();
+	competition.user = req.user;
+	competition.name = name;
+	
+	//we should cast to ObjectId of Mongoose each ID in studentsList variable
+	competition.groupsList=[];
+	for (var i = groupsList.length - 1; i >= 0; i--) {
+		competition.groupsList.push(mongoose.Types.ObjectId(groupsList[i]._id));
+	};
+	
 	competition.save(function(err) {
 		if (err) {
+			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});

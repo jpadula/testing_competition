@@ -1,15 +1,43 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions',
-	function($scope, $stateParams, $location, Authentication, Competitions) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Groups',
+	function($scope, $stateParams, $location, Authentication, Competitions,Groups) {
 		$scope.authentication = Authentication;
+		
+		//this is the model that contain the selected groups for a Competition
+		$scope.groupsSelectedList=[];
+		$scope.wrapperGroupsList = [];
 
+		//TODO: modularize (priority: 10)
+		$scope.getAllGroupsWrapperList = function(){
+			console.log("groups");
+			Groups.query(function(groups){
+				if ($scope.competition) { //is a edit action
+					for (var i = groups.length - 1; i >= 0; i--) {
+						var tmpFlag = false;
+						for (var j = $scope.competition.groupsList.length - 1; j >= 0; j--) {
+							if ($scope.competition.groupsList[j]._id == groups[i]._id){
+								tmpFlag=true;
+								break;
+							}
+						};
+						groups[i].selected=tmpFlag;
+						$scope.wrapperGroupsList.push(groups[i]);
+					};
+				} else { // is a create action
+					console.log(groups);
+					$scope.wrapperGroupsList = groups;
+				}
+			});
+		};
+		
 		// Create new Competition
 		$scope.create = function() {
 			// Create new Competition object
 			var competition = new Competitions ({
-				name: this.name
+				name: this.name,
+				groupsList: $scope.groupsSelectedList
 			});
 
 			// Redirect after save
@@ -18,6 +46,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 				// Clear form fields
 				$scope.name = '';
+				$scope.groupsSelectedList = [];
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -58,8 +87,11 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 		// Find existing Competition
 		$scope.findOne = function() {
-			$scope.competition = Competitions.get({ 
+			Competitions.get({ 
 				competitionId: $stateParams.competitionId
+			},function(competition){
+				$scope.competition = competition;
+				$scope.getAllGroupsWrapperList();
 			});
 		};
 	}

@@ -3,12 +3,31 @@
         <h1>Edit Group</h1>
     </div>
     <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
+        <form class="form-horizontal" data-ng-submit="update()">
             <fieldset>
                 <div class="form-group">
                     <label class="control-label" for="name">Name</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="group.name" id="name" class="form-control" placeholder="Name" required>
+                        <input type="text" data-ng-model="group.name" id="name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="groupNumber">Group Number</label>
+                    <div class="controls">
+                        <input type="number" data-ng-model="group.number" id="number" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="studentList">Students List</label>
+                    <div     
+                        isteven-multi-select
+                        input-model="wrapperStudentsList"
+                        output-model="studentsSelectedList"
+                        button-label="displayName"
+                        item-label=" displayName email"
+                        tick-property="selected"
+                        output-properties="_id"
+                    >
                     </div>
                 </div>
                 <div class="form-group">
