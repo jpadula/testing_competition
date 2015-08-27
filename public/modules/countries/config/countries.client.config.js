@@ -1,6 +1,6 @@
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Countries module
 angular.module('countries').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items

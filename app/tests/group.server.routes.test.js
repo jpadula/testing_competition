@@ -32,13 +32,16 @@ describe('Group CRUD tests', function() {
 			email: 'test@test.com',
 			username: credentials.username,
 			password: credentials.password,
-			provider: 'local'
+			provider: 'local',
+			roles: ["admin"]
 		});
 
 		// Save a user to the test db and create new Group
 		user.save(function() {
 			group = {
-				name: 'Group Name'
+				name: 'Group Name',
+				number: 2,
+				studentsList: []
 			};
 
 			done();

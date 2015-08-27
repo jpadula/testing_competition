@@ -1,6 +1,6 @@
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Competitions module
 angular.module('competitions').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
