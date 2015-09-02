@@ -14,7 +14,8 @@ var CompetitionSchema = new Schema({
 		type: String,
 		default: '',
 		required: 'Please fill Competition name',
-		trim: true
+		trim: true,
+		unique:true
 	},
 	created: {
 		type: Date,

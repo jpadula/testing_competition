@@ -100,13 +100,37 @@ exports.list = function(req, res) {
 /**
  * Competition middleware
  */
-exports.competitionByID = function(req, res, next, id) { 
+var competitionByID = function(req, res, next, id) { 
 	Competition.findById(id).populate('user', 'displayName').exec(function(err, competition) {
 		if (err) return next(err);
 		if (! competition) return next(new Error('Failed to load Competition ' + id));
 		req.competition = competition ;
 		next();
 	});
+};
+
+/**
+ * Competition middleware
+ */
+var competitionByName = function(req, res, next, name) { 
+	Competition.findOne({"name":name}).populate('user', 'displayName').exec(function(err, competition) {
+		if (err) return next(err);
+		if (! competition) return next(new Error('Failed to load Competition ' + name));
+		req.competition = competition ;
+		next();
+	});
+};
+
+/**
+ * Competition middleware
+ */
+exports.competitionByIdOrName = function(req, res, next, idOrName) { 
+	if (idOrName.match(/^[0-9a-fA-F]{24}$/)) {
+		// Yes, it's a valid ObjectId, proceed with `findById` call.
+		competitionByID(req,res,next,idOrName);
+	} else {
+		competitionByName(req,res,next,idOrName);
+	}
 };
 
 /**

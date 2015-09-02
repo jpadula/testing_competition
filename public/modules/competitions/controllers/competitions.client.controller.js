@@ -11,7 +11,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 		//TODO: modularize (priority: 10)
 		$scope.getAllGroupsWrapperList = function(){
-			console.log("groups");
 			Groups.query(function(groups){
 				if ($scope.competition) { //is a edit action
 					for (var i = groups.length - 1; i >= 0; i--) {

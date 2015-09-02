@@ -15,5 +15,5 @@ module.exports = function(app) {
 		.delete(users.hasAuthorization(["admin"]), competitions.hasAuthorization, competitions.delete);
 
 	// Finish by binding the Competition middleware
-	app.param('competitionId', competitions.competitionByID);
+	app.param('competitionId', competitions.competitionByIdOrName);
 };

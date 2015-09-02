@@ -15,7 +15,6 @@ function hasRol(rol,roles) {
 }
 
 angular.module('users').run(function (Authentication, $q, Permission) {
-	console.log("D");
 	var roles = Authentication.user.roles;
 	//window.location.reload();
 	Permission
