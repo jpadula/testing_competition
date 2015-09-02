@@ -145,7 +145,7 @@ describe('Group CRUD tests', function() {
 						if (groupSaveErr) done(groupSaveErr);
 
 						// Update Group name
-						group.name = 'WHY YOU GOTTA BE SO MEAN?';
+						group.name = 'Competition edited';
 
 						// Update existing Group
 						agent.put('/groups/' + groupSaveRes.body._id)
@@ -157,7 +157,7 @@ describe('Group CRUD tests', function() {
 
 								// Set assertions
 								(groupUpdateRes.body._id).should.equal(groupSaveRes.body._id);
-								(groupUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+								(groupUpdateRes.body.name).should.match('Competition edited');
 
 								// Call the assertion callback
 								done();

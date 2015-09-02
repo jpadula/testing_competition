@@ -32,13 +32,15 @@ describe('Competition CRUD tests', function() {
 			email: 'test@test.com',
 			username: credentials.username,
 			password: credentials.password,
-			provider: 'local'
+			provider: 'local',
+			roles: ["admin"]
 		});
 
 		// Save a user to the test db and create new Competition
 		user.save(function() {
 			competition = {
-				name: 'Competition Name'
+				name: 'Competition Name',
+				groupsList:[]
 			};
 
 			done();
@@ -142,7 +144,7 @@ describe('Competition CRUD tests', function() {
 						if (competitionSaveErr) done(competitionSaveErr);
 
 						// Update Competition name
-						competition.name = 'WHY YOU GOTTA BE SO MEAN?';
+						competition.name = 'Competition edited';
 
 						// Update existing Competition
 						agent.put('/competitions/' + competitionSaveRes.body._id)
@@ -154,7 +156,7 @@ describe('Competition CRUD tests', function() {
 
 								// Set assertions
 								(competitionUpdateRes.body._id).should.equal(competitionSaveRes.body._id);
-								(competitionUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+								(competitionUpdateRes.body.name).should.match('Competition edited');
 
 								// Call the assertion callback
 								done();
