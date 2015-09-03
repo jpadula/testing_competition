@@ -49,7 +49,13 @@ var CompetitionSchema = new Schema({
 			type:Number,
 			default: 2
 		},
-	}
+	},
+	bugs: [
+		{
+			type: Schema.ObjectId,
+			ref: 'Bug'
+		}
+	]
 });
 
 mongoose.model('Competition', CompetitionSchema);
