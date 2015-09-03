@@ -30,7 +30,7 @@ angular.module('competitions').config(['$stateProvider',
 			templateUrl: 'modules/competitions/views/view-competition.client.view.html',
 			data: {
         		permissions: {
-          			only: ['admin'],
+          			only: ['admin','user'],
           			redirectTo: 'home'
         		}
       		}
