@@ -25,7 +25,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 						$scope.wrapperGroupsList.push(groups[i]);
 					};
 				} else { // is a create action
-					console.log(groups);
 					$scope.wrapperGroupsList = groups;
 				}
 			});
