@@ -88,7 +88,7 @@ exports.list = function(req, res) {
 /**
  * Bug middleware
  */
-var bugByID = function(req, res, next, id) { 
+exports.bugByID = function(req, res, next, id) {
 	Bug.findById(id).populate('user', 'displayName').exec(function(err, bug) {
 		if (err) return next(err);
 		if (! bug) return next(new Error('Failed to load Bug ' + id));
