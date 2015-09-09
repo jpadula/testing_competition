@@ -1,0 +1,20 @@
+<section data-ng-controller="CompetitionsController" data-ng-if="showOpenBugs">
+    <div class="page-header">
+        <h1>Bugs List</h1>
+    </div>
+    <div class="list-bug">
+        <ul>
+            <li data-ng-repeat="bug in openBugs" class="list-bug-item">
+                <p>Reported By: {{bug.user.displayName}}</p>
+                <p>Created at: {{bug.created}}</p>
+                <p>Class Name: {{bug.className}}</p>
+                <p>Routine Name: {{bug.routineName}}</p>
+                <p data-ng-click="showDescription = !showDescription;" style="font-weight:bold">Click to see the Description Bug</p>
+                <p data-ng-if="showDescription">{{bug.description}}</p>
+            </li>
+        </ul>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">
+    	No Open Bugs yet
+    </div>
+</section>

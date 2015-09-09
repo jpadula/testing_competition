@@ -10,6 +10,15 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
+	
+	
+	<span data-ng-click="showCreateBug=!showCreateBug">Click to Report a bug</span>
+	<div data-ng-include="'/modules/competitions/views/create-bug.client.view.html'"></div>
+
+	<span data-ng-click="searchOpenBugs()">See Open Bugs</span>
+	<div data-ng-include="'/modules/competitions/views/list-bugs.client.view.html'"></div>
+
+
 	<small>
 		<em class="text-muted">
 			Posted on

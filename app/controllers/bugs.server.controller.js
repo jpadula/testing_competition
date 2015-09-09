@@ -6,7 +6,24 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Bug = mongoose.model('Bug'),
+	Group = mongoose.model("Group"),
 	_ = require('lodash');
+
+
+
+var getGroupByUser = function(req,cb) {
+	var userID = [req.user._id];
+	Group.find({studentsList: {$in: userID}}).exec(function (err,group) {
+		if (!err) {
+			if (!group){
+				cb("The user has not in a valid group",null);
+			}
+			cb(null,group[0]);
+		} else {
+			cb(err,null);
+		}
+	});
+}
 
 /**
  * Create a Bug
@@ -14,15 +31,26 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
 	var bug = new Bug(req.body);
 	bug.user = req.user;
-	
-	bug.save(function(err) {
-		if (err) {
+	var userID = [req.user._id];
+	//First, search the User Group for this competition
+	getGroupByUser(req,function(err,group){
+		if (!err) {
+			bug.group = group;
+			bug.save(function(err) {
+				if (err) {
+					console.log(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.jsonp(bug);
+				}
+			});
+		} else {
 			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.jsonp(bug);
 		}
 	});
 };
@@ -83,6 +111,35 @@ exports.list = function(req, res) {
 			res.jsonp(bugs);
 		}
 	});
+};
+
+/**
+ * List of Open Bugs
+ */
+exports.getOpenBugs = function(req, res) {
+	var config = req.body;
+	var competition = config.competition;
+	console.log(competition);
+	getGroupByUser(req,function(err,group){
+		if (!err) {
+			Bug.find({status:"OPEN",group:{$ne:group._id},competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
+				if (err) {
+					console.log(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.jsonp(bugs);
+				}
+			});
+		} else {
+			console.log(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		}
+	});
+
 };
 
 /**

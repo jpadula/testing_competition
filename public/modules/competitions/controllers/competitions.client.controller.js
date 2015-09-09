@@ -1,13 +1,50 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Groups',
-	function($scope, $stateParams, $location, Authentication, Competitions,Groups) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups',
+	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups) {
 		$scope.authentication = Authentication;
 		
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
 		$scope.wrapperGroupsList = [];
+
+		//initialize open Bugs to list
+		$scope.openBugs;
+		
+		//boolean variables to hide/show menues
+		$scope.showCreateBug = false;
+		$scope.showOpenBugs = false;
+
+		
+
+		//functions that use Bugs service
+		$scope.reportBug = function() {
+			var bug = {
+				className: this.className,
+				routineName: this.routineName,
+				description: this.description,
+				competition: $scope.competition._id
+			};
+
+			Bugs.reportBug(bug,function(bug){
+				console.log("Se guardo: ",bug);
+			});
+		}
+
+		$scope.searchOpenBugs = function() {
+			
+			$scope.showOpenBugs = !$scope.showOpenBugs;
+			var config = {
+				competition: $scope.competition._id
+			};
+			if ($scope.showOpenBugs){
+				Bugs.getOpenBugs(config,function(bugs){
+					$scope.openBugs=bugs;
+					console.log("Bugs",bugs);
+				});
+			}
+		};
 
 		//TODO: modularize (priority: 10)
 		$scope.getAllGroupsWrapperList = function(){

@@ -11,6 +11,10 @@ module.exports = function(app) {
 	app.route('/bugs')
 		.get(bugs.list)
 		.post(bugs.create);
+	
+	// Bugs Routes
+	app.route('/bugs/getOpenBugs')
+		.post(bugs.getOpenBugs);
 
 	app.route('/bugs/:bugId')
 		.get(bugs.read)

@@ -26,6 +26,11 @@ var BugSchema = new Schema({
 		ref: 'User'
 	},
 	
+	competition: {
+		type: Schema.ObjectId,
+		ref: 'Competition'
+	},
+	
 	className: {
 		type: String,
 		default: '',
@@ -45,6 +50,13 @@ var BugSchema = new Schema({
 		default: '',
 		required: 'Please fill Description',
 		trim: true
+	},
+
+	status : {
+		type: String,
+		trim:true,
+		default: 'OPEN',
+		enum: ['OPEN', 'REJECTED', 'APPROVED']
 	}
 	
 });

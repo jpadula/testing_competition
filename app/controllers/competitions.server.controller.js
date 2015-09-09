@@ -101,7 +101,7 @@ exports.list = function(req, res) {
  * Competition middleware
  */
 var competitionByID = function(req, res, next, id) { 
-	Competition.findById(id).populate('user', 'displayName').exec(function(err, competition) {
+	Competition.findById(id).populate('user', 'displayName').populate('groupsList').exec(function(err, competition) {
 		if (err) return next(err);
 		if (! competition) return next(new Error('Failed to load Competition ' + id));
 		req.competition = competition ;
@@ -113,7 +113,7 @@ var competitionByID = function(req, res, next, id) {
  * Competition middleware
  */
 var competitionByName = function(req, res, next, name) { 
-	Competition.findOne({"name":name}).populate('user', 'displayName').exec(function(err, competition) {
+	Competition.findOne({"name":name}).populate('user', 'displayName').populate('groupsList', 'name number').exec(function(err, competition) {
 		if (err) return next(err);
 		if (! competition) return next(new Error('Failed to load Competition ' + name));
 		req.competition = competition ;
