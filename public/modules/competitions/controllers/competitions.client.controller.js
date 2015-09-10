@@ -24,12 +24,15 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				className: this.className,
 				routineName: this.routineName,
 				description: this.description,
-				competition: $scope.competition._id
+				competition: $scope.competition._id,
+				group: this.group
 			};
-
+			console.log(bug);
+			/*
 			Bugs.reportBug(bug,function(bug){
 				console.log("Se guardo: ",bug);
 			});
+			*/
 		}
 
 		$scope.searchOpenBugs = function() {

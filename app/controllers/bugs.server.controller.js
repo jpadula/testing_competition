@@ -119,19 +119,22 @@ exports.list = function(req, res) {
 exports.getOpenBugs = function(req, res) {
 	var config = req.body;
 	var competition = config.competition;
-	console.log(competition);
 	getGroupByUser(req,function(err,group){
 		if (!err) {
-			Bug.find({status:"OPEN",group:{$ne:group._id},competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
-				if (err) {
-					console.log(err);
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					res.jsonp(bugs);
-				}
-			});
+			if (group){
+				Bug.find({status:"OPEN",group:{$ne:group._id},competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
+					if (err) {
+						console.log(err);
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						res.jsonp(bugs);
+					}
+				});
+			} else {
+				res.jsonp([]);
+			}
 		} else {
 			console.log(err);
 			return res.status(400).send({
