@@ -101,7 +101,7 @@ var findBugByQuery = function(query,cb) {
 		}
 	});
 }
-
+//TODO: modularize
 var assignReportBugPoints = function(self,next) {
 	getCompetition(self.competition,function(err,competition){
     	if (err) next(new Error('Failed to load Competition: ' + err));
@@ -112,7 +112,7 @@ var assignReportBugPoints = function(self,next) {
 	    	if (err) next(err);
 	    	if (bugs){
 	    		if (bugs.length > 0) { //is not the first in CLASS C, we should search if is the first in the Routine R
-	    			var queryByRoutineName = {"routineName":self.routineName,"group_reported":self.group_reported};
+	    			var queryByRoutineName = {"className":self.className,"routineName":self.routineName,"group_reported":self.group_reported};
 	    			findBugByQuery(queryByRoutineName,function(err,bugs){
 	    				if (err) next(err);
 	    				if (bugs){
