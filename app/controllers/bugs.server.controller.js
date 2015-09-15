@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Bug = mongoose.model('Bug'),
 	Group = mongoose.model("Group"),
+	Q = require('q'),
+	User = mongoose.model("User"),
 	_ = require('lodash');
 
 
@@ -31,7 +33,6 @@ var getGroupByUser = function(req,cb) {
 exports.create = function(req, res) {
 	var bug = new Bug(req.body);
 	bug.user = req.user;
-	var userID = [req.user._id];
 	//First, search the User Group for this competition
 	getGroupByUser(req,function(err,group){
 		if (!err) {
@@ -55,6 +56,8 @@ exports.create = function(req, res) {
 	});
 };
 
+
+
 /**
  * Show the current Bug
  */
@@ -68,8 +71,10 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var bug = req.bug ;
 
-	bug = _.extend(bug , req.body);
+	bug.status = req.body.status;
 
+	//bug = _.extend(bug , req.body);
+	bug.isUpdateAction= true;
 	bug.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -113,16 +118,79 @@ exports.list = function(req, res) {
 	});
 };
 
+var getUsersRanking = function(competition,cb) {
+	console.log(competition);
+    Bug.aggregate([
+        { $match: {
+            competition: mongoose.Types.ObjectId(competition)
+        }},
+        { $group: {
+            _id:"$user",
+            bugsReported: { $sum: 1 },
+            totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
+        	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
+        	totalReportedBugPoints: { $sum: "$points" }
+        }},
+        {$sort:{
+        	"totalPoints": -1
+        }}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        var promises = [];
+		var indexes = [];
+        for (var i = result.length - 1; i >= 0; i--) {
+        	var deferred = Q.defer();
+        	indexes.push({"userID":result[i]._id,"index":i});
+
+        	promises.push(User.findOne({"_id":result[i]._id}).exec(function(err,user){
+        		var index;
+        		for (var i = indexes.length - 1; i >= 0; i--) {
+        			if (user._id.equals(indexes[i].userID)) {
+        				index = indexes[i].index;
+        				break;
+        			}
+        		};
+
+        		if (!err) {
+        			result[index].user=user.displayName;
+        			deferred.resolve;
+        		} else {
+        			deferred.reject("Rejected");
+        		}
+        		
+        	}));
+        	
+        };
+        Q.all(promises).then(function(users){
+        	cb(result);
+		});
+    });
+    
+
+}
+
+exports.getUsersRanking = function(req,res) {
+	var config = req.body;
+	var competition = config.competition;
+	getUsersRanking(competition,function(result){
+		console.log("RESULTADO: ",result);
+		res.jsonp(result);
+	})
+	//res.jsonp(getUsersRanking(competition));
+}
+
 /**
  * List of Open Bugs
  */
 exports.getOpenBugs = function(req, res) {
 	var config = req.body;
 	var competition = config.competition;
-	console.log(competition);
 	getGroupByUser(req,function(err,group){
 		if (!err) {
-			Bug.find({status:"OPEN",group:{$ne:group._id},competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
+			Bug.find({status:"OPEN",competition:competition}).sort('-created').populate('user', 'displayName').populate('group_reported','name').exec(function(err, bugs) {
 				if (err) {
 					console.log(err);
 					return res.status(400).send({
@@ -139,7 +207,53 @@ exports.getOpenBugs = function(req, res) {
 			});
 		}
 	});
+};
 
+/**
+ *  getByGroupId
+ */
+exports.getByGroupId = function(req, res) {
+	var config = req.body;
+	var competition = config.competition;
+	var groupId = config.groupId;
+	Bug.find({status:"OPEN",competition:competition,group_reported:groupId}).sort('-created').populate('user', 'displayName').populate('group_reported','name').exec(function(err, bugs) {
+		if (err) {
+			console.log(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bugs);
+		}
+	});
+};
+
+/**
+ * List of Open Bugs
+ */
+exports.getMyOpenBugs = function(req, res) {
+	var config = req.body;
+	var competition = config.competition;
+	getGroupByUser(req,function(err,group){
+		if (!err) {
+			Bug.find({status:"OPEN",group_reported:group._id,competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
+				if (err) {
+					console.log(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					console.log(bugs);
+					res.jsonp(bugs);
+				}
+			});
+		} else {
+			console.log(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		}
+	});
 };
 
 /**
@@ -158,8 +272,20 @@ exports.bugByID = function(req, res, next, id) {
  * Bug authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.bug.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
+	Group.findOne({"_id":req.bug.group_reported},function(err,group){
+
+		if (err) return res.status(500).send('Internal Server Error: ',err);
+		var tmpFlag = false;
+		for (var i = group.studentsList.length - 1; i >= 0; i--) {
+			if (group.studentsList[i] == req.user.id){
+				tmpFlag = true;
+				break;
+			}
+		};
+		if (tmpFlag)
+			next();
+		else
+			return res.status(403).send('User is not authorized');
+
+	})
 };

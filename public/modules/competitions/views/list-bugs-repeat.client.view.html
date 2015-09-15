@@ -1,0 +1,31 @@
+<section data-ng-controller="CompetitionsController" data-ng-if="true">
+    <section data-ng-if = "openBugs.length > 0" >
+        <div class="page-header">
+            <h1>Bugs List of {{openBugs[0].group_reported.name}}</h1>
+        </div>
+        <div class="list-bug">
+            <ul>
+                <li data-ng-repeat="bug in openBugs" class="list-bug-item">
+                    <p>Reported By: {{bug.user.displayName}}</p>
+                    <p>Group Reported : {{bug.group_reported.name}}</p>
+                    <p>Created at: <span data-ng-bind="bug.created | date:'mediumDate'"></span></p>
+                    <p>Class Name: {{bug.className}}</p>
+                    <p>Routine Name: {{bug.routineName}}</p>
+                    <p data-ng-click="showDescription = !showDescription;" style="font-weight:bold">Click to see the Bug Description</p>
+                    <p data-ng-if="showDescription">{{bug.description}}</p>
+                </li>
+            </ul>
+
+        </div>
+    </section>
+    
+    <section data-ng-if = "openBugs.length == 0" >
+        <div class="page-header">
+            <h1>No Open Bugs yet</h1>
+        </div>
+    </section>
+    
+    <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">
+    	No Open Bugs yet
+    </div>
+</section>

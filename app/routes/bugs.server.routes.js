@@ -12,12 +12,21 @@ module.exports = function(app) {
 		.get(bugs.list)
 		.post(bugs.create);
 	
-	// Bugs Routes
 	app.route('/bugs/getOpenBugs')
 		.post(bugs.getOpenBugs);
 
+	app.route('/bugs/getMyOpenBugs')
+		.post(bugs.getMyOpenBugs);
+
+	app.route('/bugs/getByGroupId')
+		.post(bugs.getByGroupId);
+
+	app.route('/bugs/getUsersRanking')
+		.post(bugs.getUsersRanking);
+
+
 	app.route('/bugs/:bugId')
 		.get(bugs.read)
-		.put(users.hasAuthorization(["admin"]), bugs.hasAuthorization, bugs.update)
+		.put(bugs.hasAuthorization, bugs.update)
 		.delete(users.hasAuthorization(["admin"]), bugs.hasAuthorization, bugs.delete);
 };

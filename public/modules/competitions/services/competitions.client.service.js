@@ -21,9 +21,29 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 					cb(bug);
 				});
 			},
+			getByGroupId: function(config,cb) {
+				$http.post('/bugs/getByGroupId',config).success(function(bugs){
+					cb(bugs);
+				});
+			},
 			getOpenBugs: function(config,cb) {
 				$http.post('/bugs/getOpenBugs',config).success(function(bugs){
 					cb(bugs);
+				});
+			},
+			getMyOpenBugs: function(config,cb) {
+				$http.post('/bugs/getMyOpenBugs',config).success(function(bugs){
+					cb(bugs);
+				});
+			},
+			changeStatus: function(config,cb) {
+				$http.put('/bugs/'+config.bugId,config).success(function(bug){
+					cb(bug);
+				});
+			},
+			getUsersRanking: function(config,cb) {
+				$http.post('/bugs/getUsersRanking',config).success(function(ranking){
+					cb(ranking);
 				});
 			}
 		}

@@ -10,21 +10,22 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-	
-	
+<!--
 	<span data-ng-click="showCreateBug=!showCreateBug">Click to Report a bug</span>
 	<div data-ng-include="'/modules/competitions/views/create-bug.client.view.html'"></div>
 
 	<span data-ng-click="searchOpenBugs()">See Open Bugs</span>
 	<div data-ng-include="'/modules/competitions/views/list-bugs.client.view.html'"></div>
+	
+	<span data-ng-click="searchMyOpenBugs()">See My Open Bugs</span>
+	<div data-ng-include="'/modules/competitions/views/list-my-open-bugs.client.view.html'"></div>
+-->
+  <tabset justified="true">
+    <tab heading="Report a Bug" data-ng-click="changeShowStatus('showCreateBug')"><div data-ng-include="'/modules/competitions/views/create-bug.client.view.html'"></div></tab>
+    <tab heading="Open For Approval" data-ng-click="searchOpenBugs()"><div data-ng-include="'/modules/competitions/views/list-bugs.client.view.html'"></div></tab>
+    <tab heading="My Open Bugs" data-ng-click="searchMyOpenBugs()"><div data-ng-include="'/modules/competitions/views/list-my-open-bugs.client.view.html'"></div></tab>
+    <tab heading="RANKING" data-ng-click="changeShowStatus('showRanking')"><div data-ng-include="'/modules/competitions/views/ranking.client.view.html'"></div></tab>
 
+  </tabset>
 
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="competition.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="competition.user.displayName"></span>
-		</em>
-	</small>
 </section>

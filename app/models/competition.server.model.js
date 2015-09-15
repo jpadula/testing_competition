@@ -50,6 +50,7 @@ var CompetitionSchema = new Schema({
 			default: 2
 		},
 	},
+	//for the future
 	bugs: [
 		{
 			type: Schema.ObjectId,
