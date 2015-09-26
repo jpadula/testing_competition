@@ -1,4 +1,4 @@
-<section data-ng-controller="GroupsController" data-ng-init="getAllStudentsWrapperList()">
+<section data-ng-controller="GroupsController">
     <div class="page-header">
         <h1>New Group</h1>
     </div>
@@ -18,6 +18,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="githubAccounts">Github Accounts</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="githubAccounts" id="githubAccounts" class="form-control" placeholder="Github Accounts (separated by comma)" required>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
                     <label class="control-label" for="studentList">Students List</label>
                     <div     
                         isteven-multi-select
@@ -30,7 +37,7 @@
                     >
                     </div>
                 </div>
-
+                -->
 
                 <div class="form-group">
                     <input type="submit" class="btn btn-default">

@@ -31,6 +31,13 @@ var GroupSchema = new Schema({
 		ref: 'User'
 	}],
 
+	//githubAccounts separated by comma
+	githubAccounts: {
+		type: String,
+		default: '',
+		trim: true
+	},
+
 	//user that created the group
 	user: {
 		type: Schema.ObjectId,

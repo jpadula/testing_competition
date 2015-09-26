@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Group = mongoose.model('Group'),
+	User = mongoose.model('User'),
 	_ = require('lodash');
 
 /**
@@ -13,21 +14,24 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	//extract the req data
-	var studentsList = req.body.studentsList;
 	var number = req.body.number;
 	var name = req.body.name;
-
+	var githubAccounts = req.body.githubAccounts;
 	//create the group to save and set the variables
 	var group = new Group();
 	group.user = req.user;
 	group.name = name;
 	group.number = number;
+	group.githubAccounts = githubAccounts;
 	
+	/*
 	//we should cast to ObjectId of Mongoose each ID in studentsList variable
+	var studentsList = req.body.studentsList;
 	group.studentsList=[];
 	for (var i = studentsList.length - 1; i >= 0; i--) {
 		group.studentsList.push(mongoose.Types.ObjectId(studentsList[i]._id));
 	};
+	*/
 	
 	group.save(function(err) {
 		if (err) {
@@ -36,6 +40,22 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			var arrayGithubAccounts = githubAccounts.split(',');
+			for (var i = arrayGithubAccounts.length - 1; i >= 0; i--) {
+				var u = new User();
+				u.displayName = arrayGithubAccounts[i];
+				u.firstName = arrayGithubAccounts[i];
+				u.lastName = arrayGithubAccounts[i];
+				u.password = arrayGithubAccounts[i];
+				u.username = arrayGithubAccounts[i];
+				u.provider = 'github';
+				u.save(function(err){
+					if (err) {
+						console.log(err);
+					}
+				});
+				
+			};
 			res.jsonp(group);
 		}
 	});

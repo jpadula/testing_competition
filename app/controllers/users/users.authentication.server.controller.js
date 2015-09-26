@@ -126,21 +126,29 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 			} else {
 				if (!user) {
 					var possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
-
+					
 					User.findUniqueUsername(possibleUsername, null, function(availableUsername) {
-						user = new User({
-							firstName: providerUserProfile.firstName,
-							lastName: providerUserProfile.lastName,
-							username: availableUsername,
-							displayName: providerUserProfile.displayName,
-							email: providerUserProfile.email,
-							provider: providerUserProfile.provider,
-							providerData: providerUserProfile.providerData
-						});
+						User.findOne({"username": 'jpadula'},function(err,usr){
+							if (usr) {
+								usr.provider = providerUserProfile.provider;
+								usr.providerData = providerUserProfile.providerData;
+							} else {
+								var usr = new User({
+									firstName: providerUserProfile.firstName,
+									lastName: providerUserProfile.lastName,
+									username: possibleUsername,
+									displayName: providerUserProfile.displayName,
+									email: providerUserProfile.email,
+									provider: providerUserProfile.provider,
+									providerData: providerUserProfile.providerData
+								});
 
-						// And save the user
-						user.save(function(err) {
-							return done(err, user);
+							}
+							// And save the user
+							usr.save(function(err) {
+								console.log("Error: ",err);
+								return done(err, usr);
+							});
 						});
 					});
 				} else {
@@ -151,6 +159,8 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 	} else {
 		// User is already logged in, join the provider data to the existing user
 		var user = req.user;
+		console.log("Req.User: ",req.user);
+		console.log("providerUserProfile: ",providerUserProfile);
 
 		// Check if user exists, is not signed in using this provider, and doesn't have that provider data already configured
 		if (user.provider !== providerUserProfile.provider && (!user.additionalProvidersData || !user.additionalProvidersData[providerUserProfile.provider])) {

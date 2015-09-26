@@ -32,7 +32,6 @@ module.exports = function() {
 				providerIdentifierField: 'id',
 				providerData: providerData
 			};
-
 			// Save the user OAuth profile
 			users.saveOAuthUserProfile(req, providerUserProfile, done);
 		}

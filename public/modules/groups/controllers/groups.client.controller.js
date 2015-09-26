@@ -36,7 +36,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 			var group = new Groups ({
 				name: this.name,
 				number:this.groupNumber,
-				studentsList: $scope.studentsSelectedList
+				githubAccounts: this.githubAccounts
+				//studentsList: $scope.studentsSelectedList
 			});
  
 			// Redirect after save
@@ -46,7 +47,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 				// Clear form fields
 				$scope.name = '';
 				$scope.groupNumber = '';
-				$scope.studentsSelectedList = [];
+				$scope.githubAccounts = '';
+				//$scope.studentsSelectedList = [];
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
