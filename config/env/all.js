@@ -15,9 +15,16 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/datatables/media/css/datatables.bootstrap.min.css',
+				'public/lib/datatables/media/css/datatables.jqueryui.min.css',
+				'public/lib/datatables/media/css/jquery.dataTables.min.css'
+
 			],
 			js: [
+				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.js',
+				'public/lib/datatables/media/js/jquery.dataTables.min.js',
+				'public/lib/angular-datatables/dist/angular-datatables.min.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 
@@ -26,7 +33,8 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/angular-permission/dist/angular-permission.js'
+				'public/lib/angular-permission/dist/angular-permission.js',
+				'public/lib/datatables/media/js/jquery.js'
 			]
 		},
 		css: [
