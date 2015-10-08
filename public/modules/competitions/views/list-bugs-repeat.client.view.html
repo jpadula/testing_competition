@@ -18,7 +18,15 @@
 
         </div>
     </section>
-    
+<table ng-table="tableParams" class="table" show-filter="true">
+    {{$data}}
+    <tr ng-repeat="user in $data">
+        <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+            {{user.name}}</td>
+        <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+            {{user.age}}</td>
+    </tr>
+</table>
     <section data-ng-if = "openBugs.length == 0" >
         <div class="page-header">
             <h1>No Open Bugs yet</h1>

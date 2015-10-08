@@ -1,8 +1,8 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups',
-	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams',
+	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups,NgTableParams) {
 		$scope.authentication = Authentication;
 		
 		//this is the model that contain the selected groups for a Competition
@@ -22,7 +22,8 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.showRanking = false;
 		$scope.showUsersRanking = false;
 
-
+		var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
+		$scope.tableParams = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
 
 		function restartShowsVariables(exception) {
 			$scope.showCreateBug = false;

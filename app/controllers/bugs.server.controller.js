@@ -236,6 +236,7 @@ exports.getMyOpenBugs = function(req, res) {
 	var competition = config.competition;
 	getGroupByUser(req,function(err,group){
 		if (!err) {
+			if (group){
 			Bug.find({status:"OPEN",group_reported:group._id,competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
 				if (err) {
 					console.log(err);
@@ -247,6 +248,12 @@ exports.getMyOpenBugs = function(req, res) {
 					res.jsonp(bugs);
 				}
 			});
+			} else {
+				console.log("Group undefined: ",group);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage("Group undefined: ",group)
+				});
+			}
 		} else {
 			console.log(err);
 			return res.status(400).send({
