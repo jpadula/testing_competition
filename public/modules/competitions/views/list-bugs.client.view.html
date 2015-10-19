@@ -1,13 +1,16 @@
 <section data-ng-controller="CompetitionsController" data-ng-if="showOpenBugs">
     <div class="page-header">
-        <h1>Bugs List</h1>
+        <h1>Select the Group</h1>
     </div>
     <div class="list-bug">
+        <!--
         <ul>
-            <li data-ng-repeat="group in allGroups" class="list-bug-item">
+            <li data-ng-repeat="group in competition.groupsList" class="list-bug-item">
                 <p data-ng-click = "getBugsPerGroup('{{group._id}}')">{{group.name}}</p>
             </li>
         </ul>
+        -->
+        <select id="groupsList"  ng-model="clickedGroup" ng-options="gl.name for gl in competition.groupsList track by gl._id"ng-change="getBugsPerGroup(clickedGroup._id)"></select>
         <div data-ng-include="'/modules/competitions/views/list-bugs-repeat.client.view.html'"></div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">

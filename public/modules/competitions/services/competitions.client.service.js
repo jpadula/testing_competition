@@ -12,6 +12,18 @@ angular.module('competitions').factory('Competitions', ['$resource',
 	}
 ]);
 
+angular.module('competitions').factory('MyCompetitions', ['$resource','$http',
+	function($resource,$http) {
+		return {
+			getMyCompetitions: function(cb){
+				$http.get('myCompetitions').success(function(competitions){
+					cb(competitions);
+				});
+			}
+		}
+	}
+]);
+
 //Bugs service used to communicate Competitions REST endpoints
 angular.module('competitions').factory('Bugs', ['$resource','$http',
 	function($resource,$http) {

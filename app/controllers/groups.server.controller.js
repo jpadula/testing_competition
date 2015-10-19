@@ -23,6 +23,10 @@ exports.create = function(req, res) {
 	group.name = name;
 	group.number = number;
 	group.githubAccounts = githubAccounts;
+	var gaccounts = githubAccounts.split(',');
+	for (var i = gaccounts.length - 1; i >= 0; i--) {
+		group.studentsArrayList.push(gaccounts[i]);
+	};
 	
 	/*
 	//we should cast to ObjectId of Mongoose each ID in studentsList variable

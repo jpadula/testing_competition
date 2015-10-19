@@ -1,9 +1,10 @@
 <section data-ng-controller="CompetitionsController" data-ng-if="showMyOpenBugs">
-    <section data-ng-if = "myOpenBugs.length > 0" >
+    <section data-ng-if = "myOpenBugs.length > 0" data-ng-init= "myOpenBugsDatatable()" >
         <div class="page-header">
-            <h1>My Open Bugs List</h1>
+            <h1>My Group Bugs</h1>
         </div>
         <div class="list-bug">
+            <!--
             <ul>
                 <li data-ng-repeat="bug in myOpenBugs" class="list-bug-item">
                     <p>Reported By: {{bug.user.displayName}}</p>
@@ -17,6 +18,35 @@
                     <p data-ng-if="showDescription">{{bug.description}}</p>
                 </li>
             </ul>
+            -->
+                <table ng-table="datatableMyOpenBugs" class="table table-bordered table-striped table-condensed" show-filter="true">
+                <tr ng-repeat="bug in $data">
+                    <td title="'Reported By'" filter="{ user: 'text'}" sortable="'user'">
+                        {{bug.user.displayName}}
+                    </td>
+                    <td title="'Created At'" filter="{ created: 'text'}" sortable="'created'">
+                        <span data-ng-bind="bug.created | date:'mediumDate'"></span>
+                    </td>
+                    <td title="'Class Name'" filter="{ className: 'text'}" sortable="'className'">
+                        {{bug.className}}
+                    </td>
+                    <td title="'Routine Name'" filter="{ routineName: 'text'}" sortable="'routineName'">
+                        {{bug.routineName}}
+                    </td>
+                    <td title="'Status'" filter="{ status: 'text'}" sortable="'status'">
+                        {{bug.status}}
+                    </td>
+
+                    <td title="'Bug Description'" filter="{ description: 'text'}" sortable="'description'">
+                        <button class="btn btn-primary" data-ng-click="showDescription = !showDescription;"> Click to see the Bug Description</button>
+                        <p>
+                        <button class="btn btn-success" data-ng-click = "changeStatus('{{bug._id}}','APPROVED')">Approve Bug</button>
+                        <button class="btn btn-danger" data-ng-click = "changeStatus('{{bug._id}}','REJECTED')">Reject Bug</button>
+                        </p>
+                        <p data-ng-if="showDescription">{{bug.description}}</p>
+                    </td>
+                </tr>
+            </table>
         </div>
     </section>
 

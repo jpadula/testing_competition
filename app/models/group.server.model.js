@@ -30,6 +30,13 @@ var GroupSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	}],
+	//group users
+	studentsArrayList: [{
+		type: String,
+		default: '',
+		trim: true
+	}],
+
 
 	//githubAccounts separated by comma
 	githubAccounts: {

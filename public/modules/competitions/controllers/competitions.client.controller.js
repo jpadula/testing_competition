@@ -13,6 +13,8 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.openBugs;
 		$scope.myOpenBugs;
 
+		//ranking types
+		$scope.rankingTypes = [{name:'Users Ranking'},{name:'Groups Ranking'}];
 		
 		//boolean variables to hide/show menues
 		$scope.showCreateBug = true;
@@ -21,9 +23,37 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.showListBugsPerGroup = false;
 		$scope.showRanking = false;
 		$scope.showUsersRanking = false;
+		$scope.showGroupsRanking = false;
 
-		var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
-		$scope.tableParams = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
+		
+		$scope.showRanking = function(ranking) {
+			console.log(ranking);
+			if (ranking.name == "Users Ranking"){
+				//$scope.showUsersRanking = true;
+				$scope.getUsersRanking();
+			} else if (ranking.name == "Groups Ranking") {
+				//$scope.getUsersRanking();
+			}
+		};
+
+
+		$scope.usersRankingDatatable = function() {
+			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
+			var data = $scope.usersRanking;
+			$scope.datatableUsersRanking = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
+		};
+
+		$scope.bugsRepeatListDatatable = function() {
+			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
+			var data = $scope.openBugs;
+			$scope.datatableListBugsRepeat = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
+		};
+		$scope.myOpenBugsDatatable = function() {
+			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
+			var data = $scope.myOpenBugs;
+			$scope.datatableMyOpenBugs = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
+		};
+
 
 		function restartShowsVariables(exception) {
 			$scope.showCreateBug = false;
@@ -32,7 +62,9 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			$scope.showListBugsPerGroup = false;
 			$scope.showRanking = false;
 			$scope.showUsersRanking = false;
-		}
+			$scope.showGroupsRanking = false;
+
+		};
 
 		$scope.changeStatus =function(bugId,newStatus) {
 			var config = {
@@ -43,7 +75,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				console.log("Status changed");
 				$scope.searchMyOpenBugs();
 			});
-		}
+		};
 
 		$scope.getUsersRanking = function() {
 			var config = {
@@ -56,9 +88,26 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				restartShowsVariables();
 				$scope.showUsersRanking = !showUsersRanking;
 			});
-		}
+		};
+
+		$scope.getGroupsRanking = function() {
+			/*var config = {
+				competition:$scope.competition._id
+			};
+			
+			Bugs.getGroupsRanking(config,function(ranking){
+				$scope.groupsRanking = ranking;
+				var showGroupsRanking = $scope.showGroupsRanking;
+				restartShowsVariables();
+				$scope.showGroupsRanking = !showGroupsRanking;
+			});*/
+			restartShowsVariables();
+			$scope.showGroupsRanking = !showGroupsRanking;
+		};
+
 
 		$scope.getBugsPerGroup = function(group) {
+			console.log(group)
 			var showListBugsPerGroup = $scope.showListBugsPerGroup;
 			restartShowsVariables();
 			$scope.showListBugsPerGroup = !showListBugsPerGroup
@@ -86,7 +135,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			Bugs.reportBug(bug,function(bug){
 				console.log("Se guardo: ",bug);
 			});
-		}
+		};
 
 		$scope.searchMyOpenBugs = function() {
 			var showMyOpenBugs = $scope.showMyOpenBugs;
@@ -113,9 +162,10 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			var variable = $scope[vble];
 			restartShowsVariables();
 			$scope[vble] = !variable;
-		}
+		};
 
 		$scope.getGroups = function() {
+			console.log($scope.competition);
 			Groups.query(function(groups){
 				$scope.allGroups = groups;
 			});
@@ -152,7 +202,8 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 					FIRST_BUG_IN_CLASS_C: this.FIRST_BUG_IN_CLASS_C,
 					NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R: this.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R,
 					NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R: this.NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R,
-					PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG: this.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG
+					PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG: this.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG,
+					PERSON_WHO_SUBMITTED_A_REJECTED_BUG: this.PERSON_WHO_SUBMITTED_A_REJECTED_BUG	
 				}
 			});
 

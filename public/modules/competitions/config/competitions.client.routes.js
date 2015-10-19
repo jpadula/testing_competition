@@ -44,6 +44,16 @@ angular.module('competitions').config(['$stateProvider',
           			redirectTo: 'home'
         		}
       		}
+		}).
+		state('listMyCompetitions', {
+			url: '/my_competitions',
+			templateUrl: 'modules/competitions/views/my-competitions-list.view.html',
+			data: {
+        		permissions: {
+          			only: ['user'],
+          			redirectTo: 'home'
+        		}
+      		}
 		});
 	}
 ]);

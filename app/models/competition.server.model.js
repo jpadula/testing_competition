@@ -49,6 +49,10 @@ var CompetitionSchema = new Schema({
 			type:Number,
 			default: 2
 		},
+		PERSON_WHO_SUBMITTED_A_REJECTED_BUG: {
+			type:Number,
+			default: 0
+		}
 	},
 	//for the future
 	bugs: [

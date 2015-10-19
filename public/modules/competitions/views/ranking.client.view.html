@@ -1,6 +1,6 @@
 <section data-ng-controller="CompetitionsController" data-ng-if="showRanking">
     <div class="page-header">
-        <h1>RANKING</h1>
+        <h1>Ranking</h1>
     </div>
     <div class="list-bug">
         <ul>
@@ -8,28 +8,33 @@
                 <p data-ng-click = "getUsersRanking()">Users Ranking</p>
             </li>
         </ul>
+
+        <select id="ranking" ng-model="rankingType" ng-options="rt.name for rt in rankingTypes" ng-change='showRanking(rankingType)'></select>
         <!--
             <div data-ng-include="'/modules/competitions/views/list-bugs-repeat.client.view.html'"></div>
         -->
-    <table class="table" data-ng-if="showUsersRanking">
-        <thead>
-          <tr>
-            <th>User Name</th>
-            <th>Total Reported Bugs</th>
-            <th>Total points for reported bugs</th>
-            <th>Total points for approved bugs</th>
-            <th>Total SUM</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-ng-repeat="user in usersRanking">
-            <td>{{user.user}}</td>
-            <td>{{user.bugsReported}}</td>
-            <td>{{user.totalReportedBugPoints}}</td>
-            <td>{{user.totalExtraPoints}}</td>
-            <td>{{user.totalPoints}}</td>
-          </tr>
-        </tbody>
-    </table>
+        <section data-ng-if='showUsersRanking'>
+            <div data-ng-init='usersRankingDatatable()'>
+                <table ng-table="datatableUsersRanking" class="table table-bordered table-striped table-condensed" show-filter="true">
+                <tr ng-repeat="user in $data">
+                    <td title="'User Name'" filter="{ user: 'text'}" sortable="'user'">
+                        {{user.user}}
+                    </td>
+                    <td title="'Total Bugs Reported'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
+                        {{user.bugsReported}}
+                    </td>
+                    <td title="'Total points for reported bugs'" filter="{ totalReportedBugPoints: 'text'}" sortable="'totalReportedBugPoints'">
+                        {{user.totalReportedBugPoints}}
+                    </td>
+                    <td title="'Total points for approved/rejected bugs'" filter="{ totalExtraPoints: 'text'}" sortable="'totalExtraPoints'">
+                        {{user.totalExtraPoints}}
+                    </td>
+                    <td title="'Total SUM'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">
+                        {{user.totalPoints}}
+                    </td>
+                </tr>
+            </div>
+        </section>
+
     </div>
 </section>

@@ -3,6 +3,8 @@
 module.exports = function(app) {
 	var users = require('../../app/controllers/users.server.controller');
 	var competitions = require('../../app/controllers/competitions.server.controller');
+	var myCompetitions = require('../../app/controllers/myCompetitions.server.controller');
+
 
 	// Competitions Routes
 	app.route('/competitions')
@@ -16,4 +18,9 @@ module.exports = function(app) {
 
 	// Finish by binding the Competition middleware
 	app.param('competitionId', competitions.competitionByIdOrName);
+
+	// MyCompetitions Routes
+	app.route('/myCompetitions')
+		.get(myCompetitions.list)
+
 };

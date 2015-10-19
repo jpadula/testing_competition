@@ -14,8 +14,9 @@ var mongoose = require('mongoose'),
 
 
 var getGroupByUser = function(req,cb) {
-	var userID = [req.user._id];
-	Group.find({studentsList: {$in: userID}}).exec(function (err,group) {
+	//var userID = [req.user._id];
+	var username = [req.user.username];
+	Group.find({studentsArrayList: {$in: username}}).exec(function (err,group) {
 		if (!err) {
 			if (!group){
 				cb("The user has not in a valid group",null);
@@ -234,10 +235,12 @@ exports.getByGroupId = function(req, res) {
 exports.getMyOpenBugs = function(req, res) {
 	var config = req.body;
 	var competition = config.competition;
+
 	getGroupByUser(req,function(err,group){
+		console.log("Group:",group);
 		if (!err) {
 			if (group){
-			Bug.find({status:"OPEN",group_reported:group._id,competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
+			Bug.find({group_reported:group._id,competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
 				if (err) {
 					console.log(err);
 					return res.status(400).send({
@@ -280,11 +283,10 @@ exports.bugByID = function(req, res, next, id) {
  */
 exports.hasAuthorization = function(req, res, next) {
 	Group.findOne({"_id":req.bug.group_reported},function(err,group){
-
 		if (err) return res.status(500).send('Internal Server Error: ',err);
 		var tmpFlag = false;
-		for (var i = group.studentsList.length - 1; i >= 0; i--) {
-			if (group.studentsList[i] == req.user.id){
+		for (var i = group.studentsArrayList.length - 1; i >= 0; i--) {
+			if (group.studentsArrayList[i] == req.user.username){
 				tmpFlag = true;
 				break;
 			}

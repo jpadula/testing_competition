@@ -147,6 +147,10 @@ var assignExtraApprovedPoints = function(self,next) {
 		if (self.status == "APPROVED") {
 			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG;
 		}
+		if (self.status == "REJECTED") {
+			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_A_REJECTED_BUG;
+		}
+
 		next();
 	});
 
