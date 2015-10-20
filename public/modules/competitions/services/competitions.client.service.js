@@ -57,7 +57,13 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 				$http.post('/bugs/getUsersRanking',config).success(function(ranking){
 					cb(ranking);
 				});
+			},
+			getGroupsRanking: function(config,cb) {
+				$http.post('/bugs/getGroupsRanking',config).success(function(ranking){
+					cb(ranking);
+				});
 			}
+
 		}
 	}
 ]);

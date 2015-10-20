@@ -1,0 +1,23 @@
+<h1>Groups Ranking</h1>
+<section>
+    <div data-ng-init='groupsRankingDatatable()'>
+        <table ng-table="datatableGroupsRanking" class="table table-bordered table-striped table-condensed" show-filter="true" >
+        <tr ng-repeat="group in $data">
+            <td title="'Group Name'" filter="{ group: 'text'}" sortable="'group'">
+                {{group.group}}
+            </td>
+            <td title="'Total Bugs Reported'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
+                {{group.bugsReported}}
+            </td>
+            <td title="'Total points for reported bugs'" filter="{ totalReportedBugPoints: 'text'}" sortable="'totalReportedBugPoints'">
+                {{group.totalReportedBugPoints}}
+            </td>
+            <td title="'Total points for approved/rejected bugs'" filter="{ totalExtraPoints: 'text'}" sortable="'totalExtraPoints'">
+                {{group.totalExtraPoints}}
+            </td>
+            <td title="'Total SUM'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">
+                {{group.totalPoints}}
+            </td>
+        </tr>
+    </div>
+</section>

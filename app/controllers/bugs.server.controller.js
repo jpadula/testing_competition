@@ -118,15 +118,13 @@ exports.list = function(req, res) {
 		}
 	});
 };
-
-var getUsersRanking = function(competition,cb) {
-	console.log(competition);
+var getGroupsRanking = function(competition,cb) {
     Bug.aggregate([
         { $match: {
             competition: mongoose.Types.ObjectId(competition)
         }},
         { $group: {
-            _id:"$user",
+            _id:"$group",
             bugsReported: { $sum: 1 },
             totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
         	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
@@ -144,18 +142,75 @@ var getUsersRanking = function(competition,cb) {
 		var indexes = [];
         for (var i = result.length - 1; i >= 0; i--) {
         	var deferred = Q.defer();
+        	indexes.push({"groupID":result[i]._id,"index":i});
+
+        	promises.push(Group.findOne({"_id":result[i]._id}).exec(function(err,group){
+        		if (group != null){
+	        		var index;
+	        		for (var i = indexes.length - 1; i >= 0; i--) {
+	        			if (group._id.equals(indexes[i].groupID)) {
+	        				index = indexes[i].index;
+	        				break;
+	        			}
+	        		};
+        		}
+
+        		if (!err && group != null) {
+        			result[index].group=group.name;
+        			deferred.resolve;
+        		} else {
+        			deferred.reject("Rejected");
+        		}
+        		
+        	}));
+        	
+        };
+        Q.all(promises).then(function(groups){
+        	cb(result);
+		});
+    });
+}
+
+var getUsersRanking = function(competition,cb) {
+    Bug.aggregate([
+        { $match: {
+            competition: mongoose.Types.ObjectId(competition)
+        }},
+        { $group: {
+            _id:"$user",
+            bugsReported: { $sum: 1 },
+            totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
+        	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
+        	totalReportedBugPoints: { $sum: "$points" }
+        	/*"names": {
+            	"$push": { "name": "$group_reported"}
+          	}*/
+        }},
+        {$sort:{
+        	"totalPoints": -1
+        }}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        var promises = [];
+		var indexes = [];
+        for (var i = result.length - 1; i >= 0; i--) {
+        	var deferred = Q.defer();
         	indexes.push({"userID":result[i]._id,"index":i});
-
         	promises.push(User.findOne({"_id":result[i]._id}).exec(function(err,user){
-        		var index;
-        		for (var i = indexes.length - 1; i >= 0; i--) {
-        			if (user._id.equals(indexes[i].userID)) {
-        				index = indexes[i].index;
-        				break;
-        			}
-        		};
+        		if (user != null){
+	        		var index;
+	        		for (var i = indexes.length - 1; i >= 0; i--) {
+	        			if (user._id.equals(indexes[i].userID)) {
+	        				index = indexes[i].index;
+	        				break;
+	        			}
+	        		};
+        		}
 
-        		if (!err) {
+        		if (!err && user != null) {
         			result[index].user=user.displayName;
         			deferred.resolve;
         		} else {
@@ -166,6 +221,7 @@ var getUsersRanking = function(competition,cb) {
         	
         };
         Q.all(promises).then(function(users){
+        	console.log("RESULT:",result);
         	cb(result);
 		});
     });
@@ -177,6 +233,15 @@ exports.getUsersRanking = function(req,res) {
 	var config = req.body;
 	var competition = config.competition;
 	getUsersRanking(competition,function(result){
+		console.log("RESULTADO: ",result);
+		res.jsonp(result);
+	})
+	//res.jsonp(getUsersRanking(competition));
+}
+exports.getGroupsRanking = function(req,res) {
+	var config = req.body;
+	var competition = config.competition;
+	getGroupsRanking(competition,function(result){
 		console.log("RESULTADO: ",result);
 		res.jsonp(result);
 	})

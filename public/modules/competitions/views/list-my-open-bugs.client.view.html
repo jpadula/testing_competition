@@ -40,7 +40,7 @@
                     <td title="'Bug Description'" filter="{ description: 'text'}" sortable="'description'">
                         <button class="btn btn-primary" data-ng-click="showDescription = !showDescription;"> Click to see the Bug Description</button>
                         <p>
-                        <button class="btn btn-success" data-ng-click = "changeStatus('{{bug._id}}','APPROVED')">Approve Bug</button>
+                        <button class="btn btn-success" data-ng-click = "changeStatus('{{bug._id}}','APPROVED');">Approve Bug</button>
                         <button class="btn btn-danger" data-ng-click = "changeStatus('{{bug._id}}','REJECTED')">Reject Bug</button>
                         </p>
                         <p data-ng-if="showDescription">{{bug.description}}</p>
