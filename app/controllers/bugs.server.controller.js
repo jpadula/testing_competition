@@ -221,7 +221,6 @@ var getUsersRanking = function(competition,cb) {
         	
         };
         Q.all(promises).then(function(users){
-        	console.log("RESULT:",result);
         	cb(result);
 		});
     });
