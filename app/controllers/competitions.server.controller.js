@@ -21,7 +21,7 @@ exports.create = function(req, res) {
 	competition.user = req.user;
 	competition.name = name;
 	competition.POINTS = POINTS;
-	//we should cast to ObjectId of Mongoose each ID in studentsList variable
+	//we should cast to ObjectId of Mongoose each ID in groupsList variable
 	competition.groupsList=[];
 	for (var i = groupsList.length - 1; i >= 0; i--) {
 		competition.groupsList.push(mongoose.Types.ObjectId(groupsList[i]._id));

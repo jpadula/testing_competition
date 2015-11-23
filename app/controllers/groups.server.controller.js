@@ -77,9 +77,16 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
 	var group = req.group ;
-
 	group = _.extend(group , req.body);
+	
+	var githubAccounts = group.githubAccounts;
+	group.studentsArrayList = [];
 
+	var gaccounts = githubAccounts.split(',');
+	for (var i = gaccounts.length - 1; i >= 0; i--) {
+		group.studentsArrayList.push(gaccounts[i]);
+	};
+	
 	group.save(function(err) {
 		if (err) {
 			return res.status(400).send({

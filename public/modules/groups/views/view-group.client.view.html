@@ -10,12 +10,14 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
+	<h3>Students List</h3>
+	<ul>
+		<li data-ng-repeat='student in group.studentsArrayList'>{{student}}</li>
+	</ul>
 	<small>
 		<em class="text-muted">
-			Posted on
+			Created at
 			<span data-ng-bind="group.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="group.user.displayName"></span>
 		</em>
 	</small>
 </section>
