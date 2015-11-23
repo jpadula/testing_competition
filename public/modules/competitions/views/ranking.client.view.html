@@ -10,9 +10,15 @@
             <li class="list-bug-item">
                 <p data-ng-click = "showRankingType('Groups Ranking')">Groups Ranking</p>
             </li>
+            <li class="list-bug-item">
+                <p data-ng-click = "showRankingType('Groups With More Bugs Ranking')">Groups With More Bugs Ranking</p>
+            </li>
+
         </ul>
-        <div data-ng-if='showUsersRanking && !showGroupsRanking' data-ng-include="'/modules/competitions/views/datatable-users-ranking.client.view.html'"></div>
-        <div data-ng-if='!showUsersRanking && showGroupsRanking' data-ng-include="'/modules/competitions/views/datatable-groups-ranking.client.view.html'"></div>
+        <div data-ng-if='showUsersRanking && !showGroupsRanking && !showGroupsWithMoreBugsRanking' data-ng-include="'/modules/competitions/views/datatable-users-ranking.client.view.html'"></div>
+        <div data-ng-if='!showUsersRanking && !showGroupsWithMoreBugsRanking && showGroupsRanking' data-ng-include="'/modules/competitions/views/datatable-groups-ranking.client.view.html'"></div>
+        <div data-ng-if='showGroupsWithMoreBugsRanking && !showUsersRanking && !showGroupsRanking' data-ng-include="'/modules/competitions/views/datatable-groups-with-more-bugs-ranking.client.view.html'"></div>
+
 
 
         <!--

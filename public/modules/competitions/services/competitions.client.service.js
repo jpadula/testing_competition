@@ -62,8 +62,12 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 				$http.post('/bugs/getGroupsRanking',config).success(function(ranking){
 					cb(ranking);
 				});
+			},
+			getGroupsWithMoreBugsRanking: function(config,cb) {
+				$http.post('/bugs/getGroupsWithMoreBugsRanking',config).success(function(ranking){
+					cb(ranking);
+				});
 			}
-
 		}
 	}
 ]);

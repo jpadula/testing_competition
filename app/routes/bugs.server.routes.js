@@ -26,6 +26,10 @@ module.exports = function(app) {
 		
 	app.route('/bugs/getGroupsRanking')
 		.post(bugs.getGroupsRanking);
+	
+	app.route('/bugs/getGroupsWithMoreBugsRanking')
+		.post(bugs.getGroupsWithMoreBugsRanking);
+
 
 
 	app.route('/bugs/:bugId')

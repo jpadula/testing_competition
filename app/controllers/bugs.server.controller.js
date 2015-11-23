@@ -118,6 +118,77 @@ exports.list = function(req, res) {
 		}
 	});
 };
+
+var getGroupsWithMoreBugsRanking = function(competition,cb) {
+    Bug.aggregate([
+        { $match: {
+            competition: mongoose.Types.ObjectId(competition)
+        }},
+        { $group: {
+            _id:"$group_reported",
+            bugsReported: { $sum: 1 },
+            totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
+        	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
+        	totalReportedBugPoints: { $sum: "$points" },
+        	totalPointsArray: {$push:"$extra_points_for_approved"}
+        }},
+        {$sort:{
+        	"totalPoints": -1
+        }}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            return;
+        };
+        for (var j = result.length - 1; j >= 0; j--) {
+        	result[j].QTYapproved = 0;
+        	result[j].QTYrejected = 0;
+        	result[j].QTYOpen = 0;
+
+        	for (var k = result[j].totalPointsArray.length - 1; k >= 0; k--) {
+        			if (result[j].totalPointsArray[k] > 0)
+        				result[j].QTYapproved++;
+
+        			if (result[j].totalPointsArray[k] < 0)
+        				result[j].QTYrejected++;
+
+        			if (result[j].totalPointsArray[k] == 0)
+        				result[j].QTYOpen++;
+        		};
+        };
+        var promises = [];
+		var indexes = [];
+        for (var i = result.length - 1; i >= 0; i--) {
+        	var deferred = Q.defer();
+        	indexes.push({"groupID":result[i]._id,"index":i});
+
+        	promises.push(Group.findOne({"_id":result[i]._id}).exec(function(err,group){
+        		if (group != null){
+	        		var index;
+	        		for (var i = indexes.length - 1; i >= 0; i--) {
+	        			if (group._id.equals(indexes[i].groupID)) {
+	        				index = indexes[i].index;
+	        				break;
+	        			}
+	        		};
+        		}
+
+        		if (!err && group != null) {
+        			result[index].group=group.name;
+        			deferred.resolve;
+        		} else {
+        			deferred.reject("Rejected");
+        		}
+        		
+        	}));
+        	
+        };
+        Q.all(promises).then(function(groups){
+        	cb(result);
+		});
+    });
+}
+
 var getGroupsRanking = function(competition,cb) {
     Bug.aggregate([
         { $match: {
@@ -246,6 +317,15 @@ exports.getGroupsRanking = function(req,res) {
 	})
 	//res.jsonp(getUsersRanking(competition));
 }
+exports.getGroupsWithMoreBugsRanking = function(req,res) {
+	var config = req.body;
+	var competition = config.competition;
+	getGroupsWithMoreBugsRanking(competition,function(result){
+		console.log("RESULTADO: ",result);
+		res.jsonp(result);
+	})
+	//res.jsonp(getUsersRanking(competition));
+}
 
 /**
  * List of Open Bugs
@@ -281,7 +361,7 @@ exports.getByGroupId = function(req, res) {
 	var config = req.body;
 	var competition = config.competition;
 	var groupId = config.groupId;
-	Bug.find({status:"OPEN",competition:competition,group_reported:groupId}).sort('-created').populate('user', 'displayName').populate('group_reported','name').exec(function(err, bugs) {
+	Bug.find({competition:competition,group_reported:groupId}).sort('-created').populate('user', 'displayName').populate('group_reported','name').exec(function(err, bugs) {
 		if (err) {
 			console.log(err);
 			return res.status(400).send({
