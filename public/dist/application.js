@@ -92,12 +92,12 @@ angular.module('competitions').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
 		Menus.addMenuItem('topbar', 'Competitions', 'competitions', 'dropdown', '/competitions(/create)?',true,["admin"]);
-		Menus.addSubMenuItem('topbar', 'competitions', 'List Competitions', 'competitions');
+		Menus.addSubMenuItem('topbar', 'competitions', 'Show Competitions', 'competitions');
 		Menus.addSubMenuItem('topbar', 'competitions', 'New Competition', 'competitions/create');
 		
 		// My Competitions for User
-		Menus.addMenuItem('topbar', 'My Competitions', 'my_competitions', 'dropdown', '/competitions(/create)?',true,["user"]);
-		Menus.addSubMenuItem('topbar', 'my_competitions', 'See Competitions List', 'my_competitions');
+		Menus.addMenuItem('topbar', 'My Competitions', 'my_competitions', 'item', '/competitions(/create)?',true,["user"]);
+		//Menus.addSubMenuItem('topbar', 'my_competitions', 'See Competitions List', 'my_competitions');
 
 	}
 ]);
@@ -392,7 +392,14 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				}
 			});
 		};
-		
+
+		//default values
+		$scope.FIRST_BUG_IN_CLASS_C = 10;
+		$scope.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R = 5;
+		$scope.NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R = 3;
+		$scope.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG = 2;
+		$scope.PERSON_WHO_SUBMITTED_A_REJECTED_BUG = -10;
+
 		// Create new Competition
 		$scope.create = function() {
 			// Create new Competition object
@@ -1902,10 +1909,12 @@ angular.module('core').service('Menus', [
 // Configuring the Countries module
 angular.module('countries').run(['Menus',
 	function(Menus) {
+		/*
 		// Set top bar menu items
 		Menus.addMenuItem('topbar', 'Countries', 'countries', 'dropdown', '/countries(/create)?',true,["admin"]);
 		Menus.addSubMenuItem('topbar', 'countries', 'List Countries', 'countries');
 		Menus.addSubMenuItem('topbar', 'countries', 'New Country', 'countries/create');
+		*/
 	}
 ]);
 'use strict';
@@ -2043,7 +2052,7 @@ angular.module('groups').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
 		Menus.addMenuItem('topbar', 'Groups', 'groups', 'dropdown', '/groups(/create)?',true,["admin"]);
-		Menus.addSubMenuItem('topbar', 'groups', 'List Groups', 'groups');
+		Menus.addSubMenuItem('topbar', 'groups', 'Show Groups', 'groups');
 		Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');
 	}
 ]);
