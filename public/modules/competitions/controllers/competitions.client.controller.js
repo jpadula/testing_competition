@@ -285,7 +285,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		// Update existing Competition
 		$scope.update = function() {
 			var competition = $scope.competition;
-
+			competition.groupsList=$scope.groupsSelectedList,
 			competition.$update(function() {
 				$location.path('competitions/' + competition._id);
 			}, function(errorResponse) {

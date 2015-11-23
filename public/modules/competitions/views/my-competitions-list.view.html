@@ -2,7 +2,7 @@
     <div class="page-header">
         <h1>Competitions</h1>
     </div>
-    <div class="list-group">
+    <div class="list-group" data-ng-if="competitions.length>0">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -21,6 +21,9 @@
             </tr>
             </tbody>   
         </table>
+    </div>
+    <div data-ng-if = "competitions.length==0">
+        You are not in any Competitions yet
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!competitions.$resolved || competitions.length">
     	You are not in any Competitions yet
