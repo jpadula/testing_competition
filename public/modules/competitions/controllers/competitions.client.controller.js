@@ -230,7 +230,14 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				}
 			});
 		};
-		
+
+		//default values
+		$scope.FIRST_BUG_IN_CLASS_C = 10;
+		$scope.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R = 5;
+		$scope.NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R = 3;
+		$scope.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG = 2;
+		$scope.PERSON_WHO_SUBMITTED_A_REJECTED_BUG = -10;
+
 		// Create new Competition
 		$scope.create = function() {
 			// Create new Competition object
