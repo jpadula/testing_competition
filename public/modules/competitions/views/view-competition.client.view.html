@@ -6,7 +6,7 @@
 		<a class="btn btn-primary" href="/#!/competitions/{{competition._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
+		<a class="btn btn-primary" ng-confirm-click='Are you sure?' confirmed-click="remove();">
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
