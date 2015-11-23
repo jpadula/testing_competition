@@ -1741,7 +1741,20 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
 	$templateCache.put( 'isteven-multi-select.htm' , template );
 }]); 
 'use strict';
-
+angular.module('core').directive('ngConfirmClick', [
+	function(){
+	    return {
+	        link: function (scope, element, attr) {
+	            var msg = attr.ngConfirmClick || "Are you sure?";
+	            var clickAction = attr.confirmedClick;
+	            element.bind('click',function (event) {
+	                if ( window.confirm(msg) ) {
+	                    scope.$eval(clickAction)
+	                }
+	            });
+	        }
+	    };
+ }]);
 //Menu service used for managing  menus
 angular.module('core').service('Menus', [
 
