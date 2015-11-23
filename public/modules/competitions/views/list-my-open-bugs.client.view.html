@@ -55,6 +55,12 @@
             <h1>No Open Bugs yet</h1>
         </div>
     </section>
+    <section data-ng-if = "!myOpenBugs" >
+        <div class="page-header">
+            <h1>No Open Bugs yet</h1>
+        </div>
+    </section>
+
 
     <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">
     	No Open Bugs yet

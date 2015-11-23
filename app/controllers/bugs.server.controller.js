@@ -398,7 +398,7 @@ exports.getMyOpenBugs = function(req, res) {
 			} else {
 				console.log("Group undefined: ",group);
 				return res.status(400).send({
-					message: errorHandler.getErrorMessage("Group undefined: ",group)
+					message: "You are not registered in any group"
 				});
 			}
 		} else {

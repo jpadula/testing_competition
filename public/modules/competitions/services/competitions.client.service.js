@@ -46,6 +46,8 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 			getMyOpenBugs: function(config,cb) {
 				$http.post('/bugs/getMyOpenBugs',config).success(function(bugs){
 					cb(bugs);
+				}).error(function(error){
+					console.log("Error: ",error);
 				});
 			},
 			changeStatus: function(config,cb) {
