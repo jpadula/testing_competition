@@ -1,44 +1,50 @@
 <section data-ng-controller="CompetitionsController" data-ng-if="showCreateBug">
-    <div class="page-header">
-        <h1>Report a BUG</h1>
-    </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="reportBug()">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="className">Class Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="className" id="className" class="form-control" placeholder="Class Name" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="routineName">Routine Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="routineName" id="routineName" class="form-control" placeholder="Routine Name" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="description">Description</label>
-                    <div class="controls">
-                        <textarea class="form-control" data-ng-model="description" required ></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="description">Group</label>
-                    <div class="controls">
-                        <select name="group" id="group"
-                              ng-options="option.name for option in competition.groupsList track by option._id"
-                              ng-model="group"></select>
-                    </div>
-                </div>
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">Report a bug</h3>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal" data-ng-submit="reportBug()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="className">Class Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="className" id="className" class="form-control" placeholder="Class Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="routineName">Routine Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="routineName" id="routineName" class="form-control" placeholder="Routine Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description">Description</label>
+                            <div class="controls">
+                                <textarea class="form-control" data-ng-model="description" required ></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description">Group</label>
+                            <div class="controls">
+                                <select name="group" id="group"
+                                      ng-options="option.name for option in competition.groupsList track by option._id"
+                                      ng-model="group"></select>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Submit" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
+                        <div class="form-group">
+                            <input type="submit" value="Submit" class="btn btn-success">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
 </section>

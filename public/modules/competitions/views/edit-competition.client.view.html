@@ -1,54 +1,60 @@
 <section data-ng-controller="CompetitionsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Edit Competition</h1>
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">Edit Competition</h3>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal" data-ng-submit="update()" novalidate>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="competition.name" id="name" class="form-control" placeholder="Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="FIRST_BUG_IN_CLASS_C">FIRST_BUG_IN_CLASS_C</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="competition.POINTS.FIRST_BUG_IN_CLASS_C" id="FIRST_BUG_IN_CLASS_C" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R">NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R">NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG">PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="competition.POINTS.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" id="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="PERSON_WHO_SUBMITTED_A_REJECTED_BUG">PERSON_WHO_SUBMITTED_A_REJECTED_BUG</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="competition.POINTS.PERSON_WHO_SUBMITTED_A_REJECTED_BUG" id="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" value="Update" class="btn btn-success">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="competition.name" id="name" class="form-control" placeholder="Name" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="FIRST_BUG_IN_CLASS_C">FIRST_BUG_IN_CLASS_C</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="competition.POINTS.FIRST_BUG_IN_CLASS_C" id="FIRST_BUG_IN_CLASS_C" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R">NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R">NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG">PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="competition.POINTS.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" id="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="PERSON_WHO_SUBMITTED_A_REJECTED_BUG">PERSON_WHO_SUBMITTED_A_REJECTED_BUG</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="competition.POINTS.PERSON_WHO_SUBMITTED_A_REJECTED_BUG" id="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" class="form-control" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-success">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
     </div>
 </section>

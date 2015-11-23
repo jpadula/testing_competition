@@ -1,51 +1,57 @@
 <section data-ng-controller="GroupsController">
-    <div class="page-header">
-        <h1>New Group</h1>
-    </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="groupNumber">Group Number</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="groupNumber" id="groupNumber" class="form-control" placeholder="Group Number" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="githubAccounts">Github Accounts</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="githubAccounts" id="githubAccounts" class="form-control" placeholder="Github Accounts (separated by comma)" required>
-                    </div>
-                </div>
-                <!--
-                <div class="form-group">
-                    <label class="control-label" for="studentList">Students List</label>
-                    <div     
-                        isteven-multi-select
-                        input-model="wrapperStudentsList"
-                        output-model="studentsSelectedList"
-                        button-label="displayName"
-                        item-label=" displayName email"
-                        tick-property="ticked",
-                        output-properties="_id"
-                    >
-                    </div>
-                </div>
-                -->
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">Create Group</h3>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal" data-ng-submit="create()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="groupNumber">Group Number</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="groupNumber" id="groupNumber" class="form-control" placeholder="Group Number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="githubAccounts">Github Accounts</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="githubAccounts" id="githubAccounts" class="form-control" placeholder="Github Accounts (separated by comma)" required>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="form-group">
+                            <label class="control-label" for="studentList">Students List</label>
+                            <div     
+                                isteven-multi-select
+                                input-model="wrapperStudentsList"
+                                output-model="studentsSelectedList"
+                                button-label="displayName"
+                                item-label=" displayName email"
+                                tick-property="ticked",
+                                output-properties="_id"
+                            >
+                            </div>
+                        </div>
+                        -->
 
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-success">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
 </section>

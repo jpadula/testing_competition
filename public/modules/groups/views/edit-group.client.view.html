@@ -1,50 +1,56 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Edit Group</h1>
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">Edit Group</h3>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal" data-ng-submit="update()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="group.name" id="name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="groupNumber">Group Number</label>
+                            <div class="controls">
+                                <input type="number" data-ng-model="group.number" id="number" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="githubAccounts">Github Accounts</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="group.githubAccounts" id="githubAccounts" class="form-control" placeholder="Github Accounts (separated by comma)" required>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="form-group">
+                            <label class="control-label" for="studentList">Students List</label>
+                            <div     
+                                isteven-multi-select
+                                input-model="wrapperStudentsList"
+                                output-model="studentsSelectedList"
+                                button-label="displayName"
+                                item-label=" displayName email"
+                                tick-property="selected"
+                                output-properties="_id"
+                            >
+                            </div>
+                        </div>
+                        -->
+                        <div class="form-group">
+                            <input type="submit" value="Update" class="btn btn-success">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="group.name" id="name" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="groupNumber">Group Number</label>
-                    <div class="controls">
-                        <input type="number" data-ng-model="group.number" id="number" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="githubAccounts">Github Accounts</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="group.githubAccounts" id="githubAccounts" class="form-control" placeholder="Github Accounts (separated by comma)" required>
-                    </div>
-                </div>
-                <!--
-                <div class="form-group">
-                    <label class="control-label" for="studentList">Students List</label>
-                    <div     
-                        isteven-multi-select
-                        input-model="wrapperStudentsList"
-                        output-model="studentsSelectedList"
-                        button-label="displayName"
-                        item-label=" displayName email"
-                        tick-property="selected"
-                        output-properties="_id"
-                    >
-                    </div>
-                </div>
-                -->
-                <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
     </div>
 </section>

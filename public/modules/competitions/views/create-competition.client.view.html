@@ -1,74 +1,80 @@
 <section data-ng-controller="CompetitionsController" data-ng-init="getAllGroupsWrapperList()">
-    <div class="page-header">
-        <h1>New Competition</h1>
-    </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="name" id="name" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="FIRST_BUG_IN_CLASS_C">First Bug in the Class</label>
-                    <p>Number of points assigned when the bug is first bugs reported in a class C.</p>
-                    <div class="controls">
-                        <input type="number" data-ng-model="FIRST_BUG_IN_CLASS_C" id="FIRST_BUG_IN_CLASS_C" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R">First Bug in the Routine</label>
-                    <p>Number of points assigned when the bug is not first bugs reported in a class C, but it is the first bug in a routine R.</p>
-                    <div class="controls">
-                        <input type="number" data-ng-model="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R">Repeated Bug</label>
-                    <p>Number of points assigned when the bug is neither the first in a class C nor in a routine R.</p>
-                    <div class="controls">
-                        <input type="number" data-ng-model="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG">Person who submitted an accepted bug</label>
-                    <p>Number of extra points assigned if the bug is accepted by the authors.</p>
-                    <div class="controls">
-                        <input type="number" data-ng-model="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" id="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="PERSON_WHO_SUBMITTED_A_REJECTED_BUG">Person who submitted a Rejected Bug</label>
-                    <p>Number of extra points assigned if the bug is rejected by the authors (usually a negative number).</p>
-                    <div class="controls">
-                        <input type="number" data-ng-model="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" id="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" class="form-control" required>
-                    </div>
-                </div>
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">New Competition</h3>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal" data-ng-submit="create()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="name" id="name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="FIRST_BUG_IN_CLASS_C">First Bug in the Class</label>
+                            <p>Number of points assigned when the bug is first bugs reported in a class C.</p>
+                            <div class="controls">
+                                <input type="number" data-ng-model="FIRST_BUG_IN_CLASS_C" id="FIRST_BUG_IN_CLASS_C" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R">First Bug in the Routine</label>
+                            <p>Number of points assigned when the bug is not first bugs reported in a class C, but it is the first bug in a routine R.</p>
+                            <div class="controls">
+                                <input type="number" data-ng-model="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R">Repeated Bug</label>
+                            <p>Number of points assigned when the bug is neither the first in a class C nor in a routine R.</p>
+                            <div class="controls">
+                                <input type="number" data-ng-model="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" id="NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG">Person who submitted an accepted bug</label>
+                            <p>Number of extra points assigned if the bug is accepted by the authors.</p>
+                            <div class="controls">
+                                <input type="number" data-ng-model="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" id="PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="PERSON_WHO_SUBMITTED_A_REJECTED_BUG">Person who submitted a Rejected Bug</label>
+                            <p>Number of extra points assigned if the bug is rejected by the authors (usually a negative number).</p>
+                            <div class="controls">
+                                <input type="number" data-ng-model="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" id="PERSON_WHO_SUBMITTED_A_REJECTED_BUG" class="form-control" required>
+                            </div>
+                        </div>
 
-                
-                <div class="form-group">
-                    <label class="control-label" for="groupsList">Groups</label>
-                    <p>Select the groups participating in this competition.</p>
-                    <div     
-                        isteven-multi-select
-                        input-model="wrapperGroupsList"
-                        output-model="groupsSelectedList"
-                        button-label="number"
-                        item-label=" name number"
-                        tick-property="selected",
-                        output-properties="_id"
-                    >
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-success">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
+                        
+                        <div class="form-group">
+                            <label class="control-label" for="groupsList">Groups</label>
+                            <p>Select the groups participating in this competition.</p>
+                            <div     
+                                isteven-multi-select
+                                input-model="wrapperGroupsList"
+                                output-model="groupsSelectedList"
+                                button-label="number"
+                                item-label=" name number"
+                                tick-property="selected",
+                                output-properties="_id"
+                            >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-success">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
 </section>
