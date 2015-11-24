@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema,
+	logSrv = require('../services/logSrv.js');
 
 /**
  * Bug Schema
@@ -121,6 +122,7 @@ var assignReportBugPoints = function(self,next) {
 		    					next();
 		    				} else { //is the first in ROUTINE R, so we should assing NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R points
 								self.points = competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R;
+								//logSrv.addPageLog(logSrv.events.reportSilverMedalBugEvent("<REQ>",self.user, competition.name, self.group));
 								next();
 		    				}
 	    				} else {
@@ -129,6 +131,7 @@ var assignReportBugPoints = function(self,next) {
 	    			});
 	    		} else { //is the first in CLASS C, so we should assing FIRST_BUG_IN_CLASS_C points
 	    			self.points = competition.POINTS.FIRST_BUG_IN_CLASS_C;
+	    			//logSrv.addPageLog(logSrv.events.reportGoldMedalBugEvent("<REQ>",self.user, competition.name, self.group));
 	    			next();
 	    		}
 
@@ -145,9 +148,11 @@ var assignExtraApprovedPoints = function(self,next) {
 		if (!competition) next(new Error('Failed to load Competition ' + self.competition));
 		
 		if (self.status == "APPROVED") {
+			//logSrv.addPageLog(logSrv.events.reportAcceptBugEvent("<REQ>",self.user, competition.name, self.group));
 			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG;
 		}
 		if (self.status == "REJECTED") {
+			//logSrv.addPageLog(logSrv.events.reportRejectBugEvent("<REQ>",self.user, competition.name, self.group));
 			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_A_REJECTED_BUG;
 		}
 

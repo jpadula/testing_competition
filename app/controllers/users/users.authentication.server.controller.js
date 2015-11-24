@@ -7,7 +7,8 @@ var _ = require('lodash'),
 	errorHandler = require('../errors.server.controller'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	logSrv = require('../../services/logSrv.js');
 
 /**
  * Signup
@@ -52,6 +53,7 @@ exports.signup = function(req, res) {
 exports.signin = function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
+			logSrv.addPageLog(logSrv.events.failedSigninEvent(req, req.body.username));
 			res.status(400).send(info);
 		} else {
 			// Remove sensitive data before login
@@ -60,8 +62,10 @@ exports.signin = function(req, res, next) {
 
 			req.login(user, function(err) {
 				if (err) {
+					logSrv.addPageLog(logSrv.events.failedSigninEvent(req, user.username));
 					res.status(400).send(err);
 				} else {
+					logSrv.addPageLog(logSrv.events.signinEvent(req, user.username));
 					res.json(user);
 				}
 			});
@@ -73,6 +77,7 @@ exports.signin = function(req, res, next) {
  * Signout
  */
 exports.signout = function(req, res) {
+	logSrv.addPageLog(logSrv.events.signoutEvent(req, req.user.username));
 	req.logout();
 	res.redirect('/');
 };
@@ -128,7 +133,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 					var possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
 					
 					User.findUniqueUsername(possibleUsername, null, function(availableUsername) {
-						User.findOne({"username": 'jpadula'},function(err,usr){
+						User.findOne({"username": possibleUsername},function(err,usr){
 							if (usr) {
 								usr.provider = providerUserProfile.provider;
 								usr.providerData = providerUserProfile.providerData;
