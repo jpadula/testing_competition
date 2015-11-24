@@ -1,5 +1,9 @@
 .content {
 	margin-top: 50px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+    line-height: 1.8;
 }
 .undecorated-link:hover {
 	text-decoration: none;
@@ -11,5 +15,26 @@
 	border-color: #ccc;
 }
 .ng-valid.ng-dirty {
+<<<<<<< HEAD
 	border-color: #ccc;
 }
+=======
+	border-color: #78FA89;
+}
+
+.nice-font {
+    font-weight: 200;
+    font-size: 22px;
+    line-height: 1.8;
+}
+
+.dark-font-color {
+    color: #666;
+}
+
+.navbar-inverse .navbar-form{
+    background-color: #7704d1 !important;
+}
+
+
+>>>>>>> f56cac716a91c2d234ad0ab844975a5bbe0061b2
