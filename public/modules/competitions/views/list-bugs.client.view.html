@@ -1,7 +1,9 @@
-<section data-ng-controller="CompetitionsController" data-ng-if="showOpenBugs">
+<section data-ng-controller="CompetitionsController" data-ng-if="showOpenBugs" data-ng-init='getAllByCompetition()'>
+    <!--
     <div class="page-header">
         <h1>Select the Group</h1>
     </div>
+    -->
     <div class="list-bug">
         <!--
         <ul>
@@ -10,7 +12,9 @@
             </li>
         </ul>
         -->
+        <!--
         <select id="groupsList"  ng-model="clickedGroup" ng-options="gl.name for gl in competition.groupsList track by gl._id"ng-change="getBugsPerGroup(clickedGroup._id)"></select>
+        -->
         <div data-ng-include="'/modules/competitions/views/list-bugs-repeat.client.view.html'"></div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">

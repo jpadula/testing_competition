@@ -12,9 +12,13 @@
 	display: none !important;
 }
 .ng-invalid.ng-dirty {
-	border-color: #FA787E;
+	border-color: #ccc;
 }
 .ng-valid.ng-dirty {
+<<<<<<< HEAD
+	border-color: #ccc;
+}
+=======
 	border-color: #78FA89;
 }
 
@@ -33,3 +37,4 @@
 }
 
 
+>>>>>>> f56cac716a91c2d234ad0ab844975a5bbe0061b2

@@ -376,6 +376,24 @@ exports.getByGroupId = function(req, res) {
 };
 
 /**
+ *  getByGroupId
+ */
+exports.getAllByCompetition = function(req, res) {
+	var config = req.body;
+	var competition = config.competition;
+	Bug.find({competition:competition}).sort('-created').populate('user', 'displayName').populate('group_reported','name').exec(function(err, bugs) {
+		if (err) {
+			console.log(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bugs);
+		}
+	});
+};
+
+/**
  * List of Open Bugs
  */
 exports.getMyOpenBugs = function(req, res) {

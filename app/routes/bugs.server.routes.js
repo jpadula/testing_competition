@@ -20,6 +20,9 @@ module.exports = function(app) {
 
 	app.route('/bugs/getByGroupId')
 		.post(bugs.getByGroupId);
+	
+	app.route('/bugs/getAllByCompetition')
+		.post(bugs.getAllByCompetition);
 
 	app.route('/bugs/getUsersRanking')
 		.post(bugs.getUsersRanking);

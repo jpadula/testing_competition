@@ -41,10 +41,18 @@
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+	<style type="text/css">
+	.header-bar{
+		background-color: #7704d1 !important;
+	}
+	.navbar-inverse .navbar-nav > li > a {
+  		color: white;
+	}
+	</style>
 </head>
 
 <body class="ng-cloak">
-	<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
+	<header style='background-color:red !important' data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
 	<section class="content">
 		<section class="container">
 			{% block content %}{% endblock %}
