@@ -145,6 +145,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			var showListBugsPerGroup = $scope.showListBugsPerGroup;
 			restartShowsVariables();
 			$scope.showListBugsPerGroup = !showListBugsPerGroup
+
 			var config = {
 				competition: $scope.competition._id,
 				groupId: group
@@ -153,6 +154,33 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				$scope.openBugs=bugs;
 				$scope.bugsRepeatListDatatable();
 			});
+			
+
+		};
+
+		$scope.getAllByCompetition = function() {
+			var showListBugsPerGroup = $scope.showListBugsPerGroup;
+			restartShowsVariables();
+			$scope.showListBugsPerGroup = !showListBugsPerGroup
+			
+			var config = {
+				competition: $scope.competition._id
+			};
+			Bugs.getAllByCompetition(config,function(bugs){
+				$scope.openBugs=bugs;
+				$scope.bugsRepeatListDatatable();
+			});
+
+			/*
+			var config = {
+				competition: $scope.competition._id,
+				groupId: group
+			};
+			Bugs.getByGroupId(config,function(bugs){
+				$scope.openBugs=bugs;
+				$scope.bugsRepeatListDatatable();
+			});
+			*/
 
 		};
 
@@ -165,14 +193,19 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				competition: $scope.competition._id,
 				group_reported: this.group._id
 			};
-
+			var self = this;
 			Bugs.reportBug(bug,function(err,bug){
 				if (!err && bug != null){
 					//success
 					$scope.success='Bug reported Successfuly';
+					self.className = '';
+					self.routineName = '';
+					self.description = '';
+					self.group_reported = '';
+
 				} else {
 					//error
-					$scope.error='Error';
+					$scope.error='Error in the bug reported: '+err;
 				}
 				
 			});
