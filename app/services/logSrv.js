@@ -98,9 +98,9 @@ events.reportBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName)
  * @param aGroupName: {String} name of the group
  * @returns { logObject}
  */
-events.reportGoldMedalBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName) {
+events.reportGoldMedalBugEvent = function (aUserName, aCompetitionName, aGroupName) {
   return {
-    ip: requestIp.getClientIp(aReq),
+    ip: "NA", //TODO: this is a quick fix due to issues in the pre-save. Now, we decided to remo the IP to simplify
     pageCode: 5,// 'report a gold medal bug',
     userName: aUserName,
   competitionName: aCompetitionName,
@@ -118,9 +118,9 @@ events.reportGoldMedalBugEvent = function (aReq, aUserName, aCompetitionName, aG
  * @param aGroupName: {String} name of the group
  * @returns { logObject}
  */
-events.reportSilverMedalBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName) {
+events.reportSilverMedalBugEvent = function (aUserName, aCompetitionName, aGroupName) {
   return {
-    ip: requestIp.getClientIp(aReq),
+    ip: "NA", //TODO: this is a quick fix due to issues in the pre-save. Now, we decided to remo the IP to simplify
     pageCode: 6,// 'report a silver medal bug',
     userName: aUserName,
   competitionName: aCompetitionName,
@@ -137,9 +137,9 @@ events.reportSilverMedalBugEvent = function (aReq, aUserName, aCompetitionName, 
  * @param aGroupName: {String} name of the group
  * @returns { logObject}
  */
-events.reportAcceptBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName) {
+events.reportAcceptBugEvent = function (aUserName, aCompetitionName, aGroupName) {
   return {
-    ip: requestIp.getClientIp(aReq),
+    ip: "NA", //TODO: this is a quick fix due to issues in the pre-save. Now, we decided to remo the IP to simplify
     pageCode: 7,// 'accept a bug',
     userName: aUserName,
   competitionName: aCompetitionName,
@@ -156,9 +156,9 @@ events.reportAcceptBugEvent = function (aReq, aUserName, aCompetitionName, aGrou
  * @param aGroupName: {String} name of the group
  * @returns { logObject}
  */
-events.reportRejectBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName) {
+events.reportRejectBugEvent = function (aUserName, aCompetitionName, aGroupName) {
   return {
-    ip: requestIp.getClientIp(aReq),
+    ip: "NA", //TODO: this is a quick fix due to issues in the pre-save. Now, we decided to remo the IP to simplify
     pageCode: 8,// 'reject a bug',
     userName: aUserName,
   competitionName: aCompetitionName,

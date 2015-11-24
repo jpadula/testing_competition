@@ -38,9 +38,13 @@
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-success">
                         </div>
-        				<div data-ng-show="error" class="text-danger">
+        				<div data-ng-show="success" class="alert alert-success">
+                            <strong data-ng-bind="success"></strong>
+                        </div>
+                        <div data-ng-show="error" class="alert alert-danger">
         					<strong data-ng-bind="error"></strong>
         				</div>
+
                     </fieldset>
                 </form>
             </div>

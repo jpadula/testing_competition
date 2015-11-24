@@ -30,7 +30,9 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 		return {
 			reportBug: function(bug,cb) {				
 				$http.post('/bugs',bug).success(function(bug){
-					cb(bug);
+					cb(null,bug);
+				}).error(function(error){
+					cb(error,null);
 				});
 			},
 			getByGroupId: function(config,cb) {

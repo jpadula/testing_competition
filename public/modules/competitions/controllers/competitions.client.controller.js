@@ -152,7 +152,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			Bugs.getByGroupId(config,function(bugs){
 				$scope.openBugs=bugs;
 				$scope.bugsRepeatListDatatable();
-				console.log("Bugs",bugs);
 			});
 
 		};
@@ -167,8 +166,15 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				group_reported: this.group._id
 			};
 
-			Bugs.reportBug(bug,function(bug){
-				console.log("Se guardo: ",bug);
+			Bugs.reportBug(bug,function(err,bug){
+				if (!err && bug != null){
+					//success
+					$scope.success='Bug reported Successfuly';
+				} else {
+					//error
+					$scope.error='Error';
+				}
+				
 			});
 		};
 
@@ -186,7 +192,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 					if ($scope.datatableMyOpenBugs){
 						$scope.myOpenBugsDatatable();
 					}
-					console.log("Bugs",bugs);
 				});
 			}
 		};
