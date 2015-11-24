@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	Group = mongoose.model("Group"),
 	Q = require('q'),
 	User = mongoose.model("User"),
-	_ = require('lodash');
+	_ = require('lodash'),
+	logSrv = require('../services/logSrv.js');
 
 
 
@@ -45,6 +46,7 @@ exports.create = function(req, res) {
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+					logSrv.addPageLog(logSrv.events.reportBugEvent(req,req.user.username, bug.competition, bug.group));
 					res.jsonp(bug);
 				}
 			});
@@ -300,28 +302,28 @@ var getUsersRanking = function(competition,cb) {
 }
 
 exports.getUsersRanking = function(req,res) {
+	logSrv.addPageLog(logSrv.events.accessRankingPerUserEvent(req,req.user.username, req.body.competition));
 	var config = req.body;
 	var competition = config.competition;
 	getUsersRanking(competition,function(result){
-		console.log("RESULTADO: ",result);
 		res.jsonp(result);
 	})
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsRanking = function(req,res) {
+	logSrv.addPageLog(logSrv.events.accessRankingPerGroupEvent(req,req.user.username, req.body.competition));
 	var config = req.body;
 	var competition = config.competition;
 	getGroupsRanking(competition,function(result){
-		console.log("RESULTADO: ",result);
 		res.jsonp(result);
 	})
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsWithMoreBugsRanking = function(req,res) {
+	logSrv.addPageLog(logSrv.events.accessMoreBugsInGroupsEvent(req,req.user.username, req.body.competition));
 	var config = req.body;
 	var competition = config.competition;
 	getGroupsWithMoreBugsRanking(competition,function(result){
-		console.log("RESULTADO: ",result);
 		res.jsonp(result);
 	})
 	//res.jsonp(getUsersRanking(competition));

@@ -41,7 +41,10 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "q": "^1.4.1",
-    "swig": "~1.4.1"
+    "swig": "~1.4.1",
+    "protractor": "1.4.0",
+    "request": "2.40.0",
+    "request-ip": "0.0.3"
   },
   "devDependencies": {
     "supertest": "~0.14.0",
