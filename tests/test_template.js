@@ -6,7 +6,7 @@ var app = require('../../../server/server.js'),
   express = require('express'),
   should = require('should'),
   bodyParser = require('body-parser'),
-  testConfig = require('./testConfig.js');
+  testConfig = require('./../app/tests/testConfig.js');
 
 app.use(bodyParser());
 
@@ -14,7 +14,7 @@ describe('Test Mantra with Java compilation', function () {
 
   this.timeout(testConfig.timeOut);
 
-  it('Mantra Java: successful compilation (one file)', function (done) {
+  it('First test', function (done) {
 
       request(app)
         .post('/')
