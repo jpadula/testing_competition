@@ -1,4 +1,7 @@
 <div class="container" data-ng-controller="HeaderController">
+<p style="text-align:center" data-ng-show="clickedOnCompetition">
+	<span style='color:white;'>The current competition is: {{competitionName}}</span>
+</p>
 	<div class="navbar-header">
 		<button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">
 			<span class="sr-only">Toggle navigation</span>
@@ -34,6 +37,46 @@
 			</li>
 			-->
 		</ul>
+		
+		<ul class="nav navbar-nav navbar-left" data-ng-show="clickedOnCompetition" style='margin-left:29%'>
+
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Bugs<b class="caret"></b></a>
+
+				<ul class="dropdown-menu">
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/reportBug">Report Bug</a>
+					</li>
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/allBugs">All Bugs</a>
+					</li>
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/myGroupBugs">My Group Bugs</a>
+					</li>
+				</ul>
+			</li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Rankings<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/usersRanking">Users Ranking</a>
+					</li>
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/groupsRanking">Groups Ranking</a>
+					</li>
+					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
+						<a href="/#!/competitions/{{competitionID}}/groupsWithMoreBugsRanking">Groups With More Bugs Ranking</a>
+					</li>
+				</ul>
+			</li>
+			<!--
+			<li class="divider-vertical"></li>
+			<li ui-route="/signin" ng-class="{active: $uiRoute}">
+				<a href="/#!/signin">Sign In</a>
+			</li>
+			-->
+		</ul>
+
 		<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">

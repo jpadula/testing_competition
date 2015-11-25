@@ -21,6 +21,11 @@ var CompetitionSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	description: {
+		type: String,
+		default: '',
+		trim: true
+	},
 
 	//group list
 	groupsList: [{

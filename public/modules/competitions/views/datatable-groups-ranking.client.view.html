@@ -1,6 +1,7 @@
-<h1>Groups Ranking</h1>
-<section>
-    <div data-ng-init='groupsRankingDatatable()'>
+<section data-ng-controller="CompetitionsController" data-ng-init='getGroupsRanking()'>
+    <div class="page-header">
+        <h1>Groups Ranking</h1>
+    </div>
         <table ng-table="datatableGroupsRanking" class="table table-bordered table-striped table-condensed" show-filter="true" >
         <tr ng-repeat="group in $data">
             <td title="'Group Name'" filter="{ group: 'text'}" sortable="'group'">
@@ -19,5 +20,5 @@
                 {{group.totalPoints}}
             </td>
         </tr>
-    </div>
+        </table>
 </section>

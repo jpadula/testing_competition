@@ -36,9 +36,10 @@
                     <td title="'Routine Name'" filter="{ routineName: 'text'}" sortable="'routineName'">
                         {{bug.routineName}}
                     </td>
-                    <td title="'Routine Name'" filter="{ routineName: 'text'}" sortable="'routineName'">
+                    <td title="'Status'" filter="{ status: 'text'}" sortable="'status'">
                         {{bug.status}}
                     </td>
+                    
                     <td title="'Bug Description'" filter="{ description: 'text'}" sortable="'description'">
                         <button class="btn btn-primary" data-ng-click="showDescription = !showDescription;"> Click to see the Bug Description</button>
                         <p data-ng-if="showDescription">{{bug.description}}</p>

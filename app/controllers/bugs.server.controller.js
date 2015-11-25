@@ -302,6 +302,7 @@ var getUsersRanking = function(competition,cb) {
 }
 
 exports.getUsersRanking = function(req,res) {
+	console.log("req:",req.user);
 	logSrv.addPageLog(logSrv.events.accessRankingPerUserEvent(req,req.user.username, req.body.competition));
 	var config = req.body;
 	var competition = config.competition;

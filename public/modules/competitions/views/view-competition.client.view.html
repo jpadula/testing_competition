@@ -10,28 +10,15 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-<!--
-	<span data-ng-click="showCreateBug=!showCreateBug">Click to Report a bug</span>
-	<div data-ng-include="'/modules/competitions/views/create-bug.client.view.html'"></div>
-
-	<span data-ng-click="searchOpenBugs()">See Open Bugs</span>
-	<div data-ng-include="'/modules/competitions/views/list-bugs.client.view.html'"></div>
-	
-	<span data-ng-click="searchMyOpenBugs()">See My Open Bugs</span>
-	<div data-ng-include="'/modules/competitions/views/list-my-open-bugs.client.view.html'"></div>
--->
-  <tabset justified="true">
-    <tab heading="Report a Bug" data-ng-click="changeShowStatus('showCreateBug')">
-    	<div data-ng-include="'/modules/competitions/views/create-bug.client.view.html'"></div>
-    </tab>
-    <tab heading="All Bugs" data-ng-click="searchOpenBugs()">
-    	<div data-ng-include="'/modules/competitions/views/list-bugs.client.view.html'"></div>
-    </tab>
-    <tab heading="My Group Bugs" data-ng-click="searchMyOpenBugs()">
-    	<div data-ng-include="'/modules/competitions/views/list-my-open-bugs.client.view.html'"></div>
-    </tab>
-    <tab heading="Rankings" data-ng-click="changeShowStatus('showRanking')"><div data-ng-include="'/modules/competitions/views/ranking.client.view.html'"></div></tab>
-
-  </tabset>
-
+	<div class="page-body">
+		<span style='font-weight:bold'>Description:</span>
+		<p>{{competition.description}}</p>
+		
+		<span style='font-weight:bold'>Groups:</span>
+		<ul>
+			<li data-ng-repeat='group in competition.groupsList'>
+				{{group.name}}
+			</li>
+		</ul>
+	</div>
 </section>

@@ -37,7 +37,6 @@ var GroupSchema = new Schema({
 		trim: true
 	}],
 
-
 	//githubAccounts separated by comma
 	githubAccounts: {
 		type: String,

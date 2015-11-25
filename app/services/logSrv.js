@@ -35,8 +35,7 @@ events.signinEvent = function (aReq, aUserName) {
   return {
     ip: requestIp.getClientIp(aReq),
     pageCode: 1,// 'sign in',
-    userName: aUserName,
-    date: new Date()
+    userName: aUserName
   };
 };
 
@@ -50,8 +49,7 @@ events.failedSigninEvent = function (aReq, aUserName) {
   return {
     ip: requestIp.getClientIp(aReq),
     pageCode: 2,// 'failed sign in',
-    userName: aUserName,
-    date: new Date()
+    userName: aUserName
   };
 };
 
@@ -65,8 +63,7 @@ events.signoutEvent = function (aReq, aUserName) {
   return {
     ip: requestIp.getClientIp(aReq),
     pageCode: 3,// 'sign out',
-    userName: aUserName,
-    date: new Date()
+    userName: aUserName
   };
 };
 
@@ -84,7 +81,6 @@ events.reportBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName)
     pageCode: 4,// 'report a bug',
     userName: aUserName,
   competitionName: aCompetitionName,
-    date: new Date(),
   groupName: aGroupName
   };
 };
@@ -104,7 +100,6 @@ events.reportGoldMedalBugEvent = function (aUserName, aCompetitionName, aGroupNa
     pageCode: 5,// 'report a gold medal bug',
     userName: aUserName,
   competitionName: aCompetitionName,
-    date: new Date(),
   groupName: aGroupName
   };
 };
@@ -124,7 +119,6 @@ events.reportSilverMedalBugEvent = function (aUserName, aCompetitionName, aGroup
     pageCode: 6,// 'report a silver medal bug',
     userName: aUserName,
   competitionName: aCompetitionName,
-    date: new Date(),
   groupName: aGroupName
   };
 };
@@ -143,7 +137,6 @@ events.reportAcceptBugEvent = function (aUserName, aCompetitionName, aGroupName)
     pageCode: 7,// 'accept a bug',
     userName: aUserName,
   competitionName: aCompetitionName,
-    date: new Date(),
   groupName: aGroupName
   };
 };
@@ -162,7 +155,6 @@ events.reportRejectBugEvent = function (aUserName, aCompetitionName, aGroupName)
     pageCode: 8,// 'reject a bug',
     userName: aUserName,
   competitionName: aCompetitionName,
-    date: new Date(),
   groupName: aGroupName
   };
 };
@@ -174,14 +166,12 @@ events.reportRejectBugEvent = function (aUserName, aCompetitionName, aGroupName)
  * @param aCompetitionName: {String} name of the competition
  * @returns { logObject}
  */
-events.accessRankingPerUserEvent = function (aReq, aUserName, aCompetitionName) {
+events.accessRankingPerUserEvent = function (aReq, aUserName, aCompetitionName) { 
   return {
     ip: requestIp.getClientIp(aReq),
     pageCode: 9,// 'access ranking per user',
     userName: aUserName,
-  competitionName: aCompetitionName,
-    date: new Date(),
-  groupName: aGroupName
+    competitionName: aCompetitionName
   };
 };
 
@@ -197,9 +187,7 @@ events.accessRankingPerGroupEvent = function (aReq, aUserName, aCompetitionName)
     ip: requestIp.getClientIp(aReq),
     pageCode: 10,// 'access ranking per group',
     userName: aUserName,
-  competitionName: aCompetitionName,
-    date: new Date(),
-  groupName: aGroupName
+    competitionName: aCompetitionName
   };
 };
 
@@ -215,11 +203,9 @@ events.accessMoreBugsInGroupsEvent = function (aReq, aUserName, aCompetitionName
     ip: requestIp.getClientIp(aReq),
     pageCode: 11,// 'access more bugs found in a group',
     userName: aUserName,
-  competitionName: aCompetitionName,
-    date: new Date(),
-  groupName: aGroupName
+    competitionName: aCompetitionName
   };
-};
+}
 
 // export the service functions
 exports.addPageLog = addPageLog;

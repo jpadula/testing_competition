@@ -1,10 +1,10 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams',
-	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups,NgTableParams) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
+	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
 		$scope.authentication = Authentication;
-		
+
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
 		$scope.wrapperGroupsList = [];
@@ -25,9 +25,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.showUsersRanking = false;
 		$scope.showGroupsRanking = false;
 		$scope.showGroupsWithMoreBugsRanking = false;
-		
 
-		
 		$scope.showRankingType = function(ranking) {
 			if (ranking.toUpperCase()=== "USERS RANKING"){
 				//$scope.showUsersRanking = true;
@@ -42,7 +40,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			}
 
 		};
-
 
 		$scope.usersRankingDatatable = function() {
 			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
@@ -97,13 +94,19 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getUsersRanking = function() {
+			var id;
+			if (!$rootScope.competition)
+				id = $stateParams.competitionId;
+			else
+				id = $rootScope.competition._id
 			var config = {
-				competition:$scope.competition._id
+				competition:id
 			};
 			
 			Bugs.getUsersRanking(config,function(ranking){
 				console.log(ranking)
 				$scope.usersRanking = ranking;
+				$scope.usersRankingDatatable();
 				var showUsersRanking = $scope.showUsersRanking;
 				restartShowsVariables();
 				$scope.showUsersRanking = !showUsersRanking;
@@ -111,12 +114,18 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getGroupsRanking = function() {
+			var id;
+			if (!$rootScope.competition)
+				id = $stateParams.competitionId;
+			else
+				id = $rootScope.competition._id
 			var config = {
-				competition:$scope.competition._id
+				competition:id
 			};
 
 			Bugs.getGroupsRanking(config,function(ranking){
 				$scope.groupsRanking = ranking;
+				$scope.groupsRankingDatatable();
 				var showGroupsRanking = $scope.showGroupsRanking;
 				restartShowsVariables();
 
@@ -125,12 +134,18 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getGroupsWithMoreBugsRanking = function() {
+			var id;
+			if (!$rootScope.competition)
+				id = $stateParams.competitionId;
+			else
+				id = $rootScope.competition._id
 			var config = {
-				competition:$scope.competition._id
+				competition:id
 			};
 
 			Bugs.getGroupsWithMoreBugsRanking(config,function(ranking){
 				$scope.groupsWithMoreBugsRanking = ranking;
+				$scope.groupsWithMoreBugsRankingDatatable();
 				var showGroupsWithMoreBugsRanking = $scope.showGroupsWithMoreBugsRanking;
 				restartShowsVariables();
 
@@ -162,9 +177,14 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			var showListBugsPerGroup = $scope.showListBugsPerGroup;
 			restartShowsVariables();
 			$scope.showListBugsPerGroup = !showListBugsPerGroup
-			
+			var id;
+			if (!$rootScope.competition)
+				id = $stateParams.competitionId;
+			else
+				id = $rootScope.competition._id
+
 			var config = {
-				competition: $scope.competition._id
+				competition: id
 			};
 			Bugs.getAllByCompetition(config,function(bugs){
 				$scope.openBugs=bugs;
@@ -212,21 +232,23 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.searchMyOpenBugs = function() {
-			var showMyOpenBugs = $scope.showMyOpenBugs;
 			restartShowsVariables();
-			$scope.showMyOpenBugs = !showMyOpenBugs;
+			var id;
+			if (!$rootScope.competition)
+				id = $stateParams.competitionId;
+			else
+				id = $rootScope.competition._id
 			var config = {
-				competition: $scope.competition._id
-			};
-			if ($scope.showMyOpenBugs){
-				Bugs.getMyOpenBugs(config,function(bugs){
-					$scope.myOpenBugs=bugs;
-					//if exists the datatable, we reload the information
-					if ($scope.datatableMyOpenBugs){
-						$scope.myOpenBugsDatatable();
-					}
-				});
-			}
+				competition: id
+			};			
+			Bugs.getMyOpenBugs(config,function(bugs){
+				$scope.myOpenBugs=bugs;
+				//if exists the datatable, we reload the information
+				if ($scope.datatableMyOpenBugs){
+					$scope.myOpenBugsDatatable();
+				}
+			});
+			
 		};
 
 		$scope.searchOpenBugs = function() {
@@ -281,6 +303,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			// Create new Competition object
 			var competition = new Competitions ({
 				name: this.name,
+				description: this.description,
 				groupsList: $scope.groupsSelectedList,
 				POINTS: {
 					FIRST_BUG_IN_CLASS_C: this.FIRST_BUG_IN_CLASS_C,
@@ -336,12 +359,24 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			$scope.competitions = Competitions.query();
 		};
 
+		$scope.viewCreateBug = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			}
+		};
+
 		// Find existing Competition
 		$scope.findOne = function() {
 			Competitions.get({ 
 				competitionId: $stateParams.competitionId
 			},function(competition){
+				$rootScope.$broadcast('clickOnCompetition', {
+					"competitionID":$stateParams.competitionId,
+					"showMenues":true,
+					"competitionName":competition.name
+				});
 				$scope.competition = competition;
+				$rootScope.competition = competition;
 				$scope.getAllGroupsWrapperList();
 				$scope.getGroups();
 			},function(err){

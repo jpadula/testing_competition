@@ -16,11 +16,13 @@ exports.create = function(req, res) {
 	var groupsList = req.body.groupsList;
 	var name = req.body.name;
 	var POINTS = req.body.POINTS;
+	var description = req.body.description;
 	//create the competition to save and set the variables
 	var competition = new Competition();
 	competition.user = req.user;
 	competition.name = name;
 	competition.POINTS = POINTS;
+	competition.description = description;
 	//we should cast to ObjectId of Mongoose each ID in groupsList variable
 	competition.groupsList=[];
 	for (var i = groupsList.length - 1; i >= 0; i--) {

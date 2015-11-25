@@ -9,12 +9,14 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 		function hasRol(rol,roles) {
 			var result = false;
-			for (var i = roles.length - 1; i >= 0; i--) {
-				if (roles[i]===rol){
-					result = true;
-					break;
-				}
-			};
+			if (roles){
+				for (var i = roles.length - 1; i >= 0; i--) {
+					if (roles[i]===rol){
+						result = true;
+						break;
+					}
+				};
+			}
 			return result;
 		}
 
