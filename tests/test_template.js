@@ -1,7 +1,7 @@
 /**
  * Created by Martin on 24/11/15.
  */
-var app = require('../../../server/server.js'),
+var app = require('../server.js'),
   request = require('supertest'),
   express = require('express'),
   should = require('should'),
@@ -17,11 +17,12 @@ describe('Test Mantra with Java compilation', function () {
   it('First test', function (done) {
 
       request(app)
-        .post('/')
+        .get('/bugs')
         .send()
         .expect('Content-Type', /json/)
         .expect(200)
         .end(function (error, reply) {
+          console.log(reply.body);
           //(reply.body.output.indexOf("Compilation successful")).should.not.equal(-1);
 
           //reply.body.compilationError.should.equal(false);
