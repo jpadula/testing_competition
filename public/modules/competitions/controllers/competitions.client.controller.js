@@ -49,13 +49,11 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.groupsRankingDatatable = function() {
 			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
 			var data = $scope.groupsRanking;
-			console.log($scope.groupsRanking);
 			$scope.datatableGroupsRanking = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
 		};
 		$scope.groupsWithMoreBugsRankingDatatable = function() {
 			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
 			var data = $scope.groupsWithMoreBugsRanking;
-			console.log("groupsWithMoreBugsRankingDatatable",$scope.groupsWithMoreBugsRanking);
 			$scope.datatableGroupsWithMoreBugsRanking = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
 		};
 
@@ -88,12 +86,15 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				status : newStatus
 			}
 			Bugs.changeStatus(config,function(bug){
-				console.log("Status changed");
 				$scope.searchMyOpenBugs();
 			});
 		};
 
 		$scope.getUsersRanking = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			}
+		
 			var id;
 			if (!$rootScope.competition)
 				id = $stateParams.competitionId;
@@ -104,7 +105,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			};
 			
 			Bugs.getUsersRanking(config,function(ranking){
-				console.log(ranking)
 				$scope.usersRanking = ranking;
 				$scope.usersRankingDatatable();
 				var showUsersRanking = $scope.showUsersRanking;
@@ -114,6 +114,9 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getGroupsRanking = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			};
 			var id;
 			if (!$rootScope.competition)
 				id = $stateParams.competitionId;
@@ -134,6 +137,9 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getGroupsWithMoreBugsRanking = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			};
 			var id;
 			if (!$rootScope.competition)
 				id = $stateParams.competitionId;
@@ -156,7 +162,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 
 		$scope.getBugsPerGroup = function(group) {
-			console.log(group)
 			var showListBugsPerGroup = $scope.showListBugsPerGroup;
 			restartShowsVariables();
 			$scope.showListBugsPerGroup = !showListBugsPerGroup
@@ -174,6 +179,9 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getAllByCompetition = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			};
 			var showListBugsPerGroup = $scope.showListBugsPerGroup;
 			restartShowsVariables();
 			$scope.showListBugsPerGroup = !showListBugsPerGroup
@@ -232,6 +240,9 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.searchMyOpenBugs = function() {
+			if (!$rootScope.competition) {
+				$scope.findOne();
+			};
 			restartShowsVariables();
 			var id;
 			if (!$rootScope.competition)
@@ -264,7 +275,6 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		};
 
 		$scope.getGroups = function() {
-			console.log($scope.competition);
 			Groups.query(function(groups){
 				$scope.allGroups = groups;
 			});
