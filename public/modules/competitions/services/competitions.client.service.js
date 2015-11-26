@@ -61,7 +61,9 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 			},
 			changeStatus: function(config,cb) {
 				$http.put('/bugs/'+config.bugId,config).success(function(bug){
-					cb(bug);
+					cb(null,bug);
+				}).error(function(err){
+					cb(err,null);
 				});
 			},
 			getUsersRanking: function(config,cb) {
@@ -77,6 +79,13 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 			getGroupsWithMoreBugsRanking: function(config,cb) {
 				$http.post('/bugs/getGroupsWithMoreBugsRanking',config).success(function(ranking){
 					cb(ranking);
+				});
+			},
+			getById: function(id,cb) {
+				$http.get('/bugs/'+id).success(function(bug){
+					cb(null,bug);
+				}).error(function(err){
+					cb(err,null);
 				});
 			}
 		}

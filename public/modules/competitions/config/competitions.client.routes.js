@@ -55,6 +55,16 @@ angular.module('competitions').config(['$stateProvider',
         		}
       		}
 		}).
+		state('bugProfile', {
+			url: '/competitions/:competitionId/allBugs/:bugId',
+			templateUrl: 'modules/competitions/views/profile-bug.client.view.html',
+			data: {
+        		permissions: {
+          			only: ['admin','user'],
+          			redirectTo: 'home'
+        		}
+      		}
+		}).
 		state('myGroupBugs', {
 			url: '/competitions/:competitionId/myGroupBugs',
 			templateUrl: 'modules/competitions/views/list-my-open-bugs.client.view.html',

@@ -3,11 +3,18 @@
     <div class="panel panel-default">
         <div class="panel-heading">            
             <h3 class="panel-title">Report a bug</h3>
+            <span class='legendsText'>This is the form to report a Bug. All fields are mandatory</span>
         </div>
         <div class='panel-body'>
             <div class="col-md-12">
                 <form class="form-horizontal" data-ng-submit="reportBug()">
                     <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="title">Title</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="title" id="title" class="form-control" placeholder="Bug title" required>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label" for="className">Class Name</label>
                             <div class="">

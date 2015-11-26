@@ -1,24 +1,26 @@
 <section data-ng-controller="CompetitionsController" data-ng-init='getUsersRanking()'>
     <div class="page-header">
         <h1>Users Ranking</h1>
+        <span class='legendsText'>This page show a ranking by users with more points</span>
     </div>
-        <table ng-table="datatableUsersRanking" class="table table-bordered table-striped table-condensed" show-filter="true">
+        <table ng-table="datatableUsersRanking" ng-table-pagination class="table table-bordered table-striped table-condensed" show-filter="true">
             <tr ng-repeat="user in $data">
                 <td title="'User Name'" filter="{ user: 'text'}" sortable="'user'">
                     {{user.user}}
                 </td>
-                <td title="'Total Bugs Reported'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
+                <td title="'#Reported bugs'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
                     {{user.bugsReported}}
                 </td>
-                <td title="'Total points for reported bugs'" filter="{ totalReportedBugPoints: 'text'}" sortable="'totalReportedBugPoints'">
-                    {{user.totalReportedBugPoints}}
-                </td>
-                <td title="'Total points for approved/rejected bugs'" filter="{ totalExtraPoints: 'text'}" sortable="'totalExtraPoints'">
-                    {{user.totalExtraPoints}}
-                </td>
-                <td title="'Total SUM'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">
+                <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">
                     {{user.totalPoints}}
                 </td>
+                <td title="'#Gold medals'" filter="{ totalGoldMedals: 'text'}" sortable="'totalGoldMedals'">
+                    x{{user.totalGoldMedals}}
+                </td>
+                <td title="'#Silver medals'" filter="{ totalSilverMedals: 'text'}" sortable="'totalSilverMedals'">
+                    x{{user.totalSilverMedals}}
+                </td>
+                
             </tr>
         </table>
 </section>

@@ -35,6 +35,7 @@ var getGroupByUser = function(req,cb) {
 exports.create = function(req, res) {
 	var bug = new Bug(req.body);
 	bug.user = req.user;
+	bug.userName = req.user.username;
 	//First, search the User Group for this competition
 	getGroupByUser(req,function(err,group){
 		if (!err) {
@@ -46,7 +47,7 @@ exports.create = function(req, res) {
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
-					logSrv.addPageLog(logSrv.events.reportBugEvent(req,req.user.username, bug.competition, bug.group));
+					logSrv.addPageLog(logSrv.events.reportBugEvent(req,req.user.username, bug.competitionName, bug.groupReportedName));
 					res.jsonp(bug);
 				}
 			});
@@ -132,7 +133,9 @@ var getGroupsWithMoreBugsRanking = function(competition,cb) {
             totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
         	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
         	totalReportedBugPoints: { $sum: "$points" },
-        	totalPointsArray: {$push:"$extra_points_for_approved"}
+        	totalPointsArray: {$push:"$extra_points_for_approved"},
+        	totalSilverMedals: {$sum: "$totalSilverMedals"},
+        	totalGoldMedals: {$sum: "$totalGoldMedals"}
         }},
         {$sort:{
         	"totalPoints": -1
@@ -148,15 +151,15 @@ var getGroupsWithMoreBugsRanking = function(competition,cb) {
         	result[j].QTYOpen = 0;
 
         	for (var k = result[j].totalPointsArray.length - 1; k >= 0; k--) {
-        			if (result[j].totalPointsArray[k] > 0)
-        				result[j].QTYapproved++;
+    			if (result[j].totalPointsArray[k] > 0)
+    				result[j].QTYapproved++;
 
-        			if (result[j].totalPointsArray[k] < 0)
-        				result[j].QTYrejected++;
+    			if (result[j].totalPointsArray[k] < 0)
+    				result[j].QTYrejected++;
 
-        			if (result[j].totalPointsArray[k] == 0)
-        				result[j].QTYOpen++;
-        		};
+    			if (result[j].totalPointsArray[k] == 0)
+    				result[j].QTYOpen++;
+        	};
         };
         var promises = [];
 		var indexes = [];
@@ -201,7 +204,9 @@ var getGroupsRanking = function(competition,cb) {
             bugsReported: { $sum: 1 },
             totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
         	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
-        	totalReportedBugPoints: { $sum: "$points" }
+        	totalReportedBugPoints: { $sum: "$points" },
+        	totalSilverMedals: {$sum: "$totalSilverMedals"},
+        	totalGoldMedals: {$sum: "$totalGoldMedals"}
         }},
         {$sort:{
         	"totalPoints": -1
@@ -254,7 +259,9 @@ var getUsersRanking = function(competition,cb) {
             bugsReported: { $sum: 1 },
             totalPoints:       { $sum: { $add: ["$points", "$extra_points_for_approved"] } },
         	totalExtraPoints:   { $sum: "$extra_points_for_approved" },
-        	totalReportedBugPoints: { $sum: "$points" }
+        	totalReportedBugPoints: { $sum: "$points" },
+        	totalSilverMedals: {$sum: "$totalSilverMedals"},
+        	totalGoldMedals: {$sum: "$totalGoldMedals"}
         	/*"names": {
             	"$push": { "name": "$group_reported"}
           	}*/
@@ -302,8 +309,7 @@ var getUsersRanking = function(competition,cb) {
 }
 
 exports.getUsersRanking = function(req,res) {
-	console.log("req:",req.user);
-	logSrv.addPageLog(logSrv.events.accessRankingPerUserEvent(req,req.user.username, req.body.competition));
+	logSrv.addPageLog(logSrv.events.accessRankingPerUserEvent(req,req.user.username, req.body.competitionName));
 	var config = req.body;
 	var competition = config.competition;
 	getUsersRanking(competition,function(result){
@@ -312,7 +318,7 @@ exports.getUsersRanking = function(req,res) {
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsRanking = function(req,res) {
-	logSrv.addPageLog(logSrv.events.accessRankingPerGroupEvent(req,req.user.username, req.body.competition));
+	logSrv.addPageLog(logSrv.events.accessRankingPerGroupEvent(req,req.user.username, req.body.competitionName));
 	var config = req.body;
 	var competition = config.competition;
 	getGroupsRanking(competition,function(result){
@@ -321,7 +327,7 @@ exports.getGroupsRanking = function(req,res) {
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsWithMoreBugsRanking = function(req,res) {
-	logSrv.addPageLog(logSrv.events.accessMoreBugsInGroupsEvent(req,req.user.username, req.body.competition));
+	logSrv.addPageLog(logSrv.events.accessMoreBugsInGroupsEvent(req,req.user.username, req.body.competitionName));
 	var config = req.body;
 	var competition = config.competition;
 	getGroupsWithMoreBugsRanking(competition,function(result){
@@ -402,7 +408,6 @@ exports.getMyOpenBugs = function(req, res) {
 	var competition = config.competition;
 
 	getGroupByUser(req,function(err,group){
-		console.log("Group:",group);
 		if (!err) {
 			if (group){
 			Bug.find({group_reported:group._id,competition:competition}).sort('-created').populate('user', 'displayName').exec(function(err, bugs) {
@@ -412,7 +417,6 @@ exports.getMyOpenBugs = function(req, res) {
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
-					console.log(bugs);
 					res.jsonp(bugs);
 				}
 			});

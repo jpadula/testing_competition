@@ -36,21 +36,49 @@ var BugSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Competition'
 	},
-	
+
+	userName: {
+		type: String,
+		default: ''
+	},
+	competitionName: {
+		type: String,
+		default: ''
+	},
+	groupReportedName: {
+		type: String,
+		default: ''
+	},
+	groupName: {
+		type: String,
+		default: ''
+	},
 	className: {
 		type: String,
 		default: '',
 		required: 'Please fill Class name',
 		trim: true
 	},
-
+	totalSilverMedals: {
+		type: Number,
+		default: 0
+	},
+	totalGoldMedals: {
+		type: Number,
+		default: 0
+	},
 	routineName: {
 		type: String,
 		default: '',
 		required: 'Please fill Routine name',
 		trim: true
 	},
-
+	title: {
+		type:String,
+		default:'',
+		required: 'Please fill Title',
+		trim: true
+	},
 	description: {
 		type: String,
 		default: '',
@@ -122,7 +150,8 @@ var assignReportBugPoints = function(self,next) {
 		    					next();
 		    				} else { //is the first in ROUTINE R, so we should assing NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R points
 								self.points = competition.POINTS.NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R;
-								logSrv.addPageLog(logSrv.events.reportSilverMedalBugEvent(self.user, competition.name, self.group));
+								self.totalSilverMedals++;
+								logSrv.addPageLog(logSrv.events.reportSilverMedalBugEvent(self.userName, competition.name, self.groupReportedName));
 								next();
 		    				}
 	    				} else {
@@ -131,7 +160,8 @@ var assignReportBugPoints = function(self,next) {
 	    			});
 	    		} else { //is the first in CLASS C, so we should assing FIRST_BUG_IN_CLASS_C points
 	    			self.points = competition.POINTS.FIRST_BUG_IN_CLASS_C;
-	    			logSrv.addPageLog(logSrv.events.reportGoldMedalBugEvent(self.user, competition.name, self.group));
+	    			self.totalGoldMedals++;
+	    			logSrv.addPageLog(logSrv.events.reportGoldMedalBugEvent(self.userName, competition.name, self.groupReportedName));
 	    			next();
 	    		}
 
@@ -148,11 +178,11 @@ var assignExtraApprovedPoints = function(self,next) {
 		if (!competition) next(new Error('Failed to load Competition ' + self.competition));
 		
 		if (self.status == "APPROVED") {
-			logSrv.addPageLog(logSrv.events.reportAcceptBugEvent(self.user, competition.name, self.group));
+			logSrv.addPageLog(logSrv.events.reportAcceptBugEvent(self.userName, competition.name, self.groupReportedName));
 			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG;
 		}
 		if (self.status == "REJECTED") {
-			logSrv.addPageLog(logSrv.events.reportRejectBugEvent(self.user, competition.name, self.group));
+			logSrv.addPageLog(logSrv.events.reportRejectBugEvent(self.userName, competition.name, self.groupReportedName));
 			self.extra_points_for_approved = competition.POINTS.PERSON_WHO_SUBMITTED_A_REJECTED_BUG;
 		}
 

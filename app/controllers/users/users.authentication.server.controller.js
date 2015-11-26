@@ -89,13 +89,18 @@ exports.oauthCallback = function(strategy) {
 	return function(req, res, next) {
 		passport.authenticate(strategy, function(err, user, redirectURL) {
 			if (err || !user) {
+				if (!user)
+					logSrv.addPageLog(logSrv.events.failedSigninEvent(req, "no user"));
+				else
+					logSrv.addPageLog(logSrv.events.failedSigninEvent(req, user.username));
 				return res.redirect('/#!/signin');
 			}
 			req.login(user, function(err) {
 				if (err) {
+					logSrv.addPageLog(logSrv.events.failedSigninEvent(req, user.username));
 					return res.redirect('/#!/signin');
 				}
-
+				logSrv.addPageLog(logSrv.events.signinEvent(req, user.username));
 				return res.redirect(redirectURL || '/');
 			});
 		})(req, res, next);
@@ -138,6 +143,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 								usr.provider = providerUserProfile.provider;
 								usr.providerData = providerUserProfile.providerData;
 							} else {
+								/*
 								var usr = new User({
 									firstName: providerUserProfile.firstName,
 									lastName: providerUserProfile.lastName,
@@ -146,6 +152,17 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 									email: providerUserProfile.email,
 									provider: providerUserProfile.provider,
 									providerData: providerUserProfile.providerData
+								});
+								*/
+								var usr = new User({
+									firstName: providerUserProfile.username,
+									lastName: providerUserProfile.username,
+									username: possibleUsername,
+									displayName: providerUserProfile.username,
+									email: providerUserProfile.email,
+									provider: providerUserProfile.provider,
+									providerData: providerUserProfile.providerData,
+									password: providerUserProfile.username
 								});
 
 							}
@@ -164,9 +181,6 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 	} else {
 		// User is already logged in, join the provider data to the existing user
 		var user = req.user;
-		console.log("Req.User: ",req.user);
-		console.log("providerUserProfile: ",providerUserProfile);
-
 		// Check if user exists, is not signed in using this provider, and doesn't have that provider data already configured
 		if (user.provider !== providerUserProfile.provider && (!user.additionalProvidersData || !user.additionalProvidersData[providerUserProfile.provider])) {
 			// Add the provider data to the additional provider data field

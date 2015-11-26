@@ -2,13 +2,16 @@
     <section data-ng-if = "myOpenBugs.length > 0" data-ng-init= "myOpenBugsDatatable()" >
         <div class="page-header">
             <h1>My Group Bugs</h1>
+            <span class='legendsText'>
+            This page shows bugs found in your group’s project. To see the details of the bugs, as well as to accept and reject the bug, click in the title.
+            </span>
         </div>
         <div class="list-bug">
             <!--
             <ul>
                 <li data-ng-repeat="bug in myOpenBugs" class="list-bug-item">
                     <p>Reported By: {{bug.user.displayName}}</p>
-                    <p>Created at: <span data-ng-bind="bug.created | date:'mediumDate'"></span></p>
+                    <p>Created on: <span data-ng-bind="bug.created | date:'mediumDate'"></span></p>
 
                     <p>Class Name: {{bug.className}}</p>
                     <p>Routine Name: {{bug.routineName}}</p>
@@ -24,7 +27,11 @@
                     <td title="'Reported By'" filter="{ user: 'text'}" sortable="'user'">
                         {{bug.user.displayName}}
                     </td>
-                    <td title="'Created At'" filter="{ created: 'text'}" sortable="'created'">
+                    <td title="'Title'" filter="{ title: 'text'}" sortable="'title'">
+                        <a data-ng-href="#!/competitions/{{competition._id}}/allBugs/{{bug._id}}">{{bug.title}}</a>
+                    </td>
+
+                    <td title="'Created on'" filter="{ created: 'text'}" sortable="'created'">
                         <span data-ng-bind="bug.created | date:'mediumDate'"></span>
                     </td>
                     <td title="'Class Name'" filter="{ className: 'text'}" sortable="'className'">
@@ -36,7 +43,7 @@
                     <td title="'Status'" filter="{ status: 'text'}" sortable="'status'">
                         {{bug.status}}
                     </td>
-
+                    <!--
                     <td title="'Bug Description'" filter="{ description: 'text'}" sortable="'description'">
                         <button class="btn btn-primary" data-ng-click="showDescription = !showDescription;"> Click to see the Bug Description</button>
                         <p>
@@ -45,6 +52,7 @@
                         </p>
                         <p data-ng-if="showDescription">{{bug.description}}</p>
                     </td>
+                    -->
                 </tr>
             </table>
         </div>

@@ -1,7 +1,4 @@
 <div class="container" data-ng-controller="HeaderController">
-<p style="text-align:center" data-ng-show="clickedOnCompetition">
-	<span style='color:white;'>The current competition is: {{competitionName}}</span>
-</p>
 	<div class="navbar-header">
 		<button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">
 			<span class="sr-only">Toggle navigation</span>
@@ -30,6 +27,7 @@
 			<li ui-route="/signup" ng-class="{active: $uiRoute}">
 				<a href="/#!/signup">Sign Up</a>
 			</li>
+
 			<!--
 			<li class="divider-vertical"></li>
 			<li ui-route="/signin" ng-class="{active: $uiRoute}">
@@ -38,7 +36,7 @@
 			-->
 		</ul>
 		
-		<ul class="nav navbar-nav navbar-left" data-ng-show="clickedOnCompetition" style='margin-left:29%'>
+		<ul class="nav navbar-nav navbar-left" data-ng-show="clickedOnCompetition">
 
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Bugs<b class="caret"></b></a>
@@ -80,7 +78,7 @@
 		<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+					<span data-ng-bind="authentication.user.displayName"></span> ({{competitionName}}) <b class="caret"></b>
 				</a>
 				<ul class="dropdown-menu">
 					<!--
@@ -101,6 +99,7 @@
 					</li>
 				</ul>
 			</li>
+
 		</ul>
 	</nav>
 </div>

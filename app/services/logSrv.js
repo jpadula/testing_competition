@@ -80,8 +80,8 @@ events.reportBugEvent = function (aReq, aUserName, aCompetitionName, aGroupName)
     ip: requestIp.getClientIp(aReq),
     pageCode: 4,// 'report a bug',
     userName: aUserName,
-  competitionName: aCompetitionName,
-  groupName: aGroupName
+    competitionName: aCompetitionName,
+    groupName: aGroupName
   };
 };
 

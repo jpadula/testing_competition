@@ -9,8 +9,8 @@ angular.module('competitions').run(['Menus',
 		Menus.addSubMenuItem('topbar', 'competitions', 'New Competition', 'competitions/create');
 		
 		// My Competitions for User
-		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'item', '',true,["user"]);
-		//Menus.addSubMenuItem('topbar', 'my_competitions', 'See Competitions List', 'my_competitions');
+		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'dropdown', '',true,["user"]);
+		Menus.addSubMenuItem('topbar', 'my_competitions', 'Show Competitions', 'my_competitions');
 
 	}
 ]);

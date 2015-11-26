@@ -79,7 +79,6 @@ describe('Group Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) { 
-		console.log(group);
 		Group.remove().exec();
 		User.remove().exec();
 

@@ -1,10 +1,9 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
-	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
+	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
 		$scope.authentication = Authentication;
-
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
 		$scope.wrapperGroupsList = [];
@@ -17,6 +16,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.rankingTypes = [{name:'Users Ranking'},{name:'Groups Ranking'}];
 		
 		//boolean variables to hide/show menues
+		$scope.showActionColumn = false;
 		$scope.showCreateBug = true;
 		$scope.showOpenBugs = false;
 		$scope.showMyOpenBugs = false;
@@ -85,8 +85,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				bugId: bugId,
 				status : newStatus
 			}
-			Bugs.changeStatus(config,function(bug){
-				$scope.searchMyOpenBugs();
+			Bugs.changeStatus(config,function(err,bug){
+				if (!err && bug != null){
+					$scope.searchMyOpenBugs();
+					if ($scope.currentBug)
+						$scope.currentBug.status = newStatus;
+					//success
+					$scope.success='Bug ' + newStatus + ' Successfuly';
+				} else {
+					//error
+					$scope.error='Error when '+newStatus+' the bug: '+err;
+				}
 			});
 		};
 
@@ -96,12 +105,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			}
 		
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 			
 			Bugs.getUsersRanking(config,function(ranking){
@@ -118,12 +132,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				$scope.findOne();
 			};
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 
 			Bugs.getGroupsRanking(config,function(ranking){
@@ -141,12 +160,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				$scope.findOne();
 			};
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 
 			Bugs.getGroupsWithMoreBugsRanking(config,function(ranking){
@@ -214,12 +238,16 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 		//functions that use Bugs service
 		$scope.reportBug = function() {
+
 			var bug = {
 				className: this.className,
 				routineName: this.routineName,
 				description: this.description,
 				competition: $scope.competition._id,
-				group_reported: this.group._id
+				group_reported: this.group._id,
+				title: this.title,
+				groupReportedName : this.group.name,
+				competitionName : this.competition.name
 			};
 			var self = this;
 			Bugs.reportBug(bug,function(err,bug){
@@ -230,6 +258,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 					self.routineName = '';
 					self.description = '';
 					self.group_reported = '';
+					self.title = ''
 
 				} else {
 					//error
@@ -375,6 +404,54 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			}
 		};
 
+		var wait = function() {
+			var deferred = $q.defer();
+			setTimeout(function() {
+				$scope.findOne();
+				if (!$rootScope.competition) {
+					deferred.resolve('Success');
+				}
+			}, 1000);
+			return deferred.promise;
+		};
+
+		var processFindOneBug = function() {
+			Bugs.getById($stateParams.bugId,function(err,bug){
+				if (!err) {
+					var isMy = isOwn($rootScope.competition.groupsList,bug.group_reported);
+					$scope.currentBug=bug;
+					$scope.currentBug.isOwn = isMy;
+				}
+			});
+		}
+
+		$scope.findOneBug = function() {
+			if (!$rootScope.competition) {
+			wait().then(function(msg){
+				if (msg == 'Success') {
+					processFindOneBug();
+				}
+			});
+			} else {
+				processFindOneBug();
+			}
+		};
+
+		var isOwn = function(groupsList,actualGroupId) {
+			var result = false;
+			for (var i = groupsList.length - 1; i >= 0; i--) {
+				if (groupsList[i]._id == actualGroupId) {
+					for (var j = groupsList[i].studentsArrayList.length - 1; j >= 0; j--) {
+						if ($scope.authentication.user.username == groupsList[i].studentsArrayList[j]) {
+							result = true;
+							break;
+						}
+					};
+					break;
+				}
+			};
+			return result;
+		};
 		// Find existing Competition
 		$scope.findOne = function() {
 			Competitions.get({ 

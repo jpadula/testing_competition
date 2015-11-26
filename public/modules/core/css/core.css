@@ -15,13 +15,8 @@
 	border-color: #ccc;
 }
 .ng-valid.ng-dirty {
-<<<<<<< HEAD
 	border-color: #ccc;
 }
-=======
-	border-color: #78FA89;
-}
-
 .nice-font {
     font-weight: 200;
     font-size: 22px;
@@ -36,5 +31,6 @@
     background-color: #7704d1 !important;
 }
 
-
->>>>>>> f56cac716a91c2d234ad0ab844975a5bbe0061b2
+.legendsText {
+    font-size: 15px !important;
+}

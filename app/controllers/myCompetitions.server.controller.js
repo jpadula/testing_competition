@@ -13,7 +13,6 @@ var mongoose = require('mongoose'),
  * List of Competitions
  */
 exports.list = function(req, res) { 
-	console.log("hola",req.user);
 	var username = [req.user.username];
 	Group.find({studentsArrayList:{$in:username}}).exec(function(err,groups){
 		if (err) {

@@ -1,0 +1,23 @@
+<section data-ng-controller='CompetitionsController' data-ng-init='findOneBug()'>
+	<section data-ng-if='currentBug'>
+		<p>Bug Title: {{currentBug.title}}</p>
+		<p>Class: {{currentBug.className}}</p>
+		<p>Routine: {{currentBug.routineName}}</p>
+		<p>Description: {{currentBug.description}}</p>
+		<p>Group Reported: {{currentBug.groupReportedName}}</p>
+		<p>Reported By: {{currentBug.user.displayName}}</p>
+		<p>Status: {{currentBug.status}}</p>
+
+
+		<div data-ng-if='currentBug.isOwn'>
+			<button class="btn btn-success" data-ng-click = "changeStatus('{{currentBug._id}}','APPROVED');">Approve Bug</button>
+            <button class="btn btn-danger" data-ng-click = "changeStatus('{{currentBug._id}}','REJECTED')">Reject Bug</button>
+		</div>
+		<div data-ng-show="success" class="alert alert-success">
+            <strong data-ng-bind="success"></strong>
+        </div>
+        <div data-ng-show="error" class="alert alert-danger">
+			<strong data-ng-bind="error"></strong>
+		</div>
+	</section>
+</section>
