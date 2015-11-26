@@ -58,6 +58,11 @@ ApplicationConfiguration.registerModule('countries');
 ApplicationConfiguration.registerModule('groups');
 'use strict';
 
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('logs');
+
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
 
@@ -98,8 +103,8 @@ angular.module('competitions').run(['Menus',
 		Menus.addSubMenuItem('topbar', 'competitions', 'New Competition', 'competitions/create');
 		
 		// My Competitions for User
-		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'item', '',true,["user"]);
-		//Menus.addSubMenuItem('topbar', 'my_competitions', 'See Competitions List', 'my_competitions');
+		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'dropdown', '',true,["user"]);
+		Menus.addSubMenuItem('topbar', 'my_competitions', 'Show Competitions', 'my_competitions');
 
 	}
 ]);
@@ -153,6 +158,16 @@ angular.module('competitions').config(['$stateProvider',
 		state('allBugs', {
 			url: '/competitions/:competitionId/allBugs',
 			templateUrl: 'modules/competitions/views/list-bugs.client.view.html',
+			data: {
+        		permissions: {
+          			only: ['admin','user'],
+          			redirectTo: 'home'
+        		}
+      		}
+		}).
+		state('bugProfile', {
+			url: '/competitions/:competitionId/allBugs/:bugId',
+			templateUrl: 'modules/competitions/views/profile-bug.client.view.html',
 			data: {
         		permissions: {
           			only: ['admin','user'],
@@ -228,10 +243,9 @@ angular.module('competitions').config(['$stateProvider',
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
-	function($scope, $stateParams, $location, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
+	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
 		$scope.authentication = Authentication;
-
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
 		$scope.wrapperGroupsList = [];
@@ -244,6 +258,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 		$scope.rankingTypes = [{name:'Users Ranking'},{name:'Groups Ranking'}];
 		
 		//boolean variables to hide/show menues
+		$scope.showActionColumn = false;
 		$scope.showCreateBug = true;
 		$scope.showOpenBugs = false;
 		$scope.showMyOpenBugs = false;
@@ -312,8 +327,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				bugId: bugId,
 				status : newStatus
 			}
-			Bugs.changeStatus(config,function(bug){
-				$scope.searchMyOpenBugs();
+			Bugs.changeStatus(config,function(err,bug){
+				if (!err && bug != null){
+					$scope.searchMyOpenBugs();
+					if ($scope.currentBug)
+						$scope.currentBug.status = newStatus;
+					//success
+					$scope.success='Bug ' + newStatus + ' Successfuly';
+				} else {
+					//error
+					$scope.error='Error when '+newStatus+' the bug: '+err;
+				}
 			});
 		};
 
@@ -323,12 +347,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			}
 		
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 			
 			Bugs.getUsersRanking(config,function(ranking){
@@ -345,12 +374,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				$scope.findOne();
 			};
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 
 			Bugs.getGroupsRanking(config,function(ranking){
@@ -368,12 +402,17 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				$scope.findOne();
 			};
 			var id;
-			if (!$rootScope.competition)
+			var competitionName = 'N/A';
+			if (!$rootScope.competition){
 				id = $stateParams.competitionId;
-			else
-				id = $rootScope.competition._id
+			}
+			else{
+				id = $rootScope.competition._id;
+				competitionName = $rootScope.competition.name;
+			}
 			var config = {
-				competition:id
+				competition:id,
+				competitionName:competitionName
 			};
 
 			Bugs.getGroupsWithMoreBugsRanking(config,function(ranking){
@@ -441,12 +480,16 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 
 		//functions that use Bugs service
 		$scope.reportBug = function() {
+
 			var bug = {
 				className: this.className,
 				routineName: this.routineName,
 				description: this.description,
 				competition: $scope.competition._id,
-				group_reported: this.group._id
+				group_reported: this.group._id,
+				title: this.title,
+				groupReportedName : this.group.name,
+				competitionName : this.competition.name
 			};
 			var self = this;
 			Bugs.reportBug(bug,function(err,bug){
@@ -457,6 +500,7 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 					self.routineName = '';
 					self.description = '';
 					self.group_reported = '';
+					self.title = ''
 
 				} else {
 					//error
@@ -602,6 +646,54 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			}
 		};
 
+		var wait = function() {
+			var deferred = $q.defer();
+			setTimeout(function() {
+				$scope.findOne();
+				if (!$rootScope.competition) {
+					deferred.resolve('Success');
+				}
+			}, 1000);
+			return deferred.promise;
+		};
+
+		var processFindOneBug = function() {
+			Bugs.getById($stateParams.bugId,function(err,bug){
+				if (!err) {
+					var isMy = isOwn($rootScope.competition.groupsList,bug.group_reported);
+					$scope.currentBug=bug;
+					$scope.currentBug.isOwn = isMy;
+				}
+			});
+		}
+
+		$scope.findOneBug = function() {
+			if (!$rootScope.competition) {
+			wait().then(function(msg){
+				if (msg == 'Success') {
+					processFindOneBug();
+				}
+			});
+			} else {
+				processFindOneBug();
+			}
+		};
+
+		var isOwn = function(groupsList,actualGroupId) {
+			var result = false;
+			for (var i = groupsList.length - 1; i >= 0; i--) {
+				if (groupsList[i]._id == actualGroupId) {
+					for (var j = groupsList[i].studentsArrayList.length - 1; j >= 0; j--) {
+						if ($scope.authentication.user.username == groupsList[i].studentsArrayList[j]) {
+							result = true;
+							break;
+						}
+					};
+					break;
+				}
+			};
+			return result;
+		};
 		// Find existing Competition
 		$scope.findOne = function() {
 			Competitions.get({ 
@@ -698,7 +790,9 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 			},
 			changeStatus: function(config,cb) {
 				$http.put('/bugs/'+config.bugId,config).success(function(bug){
-					cb(bug);
+					cb(null,bug);
+				}).error(function(err){
+					cb(err,null);
 				});
 			},
 			getUsersRanking: function(config,cb) {
@@ -714,6 +808,13 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 			getGroupsWithMoreBugsRanking: function(config,cb) {
 				$http.post('/bugs/getGroupsWithMoreBugsRanking',config).success(function(ranking){
 					cb(ranking);
+				});
+			},
+			getById: function(id,cb) {
+				$http.get('/bugs/'+id).success(function(bug){
+					cb(null,bug);
+				}).error(function(err){
+					cb(err,null);
 				});
 			}
 		}
@@ -2398,6 +2499,71 @@ angular.module('groups').factory('Groups', ['$resource',
 				method: 'PUT'
 			}
 		});
+	}
+]);
+'use strict';
+
+// Configuring the Countries module
+angular.module('logs').run(['Menus',
+	function(Menus) {
+		
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Logs', 'logs', 'item', '',true,["admin"]);
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('countries').config(['$stateProvider',
+	function($stateProvider) {
+		// Countries state routing
+		$stateProvider.
+		state('listLogs', {
+			url: '/logs',
+			templateUrl: 'modules/logs/views/list-logs.client.view.html',
+			data: {
+        		permissions: {
+          			only: ['admin'],
+          			redirectTo: 'home'
+        		}
+      		}
+		})
+	}
+]);
+'use strict';
+
+// Logs controller
+angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs',
+	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs) {
+		$scope.findAll = function() {
+			$scope.logs = Logs.getAllLogs(function(err,logs){
+				if (!err) {
+					$scope.logs = logs;
+					$scope.groupsRankingDatatable();
+				} else {
+					//error
+				}
+			});
+		};
+
+		$scope.groupsRankingDatatable = function() {
+			var data = $scope.logs;
+			$scope.datatableLogs = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
+		};
+	}
+]);
+//Logs service used to communicate Logs REST endpoints
+angular.module('competitions').factory('Logs', ['$resource','$http',
+	function($resource,$http) {
+		return {
+			getAllLogs: function(cb) {
+				$http.get('/api/logs').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			}
+		}
 	}
 ]);
 'use strict';
