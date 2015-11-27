@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'testing-competition';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils','permission','isteven-multi-select','ngTable'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils','permission','isteven-multi-select','ngTable','chart.js'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -2533,22 +2533,189 @@ angular.module('countries').config(['$stateProvider',
 'use strict';
 
 // Logs controller
-angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs',
-	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs) {
-		$scope.findAll = function() {
-			$scope.logs = Logs.getAllLogs(function(err,logs){
-				if (!err) {
-					$scope.logs = logs;
-					$scope.groupsRankingDatatable();
-				} else {
-					//error
-				}
-			});
-		};
+angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs', 'StatsSrv',
+	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs, StatsSrv) {
+
+    $scope.logAlerts = [];
+
+    var fromDate = new Date("2015-11-24"); // TODO: refactor, to take a date from datepicker
+    var untilDate = new Date();
+
+    /**
+     * Given a source array with data, the function adds to the graph array the property .labels
+     * which contains the labels for the x-axis of the graph
+     *
+     * Requires: graphArray.labels must exist and graphArray.labels = []
+     *
+     * @param aSourceArray {Array} contains elements of form {_id: {year:, month:, day:}, count: }
+     * @param aGraphObject {Object} has property 'labels' that is an empty array; will be filled by running this function
+     */
+    var addLabelsToGraph = function (aSourceArray, aGraphObject) {
+
+      // names of month for the x-axis labels
+      var monthNames = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+
+      // step-level defines if every data point on x-axis also get a label (default yes, thus value 1)
+      var graphStepLevel = 1;
+      // if x-axis has more than 20 points, not every point should get label
+      // we recalculate the step-level based on number of points on x-axis
+      if (aSourceArray.length > 20) {
+        graphStepLevel = Math.ceil(aSourceArray.length / 20);
+      }
+
+      for (var i = 0; i < aSourceArray.length; i++) {
+        if (i % graphStepLevel == 0) {
+          // only set a labels at the graphStepLevel
+          aGraphObject.labels.push(monthNames[aSourceArray[i]._id.month - 1] + " " + aSourceArray[i]._id.day);
+        } else {
+          aGraphObject.labels.push("");
+        }
+      }
+    };
+
+
+    /**
+     * Adds a new line to the given graph object.
+     * @param aSourceArray {Array} contains elements that contain property {count: }
+     * @param aGraphObject {Object} has property 'data' that is an empty array;
+     * function will push a new array as element that contains the y-data points for line
+     */
+    var addLineToGraph = function (aSourceArray, aGraphObject) {
+      var dataNew = [];
+      for (var i = 0; i < aSourceArray.length; i++) {
+        dataNew.push(aSourceArray[i].count);
+      }
+      aGraphObject.data.push(dataNew);
+    }
+
+    /**
+     * Displays the graph for number of compilations per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawSigninGraph = function () {
+
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.singinGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.signinLogs);
+
+      $scope.singinGraph.series.push('Sign in');
+      addLineToGraph($scope.signinLogs, $scope.singinGraph);
+
+      addLabelsToGraph($scope.signinLogs, $scope.singinGraph);
+    };
+
+    var drawReportBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportBugLogs);
+
+      $scope.reportBugGraph.series.push('Sign in');
+      addLineToGraph($scope.reportBugLogs, $scope.reportBugGraph);
+
+      addLabelsToGraph($scope.reportBugLogs, $scope.reportBugGraph);
+    };
+
+    /**
+     * gets the data for signin and draws the graph
+     */
+    var getSigninDataForGraph = function () {
+      $scope.isLoadingSigninGraphData = true;
+      Logs.signinEvent(function(err,result){
+        if (!err) {
+          $scope.signinLogs = result;
+          drawSigninGraph();
+          $scope.isLoadingSigninGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
+    };
+
+    /**
+     * Gets the data reportedBugs and draws the graphs
+     */
+    var getReportedBugsDataForGraph = function () {
+      $scope.isLoadingReportedBugGraphData = true;
+      Logs.reportBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportBugLogs = result;
+          drawReportBugGraph();
+          $scope.isLoadingReportedBugGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
+    };
+    var getGoldMedalsDataForGraph = function () {
+
+    };
+    var getSilverMedalsDataForGraph = function () {
+
+    };
+    var getAcceptReportDataForGraph = function () {
+
+    };
+    var getRejectDataForGraph = function () {
+
+    };
+
+    /**
+     * gets all the draw logs from the server
+     */
+    var getAllLogsData = function () {
+      Logs.getAllLogs(function(err,logs){
+        if (!err) {
+          $scope.logs = logs;
+          $scope.groupsRankingDatatable();
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading all logs" });
+        }
+      });
+    };
+    /**
+     * Updates the data when the starting or ending dates are changed
+     */
+    var update = function () {
+      getSigninDataForGraph();
+      getReportedBugsDataForGraph();
+      getGoldMedalsDataForGraph();
+      getSilverMedalsDataForGraph();
+      getAcceptReportDataForGraph();
+      getRejectDataForGraph();
+      getAllLogsData();
+    };
+
+    /**
+     * updates all the logs, including sign in per day, reported bugs, etc.
+     */
+    $scope.findAllLogs = function() {
+      update();
+    };
+
+
 
 		$scope.groupsRankingDatatable = function() {
 			var data = $scope.logs;
-			console.log('data: ',data);
 			for (var i = data.length - 1; i >= 0; i--) {
 				pushCodeText(data[i]);
 			};
@@ -2556,7 +2723,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		};
 
 		var pushCodeText = function(element) {
-			console.log('Element: ',element);
+			//console.log('Element: ',element);
 			if (element.pageCode == 1)
 				element.pageText = 'Signin'
 			if (element.pageCode == 2)
@@ -2584,6 +2751,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		}
 	}
 ]);
+
 //Logs service used to communicate Logs REST endpoints
 angular.module('competitions').factory('Logs', ['$resource','$http',
 	function($resource,$http) {
@@ -2594,10 +2762,201 @@ angular.module('competitions').factory('Logs', ['$resource','$http',
 				}).error(function(err){
 					cb(err,null);
 				});
+			},
+			signinEvent: function(cb) {
+				$http.get('/api/logs/signinEvent').success(function(logs){
+					cb(null,logs)
+				}).error(function(err){
+					cb(err,null)
+				});
+			},
+			reportBugEvent: function(cb) {
+				$http.get('/api/logs/reportBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			reportGoldMedalBugEvent: function(cb) {
+				$http.get('/api/logs/reportGoldMedalBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			reportSilverMedalBugEvent: function(cb) {
+				$http.get('/api/logs/reportSilverMedalBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			reportAcceptedBugEvent: function(cb) {
+				$http.get('/api/logs/reportAcceptedBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			reportRejectedBugEvent: function(cb) {
+				$http.get('/api/logs/reportRejectedBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
 			}
 		}
 	}
 ]);
+/**
+ * Created by Martin on 27/11/15.
+ */
+/**
+ * StatsSrv is a service that provides functionality
+ * that's used to render the graphs on the projects' stats page
+ *
+ * Created by Martin on 13/10/15.
+ *
+ */
+'use strict';
+
+angular.module('competitions')
+  .service('StatsSrv', function StatsSrv() {
+
+
+    /**
+     * Returns a new date that is aNumOfDaysAfter days after the given date aDate.
+     * @param aDate {Date} the date from which to add days
+     * @param aNumOfDaysAfter {Number} number of days the new date should be after aDate
+     * @returns {Date} the new date that is aNumOfDaysAfter days after aDate
+     */
+    var getDateNDaysAfter = function (aDate, aNumOfDaysAfter) {
+      // create a new date based on aDate
+      var result = new Date(aDate.getTime());
+      // add the given number of days to 'result' date
+      result.setDate(result.getDate() + aNumOfDaysAfter);
+
+      return result;
+    }
+
+
+    /**
+     * Returns a new date that is aNumOfDaysBefore days before the given date aDate.
+     * @param aDate {Date} the date from which to subtract days
+     * @param aNumOfDaysBefore {Number} number of days the new date should be after aDate
+     * @returns {Date} the new date that is aNumOfDaysBefore days after aDate
+     */
+    var getDateNDaysBefore = function (aDate, aNumOfDaysBefore) {
+      return getDateNDaysAfter(aDate, -(aNumOfDaysBefore));
+    };
+
+
+    /**
+     * Adds into aArray new dates between aStartDate and aStopDate (including both boundary dates).
+     * The inserted object is an object {_id: {year:, month:, day:}, count: 0}.
+     * @param aStartDate {Date} first date that should be in the array
+     * @param aStopDate {Date} last date that should be in the array
+     * @param aArray {Array} the array to fill with elements (where they are missing)
+     */
+    var addMissingDates = function (aStartDate, aStopDate, aArray) {
+
+      var currentDate = aStartDate;
+
+      while (currentDate <= aStopDate) {
+        var d = {
+          _id: {
+            year: currentDate.getFullYear(),
+            month: currentDate.getMonth() + 1,
+            day: currentDate.getDate()
+          },
+          count: 0
+        };
+
+        aArray.push(d);
+        currentDate = getDateNDaysAfter(currentDate, 1);
+      }
+    }
+
+
+    /**
+     * Sorts the given Array and adds elements of form {_id: {year:, month:, day:}, count: 0} with the appropriate
+     * date if that date is missing in the array.
+     *
+     * Requires: if aArray has elements, the satisfy object structure {_id: {year:, month:, day:}}
+     *
+     * @param aStartDateLogs {Date} the first date should be in the array (when this function is done)
+     * @param aEndDateLogs {Date} the last date should be in the array (when this function is done)
+     * @param aArray {Array} array that may contain elements that satisfy object structure {_id: {year:, month:, day:}}
+     */
+    var sortAndAddMissingDates = function (aStartDateLogs, aEndDateLogs, aArray) {
+
+      // Inner function implementing a comparison for two Array elements; used to sort the Array.
+      var compareArrayElemsByDate = function (a, b) {
+        // create dates and then subtract them to get a value that is either negative, positive, or zero
+        return new Date(a._id.year, a._id.month - 1, a._id.day) - new Date(b._id.year, b._id.month - 1, b._id.day);
+      }
+
+      // sort the dates in the array
+      aArray.sort(compareArrayElemsByDate);
+
+      var aArrayLength = aArray.length;
+      var milliSecsInADay = 86400000;
+
+      // if empty, then add all dates between start and end
+      if (aArrayLength == 0) {
+        addMissingDates(aStartDateLogs, aEndDateLogs, aArray);
+      }
+      else {
+
+        // add the missing dates between StartDate and the first element
+        var firstDateInArray = new Date(aArray[0]._id.year, aArray[0]._id.month - 1, aArray[0]._id.day);
+
+        if (firstDateInArray - aStartDateLogs >= milliSecsInADay) {
+
+          // get the day before the first date in the array
+          var dayBeforeFirstDateInArray = getDateNDaysBefore(firstDateInArray, 1);
+
+          addMissingDates(aStartDateLogs, dayBeforeFirstDateInArray, aArray);
+        }
+
+        // add the missing dates between last element and the endDate
+        var lastDateInArray = new Date(aArray[aArrayLength - 1]._id.year, aArray[aArrayLength - 1]._id.month - 1, aArray[aArrayLength - 1]._id.day);
+        if (aEndDateLogs - lastDateInArray >= milliSecsInADay) {
+
+          // get the day after the last date in the array
+          var dayAfterLastDateInArray = getDateNDaysAfter(lastDateInArray, 1);
+
+          addMissingDates(dayAfterLastDateInArray, aEndDateLogs, aArray);
+        }
+      }
+
+      for (var i = 0; i < aArrayLength - 1; i++) {
+
+        var dateInArray = new Date(aArray[i]._id.year, aArray[i]._id.month - 1, aArray[i]._id.day);
+        var nextDateInArray = new Date(aArray[i + 1]._id.year, aArray[i + 1]._id.month - 1, aArray[i + 1]._id.day);
+
+        if (nextDateInArray - dateInArray >= milliSecsInADay) {
+
+          // get the day after and the day before the dates in the array
+          var dayAfterDateInArray = getDateNDaysAfter(dateInArray, 1);
+          var dayBeforeNextDateInArray = getDateNDaysBefore(nextDateInArray, 1)
+
+          addMissingDates(dayAfterDateInArray, dayBeforeNextDateInArray, aArray);
+        }
+      }
+
+      // sort again after we've added all the missing dates to the array
+      aArray.sort(compareArrayElemsByDate);
+    };
+
+
+    // the return object, exposing the public functions of this service
+    return {
+      sortAndAddMissingDates: sortAndAddMissingDates
+    };
+
+  });
+
 'use strict';
 
 // Config HTTP Error Handling
