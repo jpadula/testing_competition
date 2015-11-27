@@ -76,7 +76,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.signinLogs);
 
       $scope.singinGraph.series.push('Sign in');
-      addLineToGraph($scope.compilerSummaryLogs, $scope.singinGraph);
+      addLineToGraph($scope.signinLogs, $scope.singinGraph);
 
       addLabelsToGraph($scope.signinLogs, $scope.singinGraph)
     };
