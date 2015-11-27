@@ -16,7 +16,6 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
 		$scope.groupsRankingDatatable = function() {
 			var data = $scope.logs;
-			console.log('data: ',data);
 			for (var i = data.length - 1; i >= 0; i--) {
 				pushCodeText(data[i]);
 			};
