@@ -28,7 +28,7 @@
             <div class="row projectStats-row-spacing">
             <div ng-if="!isLoadingSigninGraphData">
                 <canvas id="line" class="chart chart-line" chart-data="singinGraph.data"
-                        chart-labels="singinGraph.labels" chart-series="singinGraph.series">
+                        chart-labels="singinGraph.labels" chart-series="singinGraph.series" chart-options='chartOptions'>
                 </canvas>
             </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="row projectStats-row-spacing">
                 <div ng-if="!isLoadingReportedBugGraphData">
                     <canvas id="line2" class="chart chart-line" chart-data="reportBugGraph.data"
-                            chart-labels="reportBugGraph.labels" chart-series="reportBugGraph.series">
+                            chart-labels="reportBugGraph.labels" chart-series="reportBugGraph.series" chart-options='chartOptions'>
                     </canvas>
                 </div>
             </div>
@@ -56,14 +56,83 @@
 
     </div>
     </div>
+    <div class="row projectStats-row-spacing">
+        <div class="col-md-12">
 
-    <h3> Gold medals per day</h3>
+        <div class="col-md-6">
+            <h3> Gold medals per day</h3>
+            <div>
+                <div ng-show="isLoadingReportedGoldMedalBugGraphData">
+                    <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                        Loading...
+                    </h4>
+                </div>
 
-    <h3> Silver medals per day</h3>
+                <div class="row projectStats-row-spacing">
+                <div ng-if="!isLoadingReportedGoldMedalBugGraphData">
+                    <canvas id="line3" class="chart chart-line" chart-data="reportGoldMedalBugGraph.data"
+                            chart-labels="reportGoldMedalBugGraph.labels" chart-series="reportGoldMedalBugGraph.series" chart-options='chartOptions'>
+                    </canvas>
+                </div>
+                </div>
+            </div>
+        </div>
 
-    <h3> Accept bugs per day</h3>
+        <div class="col-md-6">
+            <h3> Silver medals per day</h3>
+            <div ng-show="isLoadingReportedSilverMedalBugGraphData">
+                <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                    Loading...
+                </h4>
+            </div>
 
-    <h3> Rejected bugs per day</h3>
+            <div class="row projectStats-row-spacing">
+                <div ng-if="!isLoadingReportedSilverMedalBugGraphData">
+                    <canvas id="line4" class="chart chart-line" chart-data="reportSilverMedalBugGraph.data"
+                            chart-labels="reportSilverMedalBugGraph.labels" chart-series="reportSilverMedalBugGraph.series" chart-options='chartOptions'>
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="row projectStats-row-spacing">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <h3> Accept bugs per day</h3>
+                <div ng-show="isLoadingReportedAcceptedBugGraphData">
+                    <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                        Loading...
+                    </h4>
+                </div>
+
+                <div class="row projectStats-row-spacing">
+                    <div ng-if="!isLoadingReportedAcceptedBugGraphData">
+                        <canvas id="line5" class="chart chart-line" chart-data="reportAcceptedBugGraph.data"
+                                chart-labels="reportAcceptedBugGraph.labels" chart-series="reportAcceptedBugGraph.series" chart-options='chartOptions'>
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3> Rejected bugs per day</h3>
+                <div ng-show="isLoadingReportedRejectedBugGraphData">
+                    <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                        Loading...
+                    </h4>
+                </div>
+
+                <div class="row projectStats-row-spacing">
+                    <div ng-if="!isLoadingReportedRejectedBugGraphData">
+                        <canvas id="line6" class="chart chart-line" chart-data="reportRejectedBugGraph.data"
+                                chart-labels="reportRejectedBugGraph.labels" chart-series="reportRejectedBugGraph.series" chart-options='chartOptions'>
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
 
     <h2>Details of all logs </h2>

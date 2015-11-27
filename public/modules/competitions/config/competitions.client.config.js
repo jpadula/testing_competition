@@ -4,9 +4,14 @@
 angular.module('competitions').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Competitions', 'competitions', 'dropdown', '/competitions(/create)?',true,["admin"]);
-		Menus.addSubMenuItem('topbar', 'competitions', 'Show Competitions', 'competitions');
-		Menus.addSubMenuItem('topbar', 'competitions', 'New Competition', 'competitions/create');
+		Menus.addMenuItem('topbar', 'Admin', 'admin', 'dropdown',true,["admin"]);
+		Menus.addSubMenuItem('topbar', 'admin', 'Show Competitions', 'competitions');
+		Menus.addSubMenuItem('topbar', 'admin', 'New Competition', 'competitions/create');
+				
+		Menus.addSubMenuItem('topbar', 'admin', 'Show Groups', 'groups');
+		Menus.addSubMenuItem('topbar', 'admin', 'New Group', 'groups/create');
+		
+		Menus.addSubMenuItem('topbar', 'admin', 'Logs', 'logs');
 		
 		// My Competitions for User
 		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'dropdown', '',true,["user"]);
