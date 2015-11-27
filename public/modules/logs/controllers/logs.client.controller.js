@@ -86,6 +86,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       $scope.dataSignin = $scope.singinGraph.data;
       $scope.labelsSignin = $scope.singinGraph.labels;
       $scope.seriesSignin = $scope.singinGraph.series;
+
     };
 
     /**
@@ -167,7 +168,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		};
 
 		var pushCodeText = function(element) {
-			console.log('Element: ',element);
+			//console.log('Element: ',element);
 			if (element.pageCode == 1)
 				element.pageText = 'Signin'
 			if (element.pageCode == 2)
