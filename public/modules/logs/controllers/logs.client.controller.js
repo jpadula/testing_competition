@@ -6,7 +6,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
     $scope.logAlerts = [];
 
-    var fromDate = new Date("2015-11-25"); // TODO: refactor, to take a date from datepicker
+    var fromDate = new Date("2015-11-24"); // TODO: refactor, to take a date from datepicker
     var untilDate = new Date();
 
     /**
@@ -71,9 +71,6 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
         series: [],
         data: []
       };
-      $scope.dataSignin;
-      $scope.labelsSignin;
-      $scope.seriesSignin;
 
       // sort the array for signin logs and add the missing dates (which have a count of 0)
       StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.signinLogs);
@@ -82,11 +79,23 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       addLineToGraph($scope.signinLogs, $scope.singinGraph);
 
       addLabelsToGraph($scope.signinLogs, $scope.singinGraph);
+    };
 
-      $scope.dataSignin = $scope.singinGraph.data;
-      $scope.labelsSignin = $scope.singinGraph.labels;
-      $scope.seriesSignin = $scope.singinGraph.series;
+    var drawReportBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
 
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportBugLogs);
+
+      $scope.reportBugGraph.series.push('Sign in');
+      addLineToGraph($scope.reportBugLogs, $scope.reportBugGraph);
+
+      addLabelsToGraph($scope.reportBugLogs, $scope.reportBugGraph);
     };
 
     /**
@@ -105,10 +114,24 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
           $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
         }
       });
-
     };
-    var getReportedBugsDataForGraph = function () {
 
+    /**
+     * Gets the data reportedBugs and draws the graphs
+     */
+    var getReportedBugsDataForGraph = function () {
+      $scope.isLoadingReportedBugGraphData = true;
+      Logs.reportBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportBugLogs = result;
+          drawReportBugGraph();
+          $scope.isLoadingReportedBugGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
     };
     var getGoldMedalsDataForGraph = function () {
 
