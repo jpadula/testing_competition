@@ -46,7 +46,7 @@ exports.listSigninLogs = function(req, res) {
 exports.listReportBugLogs = function(req, res) {
 	logSrv.apiEvents.listReportBugLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
@@ -62,7 +62,7 @@ exports.listReportBugLogs = function(req, res) {
 exports.listReportGoldMedalBugLogs = function(req, res) {
 	logSrv.apiEvents.listReportGoldMedalBugLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
@@ -78,7 +78,7 @@ exports.listReportGoldMedalBugLogs = function(req, res) {
 exports.listReportSilverMedalBugLogs = function(req, res) {
 	logSrv.apiEvents.listReportSilverMedalBugLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
@@ -94,7 +94,7 @@ exports.listReportSilverMedalBugLogs = function(req, res) {
 exports.listReportAcceptedBugLogs = function(req, res) {
 	logSrv.apiEvents.listReportAcceptedBugLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
@@ -110,7 +110,7 @@ exports.listReportAcceptedBugLogs = function(req, res) {
 exports.listReportRejectedBugLogs = function(req, res) {
 	logSrv.apiEvents.listReportRejectedBugLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
