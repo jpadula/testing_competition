@@ -13,5 +13,25 @@ module.exports = function(app) {
 	// Number of users accessing per day.
 	app.route('/api/logs/signinEvent')
 		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listSigninLogs);
+	
+	// Number of bugs reported per day.
+	app.route('/api/logs/reportBugEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportBugLogs);
+
+	// Number of gold medalbugs reported per day.
+	app.route('/api/logs/reportGoldMedalBugEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportGoldMedalBugLogs);
+
+	// Number of silver medal bugs reported per day.
+	app.route('/api/logs/reportSilverMedalBugEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportSilverMedalBugLogs);
+
+	// Number of bugs accepted per day.
+	app.route('/api/logs/reportAcceptedBugEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportAcceptedBugLogs);
+
+	// Number of bugs rejected per day.
+	app.route('/api/logs/reportRejectedBugEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportRejectedBugLogs);
 
 };
