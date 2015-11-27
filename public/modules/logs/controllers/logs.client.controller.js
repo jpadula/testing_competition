@@ -71,6 +71,9 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
         series: [],
         data: []
       };
+      $scope.dataSignin;
+      $scope.labelsSignin;
+      $scope.seriesSignin;
 
       // sort the array for signin logs and add the missing dates (which have a count of 0)
       StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.signinLogs);
@@ -78,7 +81,11 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       $scope.singinGraph.series.push('Sign in');
       addLineToGraph($scope.signinLogs, $scope.singinGraph);
 
-      addLabelsToGraph($scope.signinLogs, $scope.singinGraph)
+      addLabelsToGraph($scope.signinLogs, $scope.singinGraph);
+
+      $scope.dataSignin = $scope.singinGraph.data;
+      $scope.labelsSignin = $scope.singinGraph.labels;
+      $scope.seriesSignin = $scope.singinGraph.series;
     };
 
     /**
@@ -129,7 +136,6 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
         }
       });
     };
-
     /**
      * Updates the data when the starting or ending dates are changed
      */
