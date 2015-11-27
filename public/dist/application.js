@@ -2576,7 +2576,6 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       }
     };
 
-
     /**
      * Adds a new line to the given graph object.
      * @param aSourceArray {Array} contains elements that contain property {count: }
