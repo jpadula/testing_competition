@@ -30,7 +30,7 @@ exports.list = function(req, res) {
 exports.listSigninLogs = function(req, res) {
 	logSrv.apiEvents.listSigninLogsPerDay(function(err,result){
 		if (err) {
-			res.status(400).send({message:"Error: ",err});
+			res.status(400).send({message:"Error: "+err});
 		}
 		else {
 			res.send(result);
