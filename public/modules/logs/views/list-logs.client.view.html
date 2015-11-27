@@ -1,8 +1,59 @@
-<section data-ng-controller='LogsController' data-ng-init='findAll()'>
+<section data-ng-controller='LogsController' data-ng-init='findAllLogs()'>
     <div class="page-header">
         <h1>Logs</h1>
         <span class='legendsText'>This page shows the logs</span>
     </div>
+
+    <div ng-if="logAlerts.length>0" data-ng-repeat="alert in logAlerts">
+        <div class="alert alert-danger">
+            <strong data-ng-bind="alert.msg"> </strong>
+
+        </div>
+
+    </div>
+    <h2> Bug reports and user sign in</h2>
+
+    <div class="row logSpacing">
+    <div class="col-md-12">
+
+    <div class="col-md-6">
+    <h3> User sign in per day</h3>
+        <div>
+            <div ng-show="isLoadingSigninGraphData">
+                <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                    Loading...
+                </h4>
+            </div>
+
+
+            <div ng-if="!isLoadingSigninGraphData">
+                <canvas id="line23" class="chart chart-line" chart-data="dataGraphSignin.data"
+                        chart-labels="dataGraphSignin.labels" chart-legend="true" chart-series="dataGraphSignin.series"
+                        chart-options="chartOptions"
+                        style="height: 300px; width: 400px;">
+                </canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <h3> Reported bugs per day</h3>
+
+    </div>
+
+    </div>
+    </div>
+
+    <h3> Gold medals per day</h3>
+
+    <h3> Silver medals per day</h3>
+
+    <h3> Accept bugs per day</h3>
+
+    <h3> Rejected bugs per day</h3>
+
+
+    <h2>Details of all logs </h2>
     <table ng-table="datatableLogs" class="table table-bordered table-striped table-condensed" show-filter="true" >
 	    <tr ng-repeat="log in $data">
 	        <td title="'Date'" filter="{ date: 'text'}" sortable="'date'">
