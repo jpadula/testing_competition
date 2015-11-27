@@ -98,9 +98,14 @@ angular.module('users').run(["Authentication", "$q", "Permission", function (Aut
 angular.module('competitions').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Competitions', 'competitions', 'dropdown', '/competitions(/create)?',true,["admin"]);
-		Menus.addSubMenuItem('topbar', 'competitions', 'Show Competitions', 'competitions');
-		Menus.addSubMenuItem('topbar', 'competitions', 'New Competition', 'competitions/create');
+		Menus.addMenuItem('topbar', 'Admin', 'admin', 'dropdown',true,["admin"]);
+		Menus.addSubMenuItem('topbar', 'admin', 'Show Competitions', 'competitions');
+		Menus.addSubMenuItem('topbar', 'admin', 'New Competition', 'competitions/create');
+				
+		Menus.addSubMenuItem('topbar', 'admin', 'Show Groups', 'groups');
+		Menus.addSubMenuItem('topbar', 'admin', 'New Group', 'groups/create');
+		
+		Menus.addSubMenuItem('topbar', 'admin', 'Logs', 'logs');
 		
 		// My Competitions for User
 		Menus.addMenuItem('topbar', 'Competitions', 'my_competitions', 'dropdown', '',true,["user"]);
@@ -2333,9 +2338,11 @@ angular.module('countries').factory('Countries', ['$resource',
 angular.module('groups').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
+		/*
 		Menus.addMenuItem('topbar', 'Groups', 'groups', 'dropdown', '/groups(/create)?',true,["admin"]);
 		Menus.addSubMenuItem('topbar', 'groups', 'Show Groups', 'groups');
 		Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');
+		*/
 	}
 ]);
 'use strict';
@@ -2508,7 +2515,7 @@ angular.module('logs').run(['Menus',
 	function(Menus) {
 		
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Logs', 'logs', 'item', '',true,["admin"]);
+		//Menus.addMenuItem('topbar', 'Logs', 'logs', 'item', '',true,["admin"]);
 	}
 ]);
 'use strict';
@@ -2541,6 +2548,10 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
     var fromDate = new Date(); // TODO: refactor, to take a date from datepicker
     fromDate.setMonth(fromDate.getMonth()-1);
     var untilDate = new Date();
+
+    $scope.chartOptions = {
+      pointHitDetectionRadius:1
+    };
 
     /**
      * Given a source array with data, the function adds to the graph array the property .labels
@@ -2592,7 +2603,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
     }
 
     /**
-     * Displays the graph for number of compilations per day
+     * Displays the graph for number of signin per day
      * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
      */
     var drawSigninGraph = function () {
@@ -2613,6 +2624,10 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       addLabelsToGraph($scope.signinLogs, $scope.singinGraph);
     };
 
+    /**
+     * Displays the graph for number of reported bug per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
     var drawReportBugGraph = function () {
       // object containing the data for rendering the graph for compilation and runs
       $scope.reportBugGraph = {
@@ -2624,11 +2639,96 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       // sort the array for signin logs and add the missing dates (which have a count of 0)
       StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportBugLogs);
 
-      $scope.reportBugGraph.series.push('Sign in');
+      $scope.reportBugGraph.series.push('Report Bug');
       addLineToGraph($scope.reportBugLogs, $scope.reportBugGraph);
 
       addLabelsToGraph($scope.reportBugLogs, $scope.reportBugGraph);
     };
+
+    /**
+     * Displays the graph for number of gold medal bugs per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawReportGoldMedalBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportGoldMedalBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportGoldMedalBugLogs);
+
+      $scope.reportGoldMedalBugGraph.series.push('Report Gold Medal Bug');
+      addLineToGraph($scope.reportGoldMedalBugLogs, $scope.reportGoldMedalBugGraph);
+
+      addLabelsToGraph($scope.reportGoldMedalBugLogs, $scope.reportGoldMedalBugGraph);
+    };
+
+    /**
+     * Displays the graph for number of silver medal bugs per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawReportSilverMedalBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportSilverMedalBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportSilverMedalBugLogs);
+
+      $scope.reportSilverMedalBugGraph.series.push('Report Silver Medal Bug');
+      addLineToGraph($scope.reportSilverMedalBugLogs, $scope.reportSilverMedalBugGraph);
+
+      addLabelsToGraph($scope.reportSilverMedalBugLogs, $scope.reportSilverMedalBugGraph);
+    };
+
+    /**
+     * Displays the graph for number of accepted bugs per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawReportAcceptedBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportAcceptedBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportAcceptedBugLogs);
+
+      $scope.reportAcceptedBugGraph.series.push('Report Accepted Bug');
+      addLineToGraph($scope.reportAcceptedBugLogs, $scope.reportAcceptedBugGraph);
+
+      addLabelsToGraph($scope.reportAcceptedBugLogs, $scope.reportAcceptedBugGraph);
+    };
+
+    /**
+     * Displays the graph for number of Rejected bugs per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawReportRejectedBugGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportRejectedBugGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportRejectedBugLogs);
+
+      $scope.reportRejectedBugGraph.series.push('Report Rejected Bug');
+      addLineToGraph($scope.reportRejectedBugLogs, $scope.reportRejectedBugGraph);
+
+      addLabelsToGraph($scope.reportRejectedBugLogs, $scope.reportRejectedBugGraph);
+    };
+
 
     /**
      * gets the data for signin and draws the graph
@@ -2666,16 +2766,61 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       });
     };
     var getGoldMedalsDataForGraph = function () {
+      $scope.isLoadingReportedGoldMedalBugGraphData = true;
+      Logs.reportGoldMedalBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportGoldMedalBugLogs = result;
+          drawReportGoldMedalBugGraph();
+          $scope.isLoadingReportedGoldMedalBugGraphData = false;
 
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
     };
     var getSilverMedalsDataForGraph = function () {
+      $scope.isLoadingReportedSilverMedalBugGraphData = true;
+      Logs.reportSilverMedalBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportSilverMedalBugLogs = result;
+          drawReportSilverMedalBugGraph();
+          $scope.isLoadingReportedSilverMedalBugGraphData = false;
 
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
     };
-    var getAcceptReportDataForGraph = function () {
 
+    var getAcceptReportDataForGraph = function () {
+      $scope.isLoadingReportedAcceptedBugGraphData = true;
+      Logs.reportAcceptedBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportAcceptedBugLogs = result;
+          drawReportAcceptedBugGraph();
+          $scope.isLoadingReportedAcceptedBugGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
     };
     var getRejectDataForGraph = function () {
+      $scope.isLoadingReportedRejectedBugGraphData = true;
+      Logs.reportRejectedBugEvent(function(err,result){
+        if (!err) {
+          $scope.reportRejectedBugLogs = result;
+          drawReportRejectedBugGraph();
+          $scope.isLoadingReportedRejectedBugGraphData = false;
 
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+        }
+      });
     };
 
     /**
