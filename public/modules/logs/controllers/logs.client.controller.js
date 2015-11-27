@@ -79,6 +79,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       addLineToGraph($scope.signinLogs, $scope.singinGraph);
 
       addLabelsToGraph($scope.signinLogs, $scope.singinGraph)
+      console.log($scope.singinGraph);
     };
 
     /**
@@ -161,7 +162,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		};
 
 		var pushCodeText = function(element) {
-			console.log('Element: ',element);
+			//console.log('Element: ',element);
 			if (element.pageCode == 1)
 				element.pageText = 'Signin'
 			if (element.pageCode == 2)
