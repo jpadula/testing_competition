@@ -6,7 +6,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
     $scope.logAlerts = [];
 
-    var fromDate = new Date("2015-11-24"); // TODO: refactor, to take a date from datepicker
+    var fromDate = new Date("2015-11-24 10:00:00"); // TODO: refactor, to take a date from datepicker
     var untilDate = new Date();
 
     /**
