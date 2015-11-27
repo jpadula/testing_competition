@@ -1,27 +1,12 @@
 <section data-ng-controller="CompetitionsController" data-ng-init='searchMyOpenBugs()'>
+    <div class="page-header">
+        <h1>My Group Bugs</h1>
+        <span class='legendsText'>
+        This page shows bugs found in your group’s project. To see the details of the bugs, as well as to accept and reject the bug, click in the title.
+        </span>
+    </div>
     <section data-ng-if = "myOpenBugs.length > 0" data-ng-init= "myOpenBugsDatatable()" >
-        <div class="page-header">
-            <h1>My Group Bugs</h1>
-            <span class='legendsText'>
-            This page shows bugs found in your group’s project. To see the details of the bugs, as well as to accept and reject the bug, click in the title.
-            </span>
-        </div>
         <div class="list-bug">
-            <!--
-            <ul>
-                <li data-ng-repeat="bug in myOpenBugs" class="list-bug-item">
-                    <p>Reported By: {{bug.user.displayName}}</p>
-                    <p>Created on: <span data-ng-bind="bug.created | date:'mediumDate'"></span></p>
-
-                    <p>Class Name: {{bug.className}}</p>
-                    <p>Routine Name: {{bug.routineName}}</p>
-                    <button class="btn btn-primary" data-ng-click="showDescription = !showDescription;">Bug Description</button>
-                    <button class="btn btn-success" data-ng-click = "changeStatus('{{bug._id}}','APPROVED')">Approve</button>
-                    <button class="btn btn-danger" data-ng-click = "changeStatus('{{bug._id}}','REJECTED')">Reject</button>
-                    <p data-ng-if="showDescription">{{bug.description}}</p>
-                </li>
-            </ul>
-            -->
                 <table ng-table="datatableMyOpenBugs" class="table table-bordered table-striped table-condensed" show-filter="true">
                 <tr ng-repeat="bug in $data">
                     <td title="'Reported By'" filter="{ user: 'text'}" sortable="'user'">
@@ -60,11 +45,11 @@
 
     <section data-ng-if = "myOpenBugs.length == 0" >
         <div class="page-header">
-            <h1>No Open Bugs yet</h1>
+            <h1>No Bugs yet</h1>
         </div>
     </section>
 
     <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">
-    	No Open Bugs yet
+    	No Bugs yet
     </div>
 </section>

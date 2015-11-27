@@ -1,3 +1,4 @@
+<!--
 <section data-ng-controller='CompetitionsController' data-ng-init='findOneBug()'>
 	<section data-ng-if='currentBug'>
 		<p>Bug Title: {{currentBug.title}}</p>
@@ -21,3 +22,76 @@
 		</div>
 	</section>
 </section>
+-->
+<section data-ng-controller="CompetitionsController" data-ng-init='findOneBug()'>
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
+    <div class="panel panel-default">
+        <div class="panel-heading">            
+            <h3 class="panel-title">Bug profile</h3>
+            <span class='legendsText'>This is the view for a particular Bug.</span>
+        </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="title">Title</label>
+                            <div class="controls">
+                                <input type="text" value = '{{currentBug.title}}'class="form-control" readonly="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="className">Class</label>
+                            <div class="">
+                                <input type="text" class="form-control" value='{{currentBug.className}}'readonly="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="routineName">Routine</label>
+                            <div class="controls">
+                                <input type="text" value='{{currentBug.routineName}}' class="form-control" readonly="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description">Description</label>
+                            <div class="controls">
+                                <textarea class="form-control" readonly="" >{{currentBug.description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="routineName">Found in Group</label>
+                            <div class="controls">
+                                <input type="text" value='{{currentBug.groupReportedName}}' class="form-control" readonly="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="routineName">Reported by</label>
+                            <div class="controls">
+                                <input type="text" value='{{currentBug.user.displayName}}' class="form-control" readonly="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="routineName">Status</label>
+                            <div class="controls">
+                                <input type="text" value='{{currentBug.status}}' class="form-control" readonly="">
+                            </div>
+                        </div>
+                        <div data-ng-if='currentBug.isOwn'>
+                            <button class="btn btn-success" data-ng-click = "changeStatus('{{currentBug._id}}','APPROVED');">Approve Bug</button>
+                            <button class="btn btn-danger" data-ng-click = "changeStatus('{{currentBug._id}}','REJECTED')">Reject Bug</button>
+                        </div>
+                        <div data-ng-show="success" class="alert alert-success">
+                            <strong data-ng-bind="success"></strong>
+                        </div>
+                        <div data-ng-show="error" class="alert alert-danger">
+                            <strong data-ng-bind="error"></strong>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+

@@ -2,7 +2,7 @@
     <div class="page-header">
         <h1>All Bugs</h1>
         <span class='legendsText'>
-        This page shows all the bugs reported in the competition {NAME}. To see the details of the bugs, as well as to accept and reject the bug, click in the title. (You can only accepted and rejected bugs that are present in your group’s project)
+        This page shows all the bugs reported in the competition '{{competition.name}}'. To see the details of the bugs, as well as to accept and reject the bug, click in the title. (You can only accepted and rejected bugs that are present in your group’s project)
         </legend>
     </div>
     <div class="list-bug">
@@ -19,6 +19,6 @@
         <div data-ng-include="'/modules/competitions/views/list-bugs-repeat.client.view.html'"></div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!openBugs.$resolved || openBugs.length">
-    	No Groups yet
+    	No Bugs yet
     </div>
 </section>
