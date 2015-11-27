@@ -12,7 +12,10 @@
 	</div>
 	<div class="page-body">
 		<span style='font-weight:bold'>Description:</span>
-		<p>{{competition.description}}</p>
+		<div ng-bind-html="competition.description"
+         contenteditable="false"
+         ng-model="competition.description">
+    	</div>
 		
 		<span style='font-weight:bold'>Groups:</span>
 		<ul>

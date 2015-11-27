@@ -2,9 +2,9 @@
 
 module.exports = {
 	app: {
-		title: 'Testing Competition',
-		description: 'Testing Competition for DOSE',
-		keywords: 'Testing, DOSE, Testing Competition'
+		title: 'KALI - Organizing Testing Competitions',
+		description: 'KALI - Organizing Testing Competitions',
+		keywords: 'Testing, DOSE, KALI'
 	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
