@@ -47,7 +47,7 @@ angular.element(document).ready(function() {
 ApplicationConfiguration.registerModule('competitions');
 'use strict';
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('core');
+ApplicationConfiguration.registerModule('core',['ui.tinymce']);
 'use strict';
 
 // Use applicaion configuration module to register a new module
@@ -248,8 +248,8 @@ angular.module('competitions').config(['$stateProvider',
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
-	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope','CompetitionsUtils',
+	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope,CompetitionsUtils) {
 		$scope.authentication = Authentication;
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
@@ -704,15 +704,19 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			Competitions.get({ 
 				competitionId: $stateParams.competitionId
 			},function(competition){
+				var myGroup = CompetitionsUtils.getMyGroup(competition.groupsList,$scope.authentication.user.username);
+				var groupName = '';
+				if (myGroup != null)
+					groupName = myGroup.name;
 				$rootScope.$broadcast('clickOnCompetition', {
 					"competitionID":$stateParams.competitionId,
 					"showMenues":true,
-					"competitionName":competition.name
+					"competitionName":competition.name,
+					"groupName": groupName
 				});
 				$scope.competition = competition;
 				$rootScope.competition = competition;
 				$scope.getAllGroupsWrapperList();
-				$scope.getGroups();
 			},function(err){
 				console.log(err);
 				$location.path('/');
@@ -757,6 +761,25 @@ angular.module('competitions').factory('MyCompetitions', ['$resource','$http',
 		}
 	}
 ]);
+
+angular.module('competitions').factory('CompetitionsUtils',[function(){
+	return {
+		getMyGroup: function(groupsList,actualUserName) {
+			var result = null;
+			for (var i = groupsList.length - 1; i >= 0; i--) {
+				for (var j = groupsList[i].studentsArrayList.length - 1; j >= 0; j--) {
+					if (groupsList[i].studentsArrayList[j] == actualUserName) {
+						result = groupsList[i];
+						break;
+					}
+				};
+				if (result != null)
+					break;
+			}
+			return result;
+		}
+	}
+}]);
 
 //Bugs service used to communicate Competitions REST endpoints
 angular.module('competitions').factory('Bugs', ['$resource','$http',
@@ -852,10 +875,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$scope.clickedOnCompetition = false;
 		$scope.competitionID = null;
 		$scope.competitionName = null;
+		$scope.myGroupName = null;
+
 		$rootScope.$on('clickOnCompetition',function(req,msg){
 			$scope.clickedOnCompetition = msg.showMenues;
 			$scope.competitionID = msg.competitionID;
 			$scope.competitionName = msg.competitionName
+			$scope.myGroupName = msg.groupName
 		});
 		$scope.toggleCollapsibleMenu = function() {
 			$scope.isCollapsed = !$scope.isCollapsed;
@@ -2540,8 +2566,8 @@ angular.module('countries').config(['$stateProvider',
 'use strict';
 
 // Logs controller
-angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs', 'StatsSrv',
-	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs, StatsSrv) {
+angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs', 'StatsSrv','Users',
+	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs, StatsSrv,Users) {
 
     $scope.logAlerts = [];
 
@@ -2586,6 +2612,32 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
           aGraphObject.labels.push("");
         }
       }
+    };
+
+    /**
+    * Adds the label usernames to the graph object
+    * @param {Array} aSourceArray
+    * @param {Array} aGraphObject
+    * @param {Array} aExtraUsers : used to pull usernames with 0 bugs reported
+    */
+    var addLabelsUsername = function(aSourceArray, aGraphObject,aExtraUsers) {
+      for (var i = 0; i < aSourceArray.length; i++) {
+        aGraphObject.labels.push(aSourceArray[i].username);
+      };
+      for (var i = 0; i < aExtraUsers.length; i++) {
+        var exist = false;
+        for (var j = 0; j < aSourceArray.length; j++) {
+          if (aExtraUsers[i].username == aSourceArray[j].username) {
+            exist = true;
+          }
+        };
+        
+        if (!exist) { //we should push with 0 bugs reported
+          aGraphObject.labels.unshift(aExtraUsers[i].username);
+          aGraphObject.data[0].unshift(0);
+        }
+        
+      };
     };
 
     /**
@@ -2728,6 +2780,29 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
       addLabelsToGraph($scope.reportRejectedBugLogs, $scope.reportRejectedBugGraph);
     };
+    
+    /**
+     * Displays the graph for number of bugs per user
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     * @param {Array of Objects} users: necessary for the chart to complete usernames with 0 bugs reported
+     */
+    var drawReportBugsPerUserGraph = function (users) {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportBugsPerUserGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+      
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      //StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportBugsPerUserLogs);
+
+      $scope.reportBugsPerUserGraph.series.push('Report Bugs per User');
+      addLineToGraph($scope.reportBugsPerUserLogs, $scope.reportBugsPerUserGraph);
+
+      addLabelsUsername($scope.reportBugsPerUserLogs, $scope.reportBugsPerUserGraph,users);
+    };
+
 
 
     /**
@@ -2761,7 +2836,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Reported bug logs" });
         }
       });
     };
@@ -2775,7 +2850,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Gold Medal bugs log" });
         }
       });
     };
@@ -2789,7 +2864,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Silver Medal bugs log" });
         }
       });
     };
@@ -2804,10 +2879,11 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Accepted bugs log" });
         }
       });
     };
+   
     var getRejectDataForGraph = function () {
       $scope.isLoadingReportedRejectedBugGraphData = true;
       Logs.reportRejectedBugEvent(function(err,result){
@@ -2818,7 +2894,25 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Rejected Bugs log" });
+        }
+      });
+    };
+
+    var getBugsPerUserDataForGraph = function () {
+      $scope.isLoadingBugsPerUserGraphData = true;
+      Logs.listBugsPerUserEvent(function(err,result){
+        if (!err) {
+
+          Users.query(function(users){
+            $scope.reportBugsPerUserLogs = result;
+            drawReportBugsPerUserGraph(users);
+            $scope.isLoadingBugsPerUserGraphData = false;
+          });
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Bugs per user logs" });
         }
       });
     };
@@ -2847,6 +2941,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       getSilverMedalsDataForGraph();
       getAcceptReportDataForGraph();
       getRejectDataForGraph();
+      getBugsPerUserDataForGraph();
       getAllLogsData();
     };
 
@@ -2868,7 +2963,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		};
 
 		var pushCodeText = function(element) {
-			//console.log('Element: ',element);
+
 			if (element.pageCode == 1)
 				element.pageText = 'Signin'
 			if (element.pageCode == 2)
@@ -2945,6 +3040,13 @@ angular.module('competitions').factory('Logs', ['$resource','$http',
 			},
 			reportRejectedBugEvent: function(cb) {
 				$http.get('/api/logs/reportRejectedBugEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			listBugsPerUserEvent: function(cb) {
+				$http.get('/api/logs/listBugsPerUserEvent').success(function(logs){
 					cb(null,logs);
 				}).error(function(err){
 					cb(err,null);
