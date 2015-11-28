@@ -33,5 +33,10 @@ module.exports = function(app) {
 	// Number of bugs rejected per day.
 	app.route('/api/logs/reportRejectedBugEvent')
 		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listReportRejectedBugLogs);
+	
+	// Number of bugs per user per day.
+	app.route('/api/logs/listBugsPerUserEvent')
+		.get(usersCtr.hasAuthorization(["admin"]),logsCtr.listBugsPerUser);
+
 
 };

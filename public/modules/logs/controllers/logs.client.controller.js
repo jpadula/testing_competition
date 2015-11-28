@@ -1,8 +1,8 @@
 'use strict';
 
 // Logs controller
-angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs', 'StatsSrv',
-	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs, StatsSrv) {
+angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location','NgTableParams','Authentication', 'Logs', 'StatsSrv','Users',
+	function($scope, $stateParams, $location,NgTableParams, Authentication, Logs, StatsSrv,Users) {
 
     $scope.logAlerts = [];
 
@@ -47,6 +47,32 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
           aGraphObject.labels.push("");
         }
       }
+    };
+
+    /**
+    * Adds the label usernames to the graph object
+    * @param {Array} aSourceArray
+    * @param {Array} aGraphObject
+    * @param {Array} aExtraUsers : used to pull usernames with 0 bugs reported
+    */
+    var addLabelsUsername = function(aSourceArray, aGraphObject,aExtraUsers) {
+      for (var i = 0; i < aSourceArray.length; i++) {
+        aGraphObject.labels.push(aSourceArray[i].username);
+      };
+      for (var i = 0; i < aExtraUsers.length; i++) {
+        var exist = false;
+        for (var j = 0; j < aSourceArray.length; j++) {
+          if (aExtraUsers[i].username == aSourceArray[j].username) {
+            exist = true;
+          }
+        };
+        
+        if (!exist) { //we should push with 0 bugs reported
+          aGraphObject.labels.unshift(aExtraUsers[i].username);
+          aGraphObject.data[0].unshift(0);
+        }
+        
+      };
     };
 
     /**
@@ -189,6 +215,29 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
       addLabelsToGraph($scope.reportRejectedBugLogs, $scope.reportRejectedBugGraph);
     };
+    
+    /**
+     * Displays the graph for number of bugs per user
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     * @param {Array of Objects} users: necessary for the chart to complete usernames with 0 bugs reported
+     */
+    var drawReportBugsPerUserGraph = function (users) {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.reportBugsPerUserGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+      
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      //StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportBugsPerUserLogs);
+
+      $scope.reportBugsPerUserGraph.series.push('Report Bugs per User');
+      addLineToGraph($scope.reportBugsPerUserLogs, $scope.reportBugsPerUserGraph);
+
+      addLabelsUsername($scope.reportBugsPerUserLogs, $scope.reportBugsPerUserGraph,users);
+    };
+
 
 
     /**
@@ -222,7 +271,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Reported bug logs" });
         }
       });
     };
@@ -236,7 +285,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Gold Medal bugs log" });
         }
       });
     };
@@ -250,7 +299,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Silver Medal bugs log" });
         }
       });
     };
@@ -265,10 +314,11 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Accepted bugs log" });
         }
       });
     };
+   
     var getRejectDataForGraph = function () {
       $scope.isLoadingReportedRejectedBugGraphData = true;
       Logs.reportRejectedBugEvent(function(err,result){
@@ -279,7 +329,25 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
         } else {
           //error
-          $scope.logAlerts.push({type: "danger", msg:"Error loading signin logs" });
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Rejected Bugs log" });
+        }
+      });
+    };
+
+    var getBugsPerUserDataForGraph = function () {
+      $scope.isLoadingBugsPerUserGraphData = true;
+      Logs.listBugsPerUserEvent(function(err,result){
+        if (!err) {
+
+          Users.query(function(users){
+            $scope.reportBugsPerUserLogs = result;
+            drawReportBugsPerUserGraph(users);
+            $scope.isLoadingBugsPerUserGraphData = false;
+          });
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Bugs per user logs" });
         }
       });
     };
@@ -308,6 +376,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       getSilverMedalsDataForGraph();
       getAcceptReportDataForGraph();
       getRejectDataForGraph();
+      getBugsPerUserDataForGraph();
       getAllLogsData();
     };
 
@@ -329,7 +398,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		};
 
 		var pushCodeText = function(element) {
-			//console.log('Element: ',element);
+
 			if (element.pageCode == 1)
 				element.pageText = 'Signin'
 			if (element.pageCode == 2)

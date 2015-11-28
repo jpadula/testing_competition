@@ -15,10 +15,12 @@
                     {{user.totalPoints}}
                 </td>
                 <td title="'#Gold medals'" filter="{ totalGoldMedals: 'text'}" sortable="'totalGoldMedals'">
-                    x{{user.totalGoldMedals}}
+                    {{user.totalGoldMedals}} x 
+                    <img src="/modules/core/img/goldmedal.png" alt="Gold Medal" class="img-circle" style="height: 32px">
                 </td>
                 <td title="'#Silver medals'" filter="{ totalSilverMedals: 'text'}" sortable="'totalSilverMedals'">
-                    x{{user.totalSilverMedals}}
+                    {{user.totalSilverMedals}} x 
+                    <img src="/modules/core/img/silvermedal.png" alt="Silver Medal" class="img-circle" style="height: 32px">
                 </td>
                 
             </tr>

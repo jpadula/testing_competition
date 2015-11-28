@@ -1,8 +1,8 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope',
-	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope','CompetitionsUtils',
+	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope,CompetitionsUtils) {
 		$scope.authentication = Authentication;
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
@@ -457,15 +457,19 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			Competitions.get({ 
 				competitionId: $stateParams.competitionId
 			},function(competition){
+				var myGroup = CompetitionsUtils.getMyGroup(competition.groupsList,$scope.authentication.user.username);
+				var groupName = '';
+				if (myGroup != null)
+					groupName = myGroup.name;
 				$rootScope.$broadcast('clickOnCompetition', {
 					"competitionID":$stateParams.competitionId,
 					"showMenues":true,
-					"competitionName":competition.name
+					"competitionName":competition.name,
+					"groupName": groupName
 				});
 				$scope.competition = competition;
 				$rootScope.competition = competition;
 				$scope.getAllGroupsWrapperList();
-				$scope.getGroups();
 			},function(err){
 				console.log(err);
 				$location.path('/');

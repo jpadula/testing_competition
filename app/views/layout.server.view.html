@@ -33,11 +33,16 @@
 
 	<!-- Fav Icon -->
 	<link href="/modules/core/img/brand/favicon.ico" rel="shortcut icon" type="image/x-icon">
-
+	
+	<!-- Style needed by tynmce 
+	<link rel="stylesheet" type="text/css" href="/lib/tinymce-dist/skins/lightgray/content.min.css">
+	-->
 	<!--Application CSS Files-->
 	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
+	
+	<!-- Style needed for angular charts -->
 	<link rel="stylesheet" type="text/css" href="/lib/angular-chart.js/dist/angular-chart.css">
-	<link rel="stylesheet" type="text/css" href="/lib/tinymce-dist/skins/lightgray/content.min.css">
+	
 
 
 	<!-- HTML5 Shim -->

@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 	Logs = mongoose.model("pageView"),
-	logSrv = require('../services/logSrv.js');
+	logApiEvents = require('../services/logApiEvents.js');
 
 /**
  * List of Logs
@@ -23,12 +23,28 @@ exports.list = function(req, res) {
 };
 
 /**
+ * List of Logs of bugs per User
+ * @param req: Request Object
+ * @param res: Response Object
+ */
+exports.listBugsPerUser = function(req, res) {
+	logApiEvents.apiEvents.listBugsPerUserLogsPerDay(function(err,result){
+		if (err) {
+			res.status(400).send({message:"Error: "+err});
+		}
+		else {
+			res.send(result);
+		}
+	});
+};
+
+/**
  * List of Logs of listSigninLogs
  * @param req: Request Object
  * @param res: Response Object
  */
 exports.listSigninLogs = function(req, res) {
-	logSrv.apiEvents.listSigninLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listSigninLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}
@@ -44,7 +60,7 @@ exports.listSigninLogs = function(req, res) {
  * @param res: Response Object
  */
 exports.listReportBugLogs = function(req, res) {
-	logSrv.apiEvents.listReportBugLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listReportBugLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}
@@ -60,7 +76,7 @@ exports.listReportBugLogs = function(req, res) {
  * @param res: Response Object
  */
 exports.listReportGoldMedalBugLogs = function(req, res) {
-	logSrv.apiEvents.listReportGoldMedalBugLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listReportGoldMedalBugLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}
@@ -76,7 +92,7 @@ exports.listReportGoldMedalBugLogs = function(req, res) {
  * @param res: Response Object
  */
 exports.listReportSilverMedalBugLogs = function(req, res) {
-	logSrv.apiEvents.listReportSilverMedalBugLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listReportSilverMedalBugLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}
@@ -92,7 +108,7 @@ exports.listReportSilverMedalBugLogs = function(req, res) {
  * @param res: Response Object
  */
 exports.listReportAcceptedBugLogs = function(req, res) {
-	logSrv.apiEvents.listReportAcceptedBugLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listReportAcceptedBugLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}
@@ -108,7 +124,7 @@ exports.listReportAcceptedBugLogs = function(req, res) {
  * @param res: Response Object
  */
 exports.listReportRejectedBugLogs = function(req, res) {
-	logSrv.apiEvents.listReportRejectedBugLogsPerDay(function(err,result){
+	logApiEvents.apiEvents.listReportRejectedBugLogsPerDay(function(err,result){
 		if (err) {
 			res.status(400).send({message:"Error: "+err});
 		}

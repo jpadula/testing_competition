@@ -50,6 +50,13 @@ angular.module('competitions').factory('Logs', ['$resource','$http',
 				}).error(function(err){
 					cb(err,null);
 				});
+			},
+			listBugsPerUserEvent: function(cb) {
+				$http.get('/api/logs/listBugsPerUserEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
 			}
 		}
 	}

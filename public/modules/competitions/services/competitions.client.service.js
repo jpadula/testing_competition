@@ -24,6 +24,25 @@ angular.module('competitions').factory('MyCompetitions', ['$resource','$http',
 	}
 ]);
 
+angular.module('competitions').factory('CompetitionsUtils',[function(){
+	return {
+		getMyGroup: function(groupsList,actualUserName) {
+			var result = null;
+			for (var i = groupsList.length - 1; i >= 0; i--) {
+				for (var j = groupsList[i].studentsArrayList.length - 1; j >= 0; j--) {
+					if (groupsList[i].studentsArrayList[j] == actualUserName) {
+						result = groupsList[i];
+						break;
+					}
+				};
+				if (result != null)
+					break;
+			}
+			return result;
+		}
+	}
+}]);
+
 //Bugs service used to communicate Competitions REST endpoints
 angular.module('competitions').factory('Bugs', ['$resource','$http',
 	function($resource,$http) {

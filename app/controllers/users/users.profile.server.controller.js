@@ -52,7 +52,7 @@ exports.update = function(req, res) {
  * List of User in a Wrapper
  */
 exports.userWrapper = function(req, res) {
-	User.find({},"displayName email").sort('-created').exec(function(err, users) {
+	User.find({},"displayName email username").sort('-created').exec(function(err, users) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

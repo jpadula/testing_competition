@@ -9,10 +9,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$scope.clickedOnCompetition = false;
 		$scope.competitionID = null;
 		$scope.competitionName = null;
+		$scope.myGroupName = null;
+
 		$rootScope.$on('clickOnCompetition',function(req,msg){
 			$scope.clickedOnCompetition = msg.showMenues;
 			$scope.competitionID = msg.competitionID;
 			$scope.competitionName = msg.competitionName
+			$scope.myGroupName = msg.groupName
 		});
 		$scope.toggleCollapsibleMenu = function() {
 			$scope.isCollapsed = !$scope.isCollapsed;
