@@ -10,7 +10,8 @@
   "scripts": {
     "start": "grunt",
     "postinstall": "bower install --config.interactive=false",
-    "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha ./tests/test_template.js "
+    "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha ./tests/* ",
+    "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha ./test/server/"
   },
   "dependencies": {
     "async": "~0.9.0",
@@ -44,7 +45,8 @@
     "swig": "~1.4.1",
     "protractor": "1.4.0",
     "request": "2.40.0",
-    "request-ip": "0.0.3"
+    "request-ip": "0.0.3",
+    "istanbul": "0.3.2"
   },
   "devDependencies": {
     "supertest": "1.0.1",
