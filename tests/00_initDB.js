@@ -10,8 +10,9 @@ var app = require('../server.js'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Group = mongoose.model('Group');
+  Competition = mongoose.model('Competition');
 
-var globalUser1;
+var globalUser1,globalARGGroup, globalCHGroup;
 
 describe('Initialize the Mongo database', function () {
 
@@ -40,7 +41,8 @@ describe('Initialize the Mongo database', function () {
       email: 'test@test.com',
       username: 'martinnordio',
       password: '12345678',
-      provider: 'local'
+      provider: 'local',
+      roles: ["admin","user"]
     });
     aUser.save(function(err) {
       if (!err) {
@@ -57,7 +59,8 @@ describe('Initialize the Mongo database', function () {
       email: 'test@test.com',
       username: 'jaguirre',
       password: '12345678',
-      provider: 'local'
+      provider: 'local',
+      roles: ["user"]
     });
     aUser2.save(function(err) {
       if (!err) {
@@ -74,7 +77,8 @@ describe('Initialize the Mongo database', function () {
       email: 'test@test.com',
       username: 'jpadula',
       password: '12345678',
-      provider: 'local'
+      provider: 'local',
+      roles: ["admin","user"]
     });
     globalUser1 = aUser;
     aUser.save(function(err) {
@@ -84,14 +88,15 @@ describe('Initialize the Mongo database', function () {
     });
   });
 
-  it('Store a group "ETH1"', function (done) {
+  it('Store a group "CH"', function (done) {
     var aGroup = new Group({
-      name: "ETH1",
+      name: "CH",
       user: globalUser1,
       number: 1,
-      githubAccounts: "jpadula,martinnordio",
-      studentsArrayList: ["jpadula,martinnordio"]
+      githubAccounts: "martinnordio",
+      studentsArrayList: ["martinnordio"]
     });
+    globalCHGroup = aGroup;
     aGroup.save(function(err) {
       if (!err) {
         done();
@@ -99,5 +104,42 @@ describe('Initialize the Mongo database', function () {
     });
   });
 
+  it('Store a group "ARG"', function (done) {
+    var aGroup = new Group({
+      name: "ARG",
+      user: globalUser1,
+      number: 1,
+      githubAccounts: "jpadula,jaguirre",
+      studentsArrayList: ["jpadula","jaguirre"]
+    });
+    globalARGGroup = aGroup;
+    aGroup.save(function(err) {
+      if (!err) {
+        done();
+      }
+    });
+  });
+
+  it('Store a competition "AGRvsCH"', function (done) {
+    var aCompetition = new Competition({
+      name: "ARGvsCH",
+      description:"A competition between Argentina and Switzerland",
+      groupsList: [globalARGGroup,globalCHGroup],
+      POINTS : {
+        FIRST_BUG_IN_CLASS_C: 10,
+        NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R:5,
+        NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R: 3,
+        PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG: 2,
+        PERSON_WHO_SUBMITTED_A_REJECTED_BUG: 0
+      },
+      bugs: [],
+      user: globalUser1
+    });
+    aCompetition.save(function(err) {
+      if (!err) {
+        done();
+      }
+    });
+  });
 
 });
