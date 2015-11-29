@@ -14,7 +14,7 @@ var app = require('../server.js'),
 
 app.use(bodyParser());
 
-describe('Test Mantra with Java compilation', function () {
+describe('Test User Management', function () {
 
   this.timeout(testConfig.timeOut);
 

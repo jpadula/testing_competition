@@ -12,74 +12,304 @@ var app = require('../server.js'),
 
 app.use(bodyParser());
 
-describe('Test Mantra with Java compilation', function () {
+var cookie;
+var rioCuartoGpId,argGpId, chGpId, compId;
+
+describe('Test Admin management', function () {
 
   this.timeout(testConfig.timeOut);
 
-  it('First test: do not delete', function (done) {
-
+  before('Admin signs in', function (done) {
     request(app)
-      .get('/bugs')
-      .send()
+      .post('/auth/signin')
+      .send({username: 'jpadula', password: '12345678'})
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function (error, reply) {
-        console.log(reply.body);
-        //(reply.body.output.indexOf("Compilation successful")).should.not.equal(-1);
-
-        //reply.body.compilationError.should.equal(false);
-        //reply.body.id.should.not.equal(undefined);
+        reply.body.username.should.equal('jpadula');
+        reply.body.displayName.should.equal('Jorge Padula');
+        reply.body.provider.should.equal('local');
+        reply.body.roles[0].should.equal('admin');
+        cookie = reply.headers['set-cookie'].pop().split(';')[0]; //.headers['set-cookie'];
         done();
-      })
+      });
+
   });
 
-  it('Admin signs in', function (done) {
-    done();
-  });
 
   it('Admin gets list of competitions', function (done) {
-    // GET /competitions
-    done();
+    request(app)
+      .get('/competitions')
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        reply.body[0].description.should.equal('A competition between Argentina and Switzerland');
+        reply.body[0].name.should.equal('ARGvsCH');
+        reply.body[0].groupsList.length.should.equal(2); //there are 2 groups in the competition
+        done();
+      });
   });
 
   it('Admin gets list of groups', function (done) {
-    // GET /groups
-    done();
+    request(app)
+      .get('/groups')
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        reply.body[0].name.should.equal('ARG');
+        reply.body[0].githubAccounts.should.equal('jpadula,jaguirre');
+        reply.body[0].studentsArrayList[0].should.equal('jpadula');
+        reply.body[0].studentsArrayList[1].should.equal('jaguirre');
+        argGpId = reply.body[0]._id;
+
+        reply.body[1].name.should.equal('CH');
+        reply.body[1].githubAccounts.should.equal('martinnordio');
+        reply.body[1].studentsArrayList[0].should.equal('martinnordio');
+        chGpId = reply.body[1]._id;
+        done();
+      });
   });
 
   it('Admin creates a group', function (done) {
-    // POST /groups
-    done();
+    var aGroup = {
+      name: "Rio Cuarto",
+      number: 3,
+      githubAccounts: "martinnordio12,jpadula2"
+    };
+    request(app)
+      .post('/groups')
+      .set('cookie', cookie)
+      .send(aGroup)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('Rio Cuarto');
+        reply.body.githubAccounts.should.equal("martinnordio12,jpadula2");
+        reply.body.studentsArrayList[1].should.equal('martinnordio12');
+        reply.body.studentsArrayList[0].should.equal('jpadula2');
+        rioCuartoGpId = reply.body._id;
+        // check that the group was created in the server
+        request(app)
+          .get('/groups')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(3);
+            reply.body[0].name.should.equal('Rio Cuarto');
+            reply.body[1].name.should.equal('ARG');
+            reply.body[2].name.should.equal('CH');
+
+            done();
+          });
+      });
   });
 
   it('Admin updates a group', function (done) {
     // PUT /groups
-    done();
+    var aGroup = {
+      name: "Rio Cuarto222",
+      number: 3,
+      githubAccounts: "martinnordio12,jpadula2"
+    };
+    request(app)
+      .put('/groups/'+rioCuartoGpId)
+      .set('cookie', cookie)
+      .send(aGroup)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('Rio Cuarto222');
+        reply.body.githubAccounts.should.equal("martinnordio12,jpadula2");
+        reply.body.studentsArrayList[1].should.equal('martinnordio12');
+        reply.body.studentsArrayList[0].should.equal('jpadula2');
+        // check that the group was created in the server
+        request(app)
+          .get('/groups')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(3);
+            reply.body[0].name.should.equal('Rio Cuarto222');
+            reply.body[1].name.should.equal('ARG');
+            reply.body[2].name.should.equal('CH');
+            done();
+          });
+      });
   });
 
   it('Admin deletes a group', function (done) {
     // DELETE /groups
-    done();
+    request(app)
+      .delete('/groups/'+rioCuartoGpId)
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('Rio Cuarto222');
+        reply.body.githubAccounts.should.equal("martinnordio12,jpadula2");
+        reply.body.studentsArrayList[1].should.equal('martinnordio12');
+        reply.body.studentsArrayList[0].should.equal('jpadula2');
+        // check that the group was created in the server
+        request(app)
+          .get('/groups')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(2);
+            reply.body[0].name.should.equal('ARG');
+            reply.body[1].name.should.equal('CH');
+            done();
+          });
+      });
   });
 
   it('Admin creates a competition', function (done) {
-    // POST /competitions
-    done();
+    var aCompetition = {
+        "name":"aNewCompetition",
+        "description":"<p>Testing Mocha desc</p>",
+        "groupsList":[{"_id":argGpId},{"_id":chGpId}],
+        "POINTS":{
+          "FIRST_BUG_IN_CLASS_C":10,
+          "NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R":5,
+          "NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R":3,
+          "PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG":2,
+          "PERSON_WHO_SUBMITTED_A_REJECTED_BUG":-10
+        }
+      };
+    request(app)
+      .post('/competitions')
+      .set('cookie', cookie)
+      .send(aCompetition)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('aNewCompetition');
+        reply.body.groupsList.length.should.equal(2);
+        compId = reply.body._id;
+
+        // check that the group was created in the server
+        request(app)
+          .get('/competitions')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(2);
+            reply.body[0].name.should.equal('aNewCompetition');
+            reply.body[1].name.should.equal('ARGvsCH');
+            done();
+          });
+      });
   });
 
   it('Admin updates a competition', function (done) {
-    // PUT /competitions
-    done();
+    var aCompetition = {
+      "name":"aNewCompetition222"
+    };
+    request(app)
+      .put('/competitions/'+compId)
+      .set('cookie', cookie)
+      .send(aCompetition)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('aNewCompetition222');
+        reply.body.groupsList.length.should.equal(2);
+
+        // check that the group was created in the server
+        request(app)
+          .get('/competitions')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(2);
+            reply.body[0].name.should.equal('aNewCompetition222');
+            reply.body[1].name.should.equal('ARGvsCH');
+            done();
+          });
+      });
   });
 
   it('Admin deletes a competition', function (done) {
-    // DELETE /competitions
-    done();
+    request(app)
+      .delete('/competitions/'+compId)
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        // check the reply is as expected
+        reply.body.name.should.equal('aNewCompetition222');
+        reply.body.groupsList.length.should.equal(2);
+
+        // check that the group was created in the server
+        request(app)
+          .get('/competitions')
+          .set('cookie', cookie)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.length.should.equal(1);
+            reply.body[0].name.should.equal('ARGvsCH');
+            done();
+          });
+      });
   });
 
   it('Non admin cannot create groups', function (done) {
     // POST /groups
-    done();
+    request(app)
+      .post('/auth/signin')
+      .send({username: 'jaguirre', password: '12345678'})
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function (error, reply) {
+        reply.body.username.should.equal('jaguirre');
+        reply.body.displayName.should.equal('Jorge Aguirre');
+        reply.body.provider.should.equal('local');
+        reply.body.roles[0].should.equal('user');
+        var cookie2 = reply.headers['set-cookie'].pop().split(';')[0]; //.headers['set-cookie'];
+        var aGroup = {
+          name: "aNewGroup",
+          number: 4,
+          githubAccounts: "martinnordio123"
+        };
+        request(app)
+          .post('/groups')
+          .set('cookie', cookie2)
+          .send(aGroup)
+          .expect('Content-Type', /json/)
+          .expect(403)
+          .end(function(error, reply) {
+            if (error) return done(error);
+            reply.body.message.should.equal('User is not authorized');
+            done();
+          });
+      });
   });
 
 });
