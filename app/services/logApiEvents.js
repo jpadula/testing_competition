@@ -48,7 +48,7 @@ apiEvents.listBugsPerUserLogsPerDay = function(callback) {
             username : {$last:"$userName"}
         }},
         {$sort:{
-          "bugsReported": 1
+          "count": 1
         }}
     ],function(err,result) {
       if (err) {
