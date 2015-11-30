@@ -134,8 +134,7 @@
     </div>
 
     <div class="row projectStats-row-spacing">
-        <div class="col-md-12">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h3> Bugs Per User</h3>
                 <div ng-show="isLoadingBugsPerUserGraphData">
                     <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
@@ -146,37 +145,32 @@
                 <div class="row projectStats-row-spacing">
                     <div ng-if="!isLoadingBugsPerUserGraphData">
                         <canvas id="line5" class="chart chart-line" chart-data="reportBugsPerUserGraph.data"
-                                chart-labels="reportBugsPerUserGraph.labels" chart-series="reportBugsPerUserGraph.series" chart-options='chartOptions'>
+                                chart-labels="reportBugsPerUserGraph.labels" chart-series="reportBugsPerUserGraph.series" chart-options='chartOptions' style='width: 1172px;height: 360px;'>
                         </canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-            </div>
-
-        </div>
     </div>
-    
-
-
-    <h2>Details of all logs </h2>
-    <table ng-table="datatableLogs" class="table table-bordered table-striped table-condensed" show-filter="true" >
-	    <tr ng-repeat="log in $data">
-	        <td title="'Date'" filter="{ date: 'text'}" sortable="'date'">
-            	<span data-ng-bind="log.date | date:'medium'"></span>
-            </td>
-	        <td title="'Event'" filter="{ pageText: 'text'}" sortable="'pageText'">
-	            {{log.pageText}}
-	        </td>
-	        <td title="'Username'" filter="{ userName: 'text'}" sortable="'userName'">
-	            {{log.userName}}
-	        </td>
-	        <td title="'Group Name'" filter="{ groupName: 'text'}" sortable="'groupName'">
-	            {{log.groupName}}
-	        </td>
-	        <td title="'Competition Name'" filter="{ competitionName: 'text'}" sortable="'competitionName'">
-	            {{log.competitionName}}
-	        </td>
-	    </tr>
-    </table>
+    <div class='row'>
+        <h2>Details of all logs </h2>
+        <table ng-table="datatableLogs" class="table table-bordered table-striped table-condensed" show-filter="true" >
+    	    <tr ng-repeat="log in $data">
+    	        <td title="'Date'" filter="{ date: 'text'}" sortable="'date'">
+                	<span data-ng-bind="log.date | date:'medium'"></span>
+                </td>
+    	        <td title="'Event'" filter="{ pageText: 'text'}" sortable="'pageText'">
+    	            {{log.pageText}}
+    	        </td>
+    	        <td title="'Username'" filter="{ userName: 'text'}" sortable="'userName'">
+    	            {{log.userName}}
+    	        </td>
+    	        <td title="'Group Name'" filter="{ groupName: 'text'}" sortable="'groupName'">
+    	            {{log.groupName}}
+    	        </td>
+    	        <td title="'Competition Name'" filter="{ competitionName: 'text'}" sortable="'competitionName'">
+    	            {{log.competitionName}}
+    	        </td>
+    	    </tr>
+        </table>
+    </div>
 </section>
