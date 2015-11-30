@@ -79,6 +79,7 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 				});
 			},
 			changeStatus: function(config,cb) {
+				console.log(config);
 				$http.put('/bugs/'+config.bugId,config).success(function(bug){
 					cb(null,bug);
 				}).error(function(err){

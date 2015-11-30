@@ -76,6 +76,20 @@
                                 <input type="text" value='{{currentBug.status}}' class="form-control" readonly="">
                             </div>
                         </div>
+                        <div class="form-group" data-ng-if='currentBug.isOwn'>
+                            <label class="control-label" for="routineName">Status Reason</label>
+                            <div class="controls">
+                                <input type="text"  data-ng-model='currentBug.statusReason' value='{{currentBug.statusReason}}' class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group" data-ng-if='!currentBug.isOwn'>
+                            <label class="control-label" for="routineName">Status Reason</label>
+                            <div class="controls">
+                                <input type="text" value='{{currentBug.statusReason}}' class="form-control" readonly="">
+                            </div>
+                        </div>
+
+
                         <div data-ng-if='currentBug.isOwn'>
                             <button class="btn btn-success" data-ng-click = "changeStatus('{{currentBug._id}}','APPROVED');">Approve Bug</button>
                             <button class="btn btn-danger" data-ng-click = "changeStatus('{{currentBug._id}}','REJECTED')">Reject Bug</button>

@@ -75,8 +75,10 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var bug = req.bug ;
 
-	bug.status = req.body.status;
-
+	if (req.body.status)
+		bug.status = req.body.status;
+	if (req.body.reason)
+		bug.statusReason = req.body.reason;
 	//bug = _.extend(bug , req.body);
 	bug.isUpdateAction= true;
 	bug.save(function(err) {
@@ -138,7 +140,7 @@ var getGroupsWithMoreBugsRanking = function(competition,cb) {
         	totalGoldMedals: {$sum: "$totalGoldMedals"}
         }},
         {$sort:{
-        	"totalPoints": -1
+        	"totalPoints": 1
         }}
     ], function (err, result) {
         if (err) {

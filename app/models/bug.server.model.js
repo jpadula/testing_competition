@@ -92,6 +92,11 @@ var BugSchema = new Schema({
 		default: 'OPEN',
 		enum: ['OPEN', 'REJECTED', 'APPROVED']
 	},
+	statusReason : {
+		type: String,
+		trim:true,
+		default: 'No comment'
+	},
 	points: {
 		type: Number,
 		default:0
