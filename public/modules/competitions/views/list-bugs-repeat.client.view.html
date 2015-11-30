@@ -3,7 +3,7 @@
         <div class="list-bug">
             <table ng-table="datatableListBugsRepeat" class="table table-bordered table-striped table-condensed" show-filter="true">
                 <tr ng-repeat="bug in $data">
-                    <td title="'Reported By'" filter="{ user: 'text'}" sortable="'user'">
+                    <td title="'Reported by'" filter="{ user: 'text'}" sortable="'user'">
                         {{bug.user.displayName}}
                     </td>
                     <td title="'Title'" filter="{ title: 'text'}" sortable="'title'">
@@ -12,13 +12,13 @@
                     <td title="'Found in group'" filter="{ group_reported: 'text'}" sortable="'group_reported'">
                         {{bug.group_reported.name}}
                     </td>
-                    <td title="'Created on'" filter="{ created: 'text'}" sortable="'created'">
+                    <td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
                         <span data-ng-bind="bug.created | date:'mediumDate'"></span>
                     </td>
-                    <td title="'Class Name'" filter="{ className: 'text'}" sortable="'className'">
+                    <td title="'Class name'" filter="{ className: 'text'}" sortable="'className'">
                         {{bug.className}}
                     </td>
-                    <td title="'Routine Name'" filter="{ routineName: 'text'}" sortable="'routineName'">
+                    <td title="'Routine name'" filter="{ routineName: 'text'}" sortable="'routineName'">
                         {{bug.routineName}}
                     </td>
                     <td title="'Status'" filter="{ status: 'text'}" sortable="'status'">

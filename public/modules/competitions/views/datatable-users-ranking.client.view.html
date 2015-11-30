@@ -1,14 +1,19 @@
 <section data-ng-controller="CompetitionsController" data-ng-init='getUsersRanking()'>
     <div class="page-header">
-        <h1>Users Ranking</h1>
-        <span class='legendsText'>This page show a ranking by users with more points</span>
+        <h1>User Ranking</h1>
+        <span class='legendsText'>Number of bugs each user reported and number of points and medals awarded for that.</span>
     </div>
         <table ng-table="datatableUsersRanking" ng-table-pagination class="table table-bordered table-striped table-condensed" show-filter="true">
-            <tr ng-repeat="user in $data">
-                <td title="'User Name'" filter="{ user: 'text'}" sortable="'user'">
+            <tr ng-repeat="user in $data track by $index">
+
+                <td title="'#'">
+                    {{getIndexUserRanking(user)}}
+                </td>
+                <td title="'User name'" filter="{ user: 'text'}" sortable="'user'">
                     {{user.user}}
                 </td>
-                <td title="'#Reported bugs'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
+
+                <td title="'#Bugs reported'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
                     {{user.bugsReported}}
                 </td>
                 <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">

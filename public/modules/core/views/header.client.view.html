@@ -24,8 +24,8 @@
 			</li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-			<li ui-route="/signup" ng-class="{active: $uiRoute}">
-				<a href="/#!/signup">Sign Up</a>
+			<li ui-route="/signin" ng-class="{active: $uiRoute}">
+				<a href="/#!/signin">Sign in</a>
 			</li>
 
 			<!--
@@ -43,13 +43,13 @@
 
 				<ul class="dropdown-menu">
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/reportBug">Report Bug</a>
+						<a href="/#!/competitions/{{competitionID}}/reportBug">Report New Bug</a>
 					</li>
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/allBugs">All Bugs</a>
+						<a href="/#!/competitions/{{competitionID}}/allBugs">Show All Bugs</a>
 					</li>
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/myGroupBugs">My Group Bugs</a>
+						<a href="/#!/competitions/{{competitionID}}/myGroupBugs">Show Bugs of My Group</a>
 					</li>
 				</ul>
 			</li>
@@ -57,13 +57,13 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Rankings<b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/usersRanking">Users Ranking</a>
+						<a href="/#!/competitions/{{competitionID}}/usersRanking">Show User Ranking</a>
 					</li>
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/groupsRanking">Groups Ranking</a>
+						<a href="/#!/competitions/{{competitionID}}/groupsRanking">Show Group Ranking</a>
 					</li>
 					<li ui-route="/reportBug" ng-class="{active: $uiRoute}">
-						<a href="/#!/competitions/{{competitionID}}/groupsWithMoreBugsRanking">Groups With More Bugs Ranking</a>
+						<a href="/#!/competitions/{{competitionID}}/groupsWithMoreBugsRanking">Show Most-Bugs Ranking</a>
 					</li>
 				</ul>
 			</li>
@@ -78,7 +78,8 @@
 		<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<span data-ng-bind="authentication.user.displayName"></span> ({{competitionName}} - {{myGroupName}}) <b class="caret"></b>
+					<span data-ng-bind="authentication.user.displayName"></span>
+					<span data-ng-if = 'competitionName && myGroupName'>({{competitionName}} - {{myGroupName}})</span><b class="caret"></b>
 				</a>
 				<ul class="dropdown-menu">
 					<!--

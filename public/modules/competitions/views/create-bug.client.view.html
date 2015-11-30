@@ -2,8 +2,8 @@
     <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
     <div class="panel panel-default">
         <div class="panel-heading">            
-            <h3 class="panel-title">Report a bug</h3>
-            <span class='legendsText'>This is the form to report a Bug. All fields are mandatory</span>
+            <h3 class="panel-title">Report new bug</h3>
+            <span class='legendsText'>This is the form to report a bug. All fields are mandatory.</span>
         </div>
         <div class='panel-body'>
             <div class="col-md-12">
@@ -16,13 +16,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="className">Class Name</label>
+                            <label class="control-label" for="className">Class name</label>
                             <div class="">
                                 <input type="text" data-ng-model="className" id="className" class="form-control" placeholder="Class name; write 'NONE' if the bug cannot be traced to a class" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="routineName">Routine Name</label>
+                            <label class="control-label" for="routineName">Routine name</label>
                             <div class="controls">
                                 <input type="text" data-ng-model="routineName" id="routineName" class="form-control" placeholder="Routine name; write 'NONE' if the bug cannot be traced to a routine" required>
                             </div>
@@ -31,11 +31,11 @@
                             <label class="control-label" for="description">Description</label>
                             <div class="controls">
                                 <textarea class="form-control" data-ng-model="description" 
-                                placeholder="Describe the bug, including for example input and expected output, or list of actions performed" required></textarea>
+                                placeholder="Describe the bug, including, for example, input and expected output, or a list of actions performed" required></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="description">Select the group</label>
+                            <label class="control-label" for="description">Name of the group where the bug occurs</label>
                             <div class="controls">
                                 <select name="group" id="group" style="width:505px"
                                       ng-options="option.name for option in competition.groupsList track by option._id"

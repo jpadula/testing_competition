@@ -16,12 +16,13 @@
          contenteditable="false"
          ng-model="competition.description">
     	</div>
-		
-		<span style='font-weight:bold'>Groups:</span>
+		<div style="margin-top:20px;">
+		<span style='font-weight:bold;'>Groups participating:</span>
 		<ul>
 			<li data-ng-repeat='group in competition.groupsList'>
 				{{group.name}}
 			</li>
 		</ul>
+		</div>
 	</div>
 </section>

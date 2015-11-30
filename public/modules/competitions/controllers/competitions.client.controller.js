@@ -1,8 +1,8 @@
 'use strict';
 
 // Competitions controller
-angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', 'Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope','CompetitionsUtils',
-	function($scope, $stateParams, $location,$q, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope,CompetitionsUtils) {
+angular.module('competitions').controller('CompetitionsController', ['$scope', '$stateParams', '$location','$q', '$timeout','Authentication', 'Competitions','Bugs','Groups','NgTableParams','$rootScope','CompetitionsUtils',
+	function($scope, $stateParams, $location,$q,$timeout, Authentication, Competitions,Bugs,Groups,NgTableParams,$rootScope,CompetitionsUtils) {
 		$scope.authentication = Authentication;
 		//this is the model that contain the selected groups for a Competition
 		$scope.groupsSelectedList=[];
@@ -38,12 +38,24 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 				//$scope.getUsersRanking();
 				$scope.getGroupsWithMoreBugsRanking();
 			}
-
+		};
+		
+		$scope.getIndexUserRanking = function(index) {
+			return $scope.usersRanking.indexOf(index)+1;
+		};
+		
+		$scope.getIndexGroupRanking = function(index) {
+			return $scope.groupsRanking.indexOf(index)+1;
+		};
+		
+		$scope.getIndexGroupsWithMoreBugsRanking = function(index) {
+			return $scope.groupsWithMoreBugsRanking.indexOf(index)+1;
 		};
 
 		$scope.usersRankingDatatable = function() {
 			//var data = [{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name: "Moroni", age: 50},{name:"Jorge",age:24} /*,*/];
 			var data = $scope.usersRanking;
+
 			$scope.datatableUsersRanking = new NgTableParams({page: 1,count: 10}, { data: data,filterDelay: 300});
 		};
 		$scope.groupsRankingDatatable = function() {
@@ -93,9 +105,13 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 						$scope.currentBug.status = newStatus;
 					}
 					//success
-					$scope.success='Bug ' + newStatus + ' Successfuly';
+					$scope.success='Bug ' + newStatus + ' successfully';
+					$timeout(function() {
+						$scope.success='';	
+					}, 2000);
 				} else {
 					//error
+					
 					$scope.error='Error when '+newStatus+' the bug: '+err;
 				}
 			});
@@ -255,7 +271,11 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			Bugs.reportBug(bug,function(err,bug){
 				if (!err && bug != null){
 					//success
-					$scope.success='Bug reported Successfuly';
+					$scope.success='Bug reported successfully';
+					$timeout(function() {
+						$scope.success='';	
+					}, 2000);
+					
 					self.className = '';
 					self.routineName = '';
 					self.description = '';

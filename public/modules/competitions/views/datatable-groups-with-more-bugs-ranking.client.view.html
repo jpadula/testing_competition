@@ -1,15 +1,18 @@
 <section data-ng-controller="CompetitionsController" data-ng-init='getGroupsWithMoreBugsRanking()'>
     <div class="page-header">
-        <h1>Groups With More Bugs Ranking</h1>
-        <span class='legendsText'>This page show a ranking by groups with more bugs</span>
+        <h1>Most-Bugs Ranking</h1>
+        <span class='legendsText'>Number of bugs reported for each group and total number of points that were awarded to the users for reporting the bugs.</span>
     </div>
 
     <table ng-table="datatableGroupsWithMoreBugsRanking" class="table table-bordered table-striped table-condensed" show-filter="true" >
     <tr ng-repeat="group in $data">
-        <td title="'Group Name'" filter="{ group: 'text'}" sortable="'group'">
+        <td title="'#'">
+            {{getIndexGroupsWithMoreBugsRanking(group)}}
+        </td>
+        <td title="'Group name'" filter="{ group: 'text'}" sortable="'group'">
             {{group.group}}
         </td>
-        <td title="'#Reported bugs'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
+        <td title="'#Bugs reported'" filter="{ bugsReported: 'text'}" sortable="'bugsReported'">
             {{group.bugsReported}}
         </td>
         <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'">

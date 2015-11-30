@@ -1,28 +1,28 @@
 <section data-ng-controller="CompetitionsController" data-ng-init='searchMyOpenBugs()'>
     <div class="page-header">
-        <h1>My Group Bugs</h1>
+        <h1>Bugs Of My Group</h1>
         <span class='legendsText'>
-        This page shows bugs found in your group’s project. To see the details of the bugs, as well as to accept and reject the bug, click in the title.
+        Shows all bugs reported in the competition '{{competition.name}}' for your group. To see the details of a bug, accept, or reject it, click the bug’s title. (You can only accept or reject bugs for your own group.)
         </span>
     </div>
     <section data-ng-if = "myOpenBugs.length > 0" data-ng-init= "myOpenBugsDatatable()" >
         <div class="list-bug">
                 <table ng-table="datatableMyOpenBugs" class="table table-bordered table-striped table-condensed" show-filter="true">
                 <tr ng-repeat="bug in $data">
-                    <td title="'Reported By'" filter="{ user: 'text'}" sortable="'user'">
+                    <td title="'Reported by'" filter="{user.displayName: 'text'}" sortable="'user.displayName'">
                         {{bug.user.displayName}}
                     </td>
                     <td title="'Title'" filter="{ title: 'text'}" sortable="'title'">
                         <a data-ng-href="#!/competitions/{{competition._id}}/allBugs/{{bug._id}}">{{bug.title}}</a>
                     </td>
 
-                    <td title="'Created on'" filter="{ created: 'text'}" sortable="'created'">
+                    <td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
                         <span data-ng-bind="bug.created | date:'mediumDate'"></span>
                     </td>
-                    <td title="'Class Name'" filter="{ className: 'text'}" sortable="'className'">
+                    <td title="'Class name'" filter="{ className: 'text'}" sortable="'className'">
                         {{bug.className}}
                     </td>
-                    <td title="'Routine Name'" filter="{ routineName: 'text'}" sortable="'routineName'">
+                    <td title="'Routine name'" filter="{ routineName: 'text'}" sortable="'routineName'">
                         {{bug.routineName}}
                     </td>
                     <td title="'Status'" filter="{ status: 'text'}" sortable="'status'">

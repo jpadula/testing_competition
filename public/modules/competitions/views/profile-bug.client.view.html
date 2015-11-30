@@ -27,8 +27,8 @@
     <div class="col-md-6 col-md-offset-3" style="margin-top: 40px">
     <div class="panel panel-default">
         <div class="panel-heading">            
-            <h3 class="panel-title">Bug profile</h3>
-            <span class='legendsText'>This is the view for a particular Bug.</span>
+            <h3 class="panel-title">Bug details</h3>
+            <span class='legendsText'>This view shows the details of a particular bug.</span>
         </div>
         <div class='panel-body'>
             <div class="col-md-12">
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="routineName">Found in Group</label>
+                            <label class="control-label" for="routineName">Name of the group where the bug occurs</label>
                             <div class="controls">
                                 <input type="text" value='{{currentBug.groupReportedName}}' class="form-control" readonly="">
                             </div>
@@ -70,6 +70,20 @@
                                 <input type="text" value='{{currentBug.user.displayName}}' class="form-control" readonly="">
                             </div>
                         </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">            
+                <h3 class="panel-title">Bug status</h3>
+            </div>
+        <div class='panel-body'>
+            <div class="col-md-12">
+                <form class="form-horizontal">
+                <fieldset>
                         <div class="form-group">
                             <label class="control-label" for="routineName">Status</label>
                             <div class="controls">
@@ -77,20 +91,20 @@
                             </div>
                         </div>
                         <div class="form-group" data-ng-if='currentBug.isOwn'>
-                            <label class="control-label" for="routineName">Status Reason</label>
+                            <label class="control-label" for="routineName">Comment</label>
                             <div class="controls">
                                 <input type="text"  data-ng-model='currentBug.statusReason' value='{{currentBug.statusReason}}' class="form-control">
                             </div>
                         </div>
                         <div class="form-group" data-ng-if='!currentBug.isOwn'>
-                            <label class="control-label" for="routineName">Status Reason</label>
+                            <label class="control-label" for="routineName">Comment</label>
                             <div class="controls">
                                 <input type="text" value='{{currentBug.statusReason}}' class="form-control" readonly="">
                             </div>
                         </div>
 
 
-                        <div data-ng-if='currentBug.isOwn'>
+                        <div class="form-group" data-ng-if='currentBug.isOwn'>
                             <button class="btn btn-success" data-ng-click = "changeStatus('{{currentBug._id}}','APPROVED');">Approve Bug</button>
                             <button class="btn btn-danger" data-ng-click = "changeStatus('{{currentBug._id}}','REJECTED')">Reject Bug</button>
                         </div>
