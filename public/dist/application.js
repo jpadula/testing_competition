@@ -327,16 +327,18 @@ angular.module('competitions').controller('CompetitionsController', ['$scope', '
 			$scope.showGroupsWithMoreBugsRanking = false;
 		};
 
-		$scope.changeStatus =function(bugId,newStatus) {
+		$scope.changeStatus =function(bugId,newStatus,reason) {
 			var config = {
 				bugId: bugId,
-				status : newStatus
-			}
+				status : newStatus,
+				reason: $scope.currentBug.statusReason
+			};
 			Bugs.changeStatus(config,function(err,bug){
 				if (!err && bug != null){
 					$scope.searchMyOpenBugs();
-					if ($scope.currentBug)
+					if ($scope.currentBug){
 						$scope.currentBug.status = newStatus;
+					}
 					//success
 					$scope.success='Bug ' + newStatus + ' Successfuly';
 				} else {
@@ -817,6 +819,7 @@ angular.module('competitions').factory('Bugs', ['$resource','$http',
 				});
 			},
 			changeStatus: function(config,cb) {
+				console.log(config);
 				$http.put('/bugs/'+config.bugId,config).success(function(bug){
 					cb(null,bug);
 				}).error(function(err){
