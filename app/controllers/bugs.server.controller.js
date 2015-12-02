@@ -316,7 +316,7 @@ exports.getUsersRanking = function(req,res) {
 	var competition = config.competition;
 	getUsersRanking(competition,function(result){
 		res.jsonp(result);
-	})
+	});
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsRanking = function(req,res) {
@@ -325,7 +325,7 @@ exports.getGroupsRanking = function(req,res) {
 	var competition = config.competition;
 	getGroupsRanking(competition,function(result){
 		res.jsonp(result);
-	})
+	});
 	//res.jsonp(getUsersRanking(competition));
 }
 exports.getGroupsWithMoreBugsRanking = function(req,res) {
@@ -334,7 +334,7 @@ exports.getGroupsWithMoreBugsRanking = function(req,res) {
 	var competition = config.competition;
 	getGroupsWithMoreBugsRanking(competition,function(result){
 		res.jsonp(result);
-	})
+	});
 	//res.jsonp(getUsersRanking(competition));
 }
 

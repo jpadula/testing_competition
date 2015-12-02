@@ -134,3 +134,35 @@ exports.listReportRejectedBugLogs = function(req, res) {
 	});
 };
 
+/**
+ * List of Logs of access to Rankings
+ * @param req: Request Object
+ * @param res: Response Object
+ */
+exports.accessToRankings = function(req, res) {
+	logApiEvents.apiEvents.listAccessToRankingsPerDay(function(err,result){
+		if (err) {
+			res.status(400).send({message:"Error: "+err});
+		}
+		else {
+			res.send(result);
+		}
+	});
+};
+
+/**
+ * List of Logs of open,rejected,accepted
+ * @param req: Request Object
+ * @param res: Response Object
+ */
+exports.listReportStatusBugs = function(req, res) {
+	logApiEvents.apiEvents.getCountStatusBug(function(err,result){
+		if (err) {
+			res.status(400).send({message:"Error: "+err});
+		}
+		else {
+			res.send(result);
+		}
+	});
+};
+

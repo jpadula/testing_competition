@@ -132,6 +132,42 @@
             </div>
         </div>
     </div>
+    <div class="row projectStats-row-spacing">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <h3> Status Bugs Pie Chart</h3>
+                <div ng-show="isLoadingStatusBugGraphData">
+                    <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                        Loading...
+                    </h4>
+                </div>
+
+                <div class="row projectStats-row-spacing">
+                    <div ng-if="!isLoadingStatusBugGraphData">
+                    
+                        <canvas id="pie" class="chart chart-pie" chart-data="listStatusBugsGraph.data" chart-labels="listStatusBugsGraph.labels">
+                        </canvas> 
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3> Ranking hits per day</h3>
+                <div ng-show="isLoadingAccessToRankingsGraphData">
+                    <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
+                        Loading...
+                    </h4>
+                </div>
+
+                <div class="row projectStats-row-spacing">
+                    <div ng-if="!isLoadingAccessToRankingsGraphData">
+                        <canvas id="line6" class="chart chart-line" chart-data="accessToRankingsGraph.data"
+                                chart-labels="accessToRankingsGraph.labels" chart-series="accessToRankingsGraph.series" chart-options='chartOptions'>
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row projectStats-row-spacing">
             <div class="col-md-12">

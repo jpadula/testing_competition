@@ -30,6 +30,13 @@ angular.module('competitions').factory('Logs', ['$resource','$http',
 					cb(err,null);
 				});
 			},
+			accessToRankingsEvent: function(cb) {
+				$http.get('/api/logs/accessToRankingsEvent').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
 			reportSilverMedalBugEvent: function(cb) {
 				$http.get('/api/logs/reportSilverMedalBugEvent').success(function(logs){
 					cb(null,logs);
@@ -57,7 +64,15 @@ angular.module('competitions').factory('Logs', ['$resource','$http',
 				}).error(function(err){
 					cb(err,null);
 				});
-			}
+			},
+			listStatusBugs: function(cb) {
+				$http.get('/api/logs/listStatusBugs').success(function(logs){
+					cb(null,logs);
+				}).error(function(err){
+					cb(err,null);
+				});
+			},
+			
 		}
 	}
 ]);

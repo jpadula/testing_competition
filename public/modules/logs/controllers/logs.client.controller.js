@@ -194,6 +194,28 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
       addLabelsToGraph($scope.reportAcceptedBugLogs, $scope.reportAcceptedBugGraph);
     };
+   
+    /**
+     * Displays the graph for number of access to Rankings per day
+     * Requires: $scope.compilerSummaryLogs has the data as {_id, count}
+     */
+    var drawAccessToRankingsGraph = function () {
+      // object containing the data for rendering the graph for compilation and runs
+      $scope.accessToRankingsGraph = {
+        labels: [],
+        series: [],
+        data: []
+      };
+
+      // sort the array for signin logs and add the missing dates (which have a count of 0)
+      StatsSrv.sortAndAddMissingDates(fromDate, untilDate, $scope.reportRejectedBugLogs);
+
+      $scope.accessToRankingsGraph.series.push('Ranking hits');
+      addLineToGraph($scope.reportRejectedBugLogs, $scope.accessToRankingsGraph);
+
+      addLabelsToGraph($scope.reportRejectedBugLogs, $scope.accessToRankingsGraph);
+    };
+
 
     /**
      * Displays the graph for number of Rejected bugs per day
@@ -334,6 +356,21 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       });
     };
 
+    var getAccessToRankingsGraph = function () {
+      $scope.isLoadingAccessToRankingsGraphData = true;
+      Logs.accessToRankingsEvent(function(err,result){
+        if (!err) {
+          $scope.reportRejectedBugLogs = result;
+          drawAccessToRankingsGraph();
+          $scope.isLoadingAccessToRankingsGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Access to Rankings log" });
+        }
+      });
+    };
+
     var getBugsPerUserDataForGraph = function () {
       $scope.isLoadingBugsPerUserGraphData = true;
       Logs.listBugsPerUserEvent(function(err,result){
@@ -351,6 +388,37 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
         }
       });
     };
+    
+    var getStatusBugsGraph = function () {
+      $scope.isLoadingStatusBugGraphData = true;
+      Logs.listStatusBugs(function(err,result){
+        if (!err) {
+          var listStatusBugs = result;
+
+          //initialization 
+          $scope.listStatusBugsGraph={};
+          $scope.listStatusBugsGraph.data = [];
+          $scope.listStatusBugsGraph.labels = [];
+
+          //assign the data
+          $scope.listStatusBugsGraph.data.push(listStatusBugs.open);
+          $scope.listStatusBugsGraph.data.push(listStatusBugs.rejected);
+          $scope.listStatusBugsGraph.data.push(listStatusBugs.approved);
+          
+          //assing the labels
+          $scope.listStatusBugsGraph.labels.push("Open Bugs");
+          $scope.listStatusBugsGraph.labels.push("Rejected Bugs");
+          $scope.listStatusBugsGraph.labels.push("Approved Bugs");
+          
+          $scope.isLoadingStatusBugGraphData = false;
+
+        } else {
+          //error
+          $scope.logAlerts.push({type: "danger", msg:"Error loading Status Bugs log" });
+        }
+      });
+    };
+
 
     /**
      * gets all the draw logs from the server
@@ -377,6 +445,8 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
       getAcceptReportDataForGraph();
       getRejectDataForGraph();
       getBugsPerUserDataForGraph();
+      getStatusBugsGraph();
+      getAccessToRankingsGraph();
       getAllLogsData();
     };
 

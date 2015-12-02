@@ -40,6 +40,30 @@ var reportAggregate = function(aPageCode,callback) {
   });
 };
 
+var reportAggregateListMatch = function(aListOfPageCodes,callback) {
+  var fDate = {
+      year:{$year:"$date"},
+      month: {$month:"$date"},
+      day:{$dayOfMonth:"$date"}
+    };
+
+  var filter = {
+    $match: { $or: aListOfPageCodes }
+  };
+  pageViewModel.aggregate(filter,{$group: {
+      _id: fDate,
+      count: { $sum: 1 }
+    }
+  },function(err,result){
+      if (!err) {
+        callback(null,result);
+      } else {
+        callback(err,null);
+      }
+  });
+};
+
+
 apiEvents.listBugsPerUserLogsPerDay = function(callback) {
     Bug.aggregate([
         { $group: {
@@ -106,5 +130,46 @@ apiEvents.listReportAcceptedBugLogsPerDay = function(callback) {
 apiEvents.listReportRejectedBugLogsPerDay = function(callback) {
   reportAggregate('8',callback);
 };
+
+/**
+* Returns list of  access events grouped per day
+* @param {function} callback
+*/
+apiEvents.listAccessToRankingsPerDay = function(callback) {
+  var codesList = [{ pageCode: '9' }, { pageCode: '10' },{pageCode:'11'}];
+  reportAggregateListMatch(codesList,callback);
+};
+
+/**
+* Returns list of  Rejected,Accepted and Open Bugs
+* @param {function} callback
+*/
+apiEvents.getCountStatusBug = function(callback) {
+  var result = {};
+  // searching the open bugs
+  Bug.count({status: 'OPEN'}, function(err, c) {
+    if (!err) {
+      result.open = c;
+      Bug.count({status: 'APPROVED'}, function(err, c) {
+        if (!err) {
+          result.approved = c;
+          Bug.count({status: 'REJECTED'}, function(err, c) {
+            if (!err) {
+              result.rejected =c;
+              callback(null,result);
+            } else {
+              callback(err,null);
+            }
+          });
+        } else {
+          callback(err,null);
+        }
+      });
+    } else {
+      callback(err,null);
+    }
+  });
+};
+
 
 exports.apiEvents = apiEvents;
