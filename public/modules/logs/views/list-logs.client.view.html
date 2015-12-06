@@ -99,7 +99,7 @@
     <div class="row projectStats-row-spacing">
         <div class="col-md-12">
             <div class="col-md-6">
-                <h3> Accept bugs per day</h3>
+                <h3> Accepted bugs per day</h3>
                 <div ng-show="isLoadingReportedAcceptedBugGraphData">
                     <h4><span class="glyphicon glyphicon-refresh projectStats-load-icon-animate"></span>
                         Loading...
@@ -145,7 +145,7 @@
                 <div class="row projectStats-row-spacing">
                     <div ng-if="!isLoadingStatusBugGraphData">
                     
-                        <canvas id="pie" class="chart chart-pie" chart-data="listStatusBugsGraph.data" chart-labels="listStatusBugsGraph.labels">
+                        <canvas id="pie" class="chart chart-pie" chart-data="listStatusBugsGraph.data" chart-labels="listStatusBugsGraph.labels" chart-legend='true'>
                         </canvas> 
                     </div>
                 </div>
