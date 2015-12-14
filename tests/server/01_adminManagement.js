@@ -3,17 +3,17 @@
  */
   // to run all tests, run:  npm run-script test
 
-var app = require('../server.js'),
+var app = require('../../server.js'),
   request = require('supertest'),
   express = require('express'),
   should = require('should'),
   bodyParser = require('body-parser'),
-  testConfig = require('./../app/tests/testConfig.js');
+  testConfig = require('./../../app/tests/testConfig.js');
 
 app.use(bodyParser());
 
 var cookie;
-var rioCuartoGpId,argGpId, chGpId, compId;
+var rioCuartoGpId,argGpId, chGpId, compId,argChCompetitionId;
 
 describe('Test Admin management', function () {
 
@@ -33,7 +33,6 @@ describe('Test Admin management', function () {
         cookie = reply.headers['set-cookie'].pop().split(';')[0]; //.headers['set-cookie'];
         done();
       });
-
   });
 
 
@@ -48,6 +47,24 @@ describe('Test Admin management', function () {
         reply.body[0].description.should.equal('A competition between Argentina and Switzerland');
         reply.body[0].name.should.equal('ARGvsCH');
         reply.body[0].groupsList.length.should.equal(2); //there are 2 groups in the competition
+        argChCompetitionId = reply.body[0]._id;
+
+        done();
+      });
+  });
+
+  it('Admin gets list of competitions', function (done) {
+    request(app)
+      .get('/competitions/'+argChCompetitionId)
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        reply.body.description.should.equal('A competition between Argentina and Switzerland');
+        reply.body.name.should.equal('ARGvsCH');
+        reply.body.groupsList.length.should.equal(2); //there are 2 groups in the competition
+
         done();
       });
   });
@@ -70,6 +87,37 @@ describe('Test Admin management', function () {
         reply.body[1].githubAccounts.should.equal('martinnordio');
         reply.body[1].studentsArrayList[0].should.equal('martinnordio');
         chGpId = reply.body[1]._id;
+        done();
+      });
+  });
+
+  it('Admin gets ARG group', function (done) {
+    request(app)
+      .get('/groups/'+argGpId)
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        reply.body.name.should.equal('ARG');
+        reply.body.githubAccounts.should.equal('jpadula,jaguirre');
+        reply.body.studentsArrayList[0].should.equal('jpadula');
+        reply.body.studentsArrayList[1].should.equal('jaguirre');
+        done();
+      });
+  });
+
+  it('Admin gets CH group', function (done) {
+    request(app)
+      .get('/groups/'+chGpId)
+      .set('cookie', cookie)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(error, reply) {
+        if(error) return done(error);
+        reply.body.name.should.equal('CH');
+        reply.body.githubAccounts.should.equal('martinnordio');
+        reply.body.studentsArrayList[0].should.equal('martinnordio');
         done();
       });
   });
@@ -221,6 +269,33 @@ describe('Test Admin management', function () {
       });
   });
 
+  it('Admin creating a competition that exists fail', function (done) {
+    var aCompetition = {
+        "name":"aNewCompetition",
+        "description":"<p>Testing Mocha desc</p>",
+        "groupsList":[{"_id":argGpId},{"_id":chGpId}],
+        "POINTS":{
+          "FIRST_BUG_IN_CLASS_C":10,
+          "NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R":5,
+          "NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R":3,
+          "PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG":2,
+          "PERSON_WHO_SUBMITTED_A_REJECTED_BUG":-10
+        }
+      };
+    request(app)
+      .post('/competitions')
+      .set('cookie', cookie)
+      .send(aCompetition)
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(function(error, reply) {
+        reply.status.should.equal(400);
+        if(error) return done(error);
+        done();
+      });
+  });
+
+
   it('Admin updates a competition', function (done) {
     var aCompetition = {
       "name":"aNewCompetition222"
@@ -252,6 +327,25 @@ describe('Test Admin management', function () {
           });
       });
   });
+
+/*
+  it('Admin updates a competition that fail because the name already exist', function (done) {
+      var aCompetition = {
+        "name":"aNewCompetition222"
+      };
+      request(app)
+        .put('/competitions/'+compId)
+        .set('cookie', cookie)
+        .send(aCompetition)
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .end(function(error, reply) {
+          reply.status.should.equal(400);
+          if(error) return done(error);
+          done();
+        });
+    });
+*/
 
   it('Admin deletes a competition', function (done) {
     request(app)

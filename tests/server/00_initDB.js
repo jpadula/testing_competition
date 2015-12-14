@@ -1,12 +1,12 @@
 /**
  * Created by Martin on 24/11/15.
  */
-var app = require('../server.js'),
+var app = require('../../server.js'),
   request = require('supertest'),
   express = require('express'),
   should = require('should'),
   bodyParser = require('body-parser'),
-  testConfig = require('./../app/tests/testConfig.js'),
+  testConfig = require('./../../app/tests/testConfig.js'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Group = mongoose.model('Group');
@@ -130,7 +130,7 @@ describe('Initialize the Mongo database', function () {
         NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R:5,
         NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R: 3,
         PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG: 2,
-        PERSON_WHO_SUBMITTED_A_REJECTED_BUG: 0
+        PERSON_WHO_SUBMITTED_A_REJECTED_BUG: -10
       },
       bugs: [],
       user: globalUser1
