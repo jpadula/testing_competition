@@ -13,7 +13,7 @@
             <tbody>
             <tr data-ng-repeat="competition in competitions">
                 <td>
-                    <a data-ng-href="#!/competitions/{{competition._id}}">{{competition.name}}</a>
+                    <a id='{{competition.name}}' data-ng-href="#!/competitions/{{competition._id}}">{{competition.name}}</a>
                 </td>
                 <td>
                     {{competition.created | date:medium}}

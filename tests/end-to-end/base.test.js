@@ -1,44 +1,149 @@
-var SignInPage = function() {
-  
-  var username = element(by.model('username'));
-  var password = element(by.binding('password'));
-  return {
-    init : function() {
-      browser.get('http://localhost:3000/#!/signin');
-    },
-    login: function(username,password){
-      element(by.id('username')).sendKeys('jpadula');
-      element(by.id('password')).sendKeys('jpadula');
-      element(by.id('signInBtn')).click();
-    }
-  }
-};
-
 describe('KALI PROJECT', function() {
-  
-  it('should sign in', function() {
-    var signinPage = new SignInPage();
-    browser.sleep(1500);
-    signinPage.init();
-    browser.sleep(1500);
-    signinPage.login("jpadula","jpadula");
+  it('should sign in', function(done) {
+    browser.get('http://localhost:3000/#!/signin');
 
-/*
-    var competitionPage = new CompetitionPage();
-    competitionPage.goToCreate();
+    var username = element(by.model('username'));
+    var password = element(by.binding('password'));
     
-    competitionPage.createFailedCompetitionCompetition();
-    //expect...
-    
-    competitionPage.createSuccessCompetitionCompetition();
-    //expect...
-*/
+    browser.sleep(1500);
+    element(by.id('username')).sendKeys('jpadula');
+    browser.sleep(1500);
+    element(by.id('password')).sendKeys('jpadula');
+    browser.sleep(1500);
+    element(by.id('signInBtn')).click();
 
+    // login successfully => we know that the next page should be the home yes or yes
+    var nextURL = 'http://localhost:3000/#!/';
+    expect(browser.getCurrentUrl()).toContain(nextURL);
+    browser.sleep(1500);
     
-    browser.sleep(90000); // to let you see the result
+
+    // the titleHomepage ID should be equal that KALI
+    var title = element(by.id('titleHomepage'));
+    expect(title.getText()).toBe('KALI');
+    done();
 
   });
+
+var createGroup = function(aGroupName,aGroupNumber,aGithubAccounts) {
+    element(by.id('Admin')).click();
+    browser.sleep(1500);
+    element(by.id("groups/create")).click();
+    browser.sleep(1500);
+    var name = element(by.model('name'));
+    var groupNumber = element(by.model('groupNumber'));
+    var githubAccounts = element(by.model('githubAccounts'));
+    element(by.id('name')).sendKeys(aGroupName);
+    browser.sleep(1500);
+    element(by.id('groupNumber')).sendKeys(aGroupNumber);
+    browser.sleep(1500);
+    element(by.id('githubAccounts')).sendKeys(aGithubAccounts);
+
+    element(by.id('createGroupBtn')).click();
+};
+
+var competitionCreatedID;
+
+var createAndEditCompetition = function(aCompetitionName,aDescription,aFirstBugClass,aFirstBugRoutine,aRepeatedBug,aAcceptedBug,aRejectedBug) {
+    element(by.id('Admin')).click();
+    browser.sleep(1500);
+    element(by.id("competitions/create")).click();
+    browser.sleep(1500);
+    
+    var name = element(by.model('name'));
+    var description = element(by.model('description'));
+    var FIRST_BUG_IN_CLASS_C = element(by.model('FIRST_BUG_IN_CLASS_C'));
+    var NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R = element(by.model('NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R'));
+    var NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R = element(by.model('NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R'));
+    var PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG = element(by.model('PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG'));
+    var PERSON_WHO_SUBMITTED_A_REJECTED_BUG = element(by.model('PERSON_WHO_SUBMITTED_A_REJECTED_BUG'));
+
+
+    element(by.model('name')).sendKeys(aCompetitionName);
+    browser.sleep(1500);
+    element(by.model('description')).sendKeys(aDescription);
+    browser.sleep(1500);
+    element(by.model('FIRST_BUG_IN_CLASS_C')).clear().sendKeys(aFirstBugClass);
+    browser.sleep(1500);
+    element(by.model('NOT_FIRST_BUG_IN_CLASS_C_BUT_YES_IN_ROUTINE_R')).clear().sendKeys(aFirstBugRoutine);
+    browser.sleep(1500);
+    element(by.model('NOT_FIRST_BUG_IN_CLASS_C_AND_NOT_FIRST_IN_ROUTINE_R')).clear().sendKeys(aRepeatedBug);
+    browser.sleep(1500);
+    element(by.model('PERSON_WHO_SUBMITTED_AN_ACCEPTED_BUG')).clear().sendKeys(aAcceptedBug);
+    browser.sleep(1500);
+    element(by.model('PERSON_WHO_SUBMITTED_A_REJECTED_BUG')).clear().sendKeys(aRejectedBug);
+    
+    browser.sleep(1500);
+    element(by.binding('varButtonLabel')).click();
+    var first = element.all(by.css('.acol')).get(0).click();
+    browser.sleep(1000);
+    var second = element.all(by.css('.acol')).get(1).click();
+    browser.sleep(1000);
+    element(by.model('PERSON_WHO_SUBMITTED_A_REJECTED_BUG')).click();
+    browser.sleep(1500);
+    
+    element(by.id('createCompetitionBtn')).click();
+    browser.sleep(1500);
+
+    //EDIT:
+    element(by.id('editCompetitionBtn')).click();
+    browser.sleep(1500);
+    element(by.id('name')).clear().sendKeys("EditedCompetition");
+    browser.sleep(1500);
+    element(by.id('updateCompetitionBtn')).click();
+    browser.sleep(1500);
+};
+
+
+var removeCompetitionCreated = function() {
+    element(by.id('Admin')).click();
+    browser.sleep(1500);
+    element(by.id("competitions")).click();
+    browser.sleep(1500);
+    element(by.id("EditedCompetition")).click();
+    browser.sleep(1500);
+    element(by.id("removeCompetitionBtn")).click();
+    browser.sleep(1500);
+    browser.switchTo().alert().accept();
+    browser.sleep(1500);
+};
+
+  it('should go to create two groups and then a competition', function(done) {
+
+    
+    createGroup('testing group 1','101','testing_g1_user1,testing_g1_user2');
+    browser.sleep(2500);
+    createGroup('testing group 2','102','testing_g2_user1,testing_g2_user2');
+    browser.sleep(2500);
+
+    var aCompetitionName='Testing competition';
+    var aDescription = 'Description Testing Competition';
+    var aFirstBugClass= '12';
+    var aFirstBugRoutine = '8';
+    var aRepeatedBug = '4';
+    var aAcceptedBug = '3';
+    var aRejectedBug = '-12';
+    
+    createAndEditCompetition(aCompetitionName,aDescription,aFirstBugClass,aFirstBugRoutine,aRepeatedBug,aAcceptedBug,aRejectedBug);
+    
+    removeCompetitionCreated();
+    done();
+
+  });
+
+var logout = function() {
+  element(by.id('logoutBtn')).click();
+  browser.sleep(1500);
+  element(by.id('signoutBtn')).click();
+  browser.sleep(1500);
+
+};
+
+  it('should logout after end-to-end test case finished',function(done){
+    logout();
+  });
 });
+//browser.sleep(90000); // to let you see the result
     /*
     browser.sleep(1000); // to let you see the result
     element(by.model('loginForm.username')).sendKeys('martin');

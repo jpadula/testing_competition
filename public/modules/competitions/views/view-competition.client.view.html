@@ -3,10 +3,10 @@
 		<h1 data-ng-bind="competition.name"></h1>
 	</div>
 	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == competition.user._id))">
-		<a class="btn btn-primary" href="/#!/competitions/{{competition._id}}/edit">
+		<a class="btn btn-primary" id='editCompetitionBtn' href="/#!/competitions/{{competition._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
-		<a class="btn btn-primary" ng-confirm-click='Are you sure?' confirmed-click="remove();">
+		<a class="btn btn-primary" id='removeCompetitionBtn' ng-confirm-click='Are you sure?' confirmed-click="remove();">
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>

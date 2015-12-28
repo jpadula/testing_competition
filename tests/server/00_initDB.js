@@ -1,6 +1,3 @@
-/**
- * Created by Martin on 24/11/15.
- */
 var app = require('../../server.js'),
   request = require('supertest'),
   express = require('express'),
